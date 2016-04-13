@@ -4,7 +4,7 @@
 * Click clone, use sourcetree and choose a directory. MP-LAB X should be able to open the project.
 
 ### Who do I talk to? ###
-* Talk to Paul for help :)
+* Talk to Paul for help with git/sourcetree :)
 
 ### Requirements ###
 You will be required to write source code for the PIC 16F877A micro-controller to:
