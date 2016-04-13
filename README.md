@@ -8,8 +8,9 @@
 
 ### Requirements ###
 You will be required to write source code for the PIC 16F877A micro-controller to:
+
 * Flash a heartbeat LED at 1Hz
-* Continuously read the IR sensor and display the range in cm on the LCD
+Continuously read the IR sensor and display the range in cm on the LCD
 * On a button press, scan the IR sensor CW through 360 degrees taking readings at each half step. At the conclusion of the scan, rotate CCW to point the sensor towards the closest obstacle.
 * On a button press, drive iRobot Create 4m in a straight line (straight line manoeuvre) while continuously displaying the total linear distance travelled on the LCD since the button press.
 * On a button press, drive the iRobot Create in a “square” shaped trajectory (square-shaped manoeuvre) with 1m each side (taking either left or right turns) while continuously
