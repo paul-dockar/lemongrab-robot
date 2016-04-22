@@ -11,34 +11,32 @@ void setupADC(void) {
 
 //return ADC 10bit raw value
 unsigned int getADC(void) {
-    unsigned int adcRAW = 0;
+    unsigned int adc_raw = 0;
     GO = 1;                                 //Starts ADC Conversion
     while(GO) {
         continue;
     }
     
-    adcRAW = (ADRESH << 2) | (ADRESL >> 6); //moves ADRESH and ADRESL to int
-    return adcRAW;
+    adc_raw = (ADRESH << 2) | (ADRESL >> 6); //moves ADRESH and ADRESL to int
+    return adc_raw;
 }
 
 //takes ADC raw and calculates to cm
-float getADCdist(unsigned int raw) {
-    float calc;
-    if (raw < 500) {                //equation for 20-110cm range
-        calc = 1/(((raw)-18.67)/10930);
+float getADCdist(unsigned int adc_raw) {
+    float adc_distance_cm;
+    if (adc_raw < 500) {                //equation for 20-110cm range
+        adc_distance_cm = 1/(((adc_raw)-18.67)/10930);
     }
-    if (raw >= 500) {               //equation for <20cm range
-        calc = 1/(((raw)-352.5)/3210);
+    if (adc_raw >= 500) {               //equation for <20cm range
+        adc_distance_cm = 1/(((adc_raw)-352.5)/3210);
     }
     
-    return calc;
+    return adc_distance_cm;
 }
 
-//writes ADC raw and ADC distance to LCD
+//writes ADC distance to LCD
 void adcDisplay (void) {
     lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(getADC());
-    lcdWriteString(" ");
     lcdWriteToDigitBCD(getADCdist(getADC()));
     lcdWriteString("cm");
 }

@@ -35,27 +35,27 @@ void lcdWriteString(char * s){
 
 //function accepts char between 0 and 999 and writes it to lcd display in 3 digits
 void lcdWriteToDigitBCD(unsigned int data){
-    unsigned int OnesDigit;
-    unsigned char TensDigit, HundredsDigit;
+    unsigned int ones_digit;
+    unsigned char tens_digit, hundreds_digit;
 
     //load number to be converted into OnesDigit
-    OnesDigit = data;
-    TensDigit = 0;
-    HundredsDigit = 0;
+    ones_digit = data;
+    tens_digit = 0;
+    hundreds_digit = 0;
 
     //Perform a BCD Conversion
-    while (OnesDigit >= 100){
-            OnesDigit = OnesDigit - 100;
-            HundredsDigit++;
+    while (ones_digit >= 100){
+            ones_digit = ones_digit - 100;
+            hundreds_digit++;
     }
-    while (OnesDigit >= 10){
-            OnesDigit = OnesDigit - 10;
-            TensDigit++;
+    while (ones_digit >= 10){
+            ones_digit = ones_digit - 10;
+            tens_digit++;
     }
 
-    lcdWriteData(HundredsDigit + 48);
-    lcdWriteData(TensDigit + 48);
-    lcdWriteData(OnesDigit + 48);
+    lcdWriteData(hundreds_digit + 48);
+    lcdWriteData(tens_digit + 48);
+    lcdWriteData(ones_digit + 48);
 }
 
 //function initalises the LCD module - check that ADCON1 setting doesn't conflict

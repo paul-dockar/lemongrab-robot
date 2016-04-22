@@ -1,7 +1,7 @@
 #include "stepper.h"
 
 signed char cstep = 0;
-signed int stepperCount = 0;
+signed int stepper_count = 0;
 volatile bit cw_flag = 0;
 
 //move stepper CW
@@ -44,40 +44,40 @@ void moveCCW (char steps) {
 
 //updates LCD step position
 void lcdCW (void) {
-    if ((stepperCount == 0) && (!cw_flag)){
+    if ((stepper_count == 0) && (!cw_flag)){
         cw_flag = 1;
         lcdSetCursor(0X40);
         lcdWriteString("000 CW ");
     }
     if (cw_flag) {
-        stepperCount++;
-        writeStep(stepperCount);
+        stepper_count++;
+        writeStep(stepper_count);
     }
     else {
-        stepperCount--;
-        writeStep(stepperCount);
+        stepper_count--;
+        writeStep(stepper_count);
     }
 }
 
 //updates LCD step position
 void lcdCCW (void) {
-    if ((stepperCount == 0) && (cw_flag)){
+    if ((stepper_count == 0) && (cw_flag)){
         cw_flag = 0;
         lcdSetCursor(0X40);
         lcdWriteString("000 CCW");
     }
     if (cw_flag) {
-        stepperCount--;
-        writeStep(stepperCount);
+        stepper_count--;
+        writeStep(stepper_count);
     }
     else {
-        stepperCount++;
-        writeStep(stepperCount);
+        stepper_count++;
+        writeStep(stepper_count);
     }
 }
 
 //updates LCD step position
-void writeStep (signed int stepCount) {
+void writeStep (signed int step_count) {
     lcdSetCursor(0X40);
-    lcdWriteToDigitBCD(stepCount);
+    lcdWriteToDigitBCD(step_count);
 }

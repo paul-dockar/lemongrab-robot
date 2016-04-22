@@ -1,50 +1,50 @@
 #include "interrupt.h"
 
-volatile unsigned int rtcCounter = 0;
-volatile bit pbRelease = 0;
-volatile unsigned char pbDebounceCount = 0;
+volatile unsigned int rtc_counter = 0;
+volatile bit pb_release = 0;
+volatile unsigned char pb_debounce_count = 0;
 
  //setup PIC interrupt registers, control heartbeat and PB inputs
 void interrupt isr(void) {
     if (T0IF) {
         T0IF = 0; 
         TMR0 = TMR0_VAL;
-        rtcCounter++;
+        rtc_counter++;
         
-        if (rtcCounter % 500 == 0) {        //cycle LED at 1Hz
+        if (rtc_counter % 500 == 0) {        //cycle LED at 1Hz
             LED0 = !LED0;
-            rtcCounter = 0;
+            rtc_counter = 0;
         }
         
-        if (PBLED||PBCW||PBCCW||PBROT){                  //check for PB inputs
-            pbDebounceCount++;
-            if (debounce(pbDebounceCount) && PBLED) {   //call debounce & PB check
-                pbLEDPressed = 1;                       //PB flag to ON
-                pbRelease = 0;
+        if (PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){                  //check for PB inputs
+            pb_debounce_count++;
+            if (debounce(pb_debounce_count) && PB_SCAN) {   //call debounce & PB check
+                pb_scan_pressed = 1;                       //PB flag to ON
+                pb_release = 0;
             }
-            if (debounce(pbDebounceCount) && PBCW) {
-                pbCWPressed = 1;
-                pbRelease = 0;
+            if (debounce(pb_debounce_count) && PB_DRIVE_4M) {
+                pb_drive_4m_pressed = 1;
+                pb_release = 0;
             }
-            if (debounce(pbDebounceCount) && PBCCW) {
-                pbCCWPressed = 1;
-                pbRelease = 0;
+            if (debounce(pb_debounce_count) && PB_DRVE_SQUARE) {
+                pb_drive_square_pressed = 1;
+                pb_release = 0;
             }
-            if (debounce(pbDebounceCount) && PBROT) {
-                pbROTPressed = 1;
-                pbRelease = 0;
+            if (debounce(pb_debounce_count) && PB_FIND_WALL) {
+                pb_find_wall_pressed = 1;
+                pb_release = 0;
             }
         }
         else {
-            pbDebounceCount = 0;
-            pbRelease = 1;
+            pb_debounce_count = 0;
+            pb_release = 1;
         }
     }
 }
 
 //debounces buttons
 bit debounce (unsigned char count) {
-    if (count > DEBOUNCE_REQ_COUNT && pbRelease) {
+    if (count > DEBOUNCE_REQ_COUNT && pb_release) {
         return 1;
     }
     else return 0;

@@ -8,10 +8,10 @@
 #include "main.h"
 
 //PB flags, 180 degree rotate flag to switch between CW and CCW
-volatile bit pbLEDPressed = 0;
-volatile bit pbCWPressed = 0;
-volatile bit pbCCWPressed = 0;
-volatile bit pbROTPressed = 0;
+volatile bit pb_scan_pressed = 0;
+volatile bit pb_drive_4m_pressed = 0;
+volatile bit pb_drive_square_pressed = 0;
+volatile bit pb_find_wall_pressed = 0;
 volatile bit ROTATE_FLAG = 0;
 
 //setup PIC, enable interrupts
@@ -39,28 +39,20 @@ void main (void) {
 
 //checks for button flags, performs actions if TRUE
 void buttonControl (void) {
-    if (pbLEDPressed) {
-        LED1 = !LED1;
-        pbLEDPressed = 0;
+    if (pb_scan_pressed) {
+        UNUSED = !UNUSED;
+        pb_scan_pressed = 0;
     }
-    if (pbCWPressed) {
+    if (pb_drive_4m_pressed) {
         moveCW(1);
-        pbCWPressed = 0;
+        pb_drive_4m_pressed = 0;
     }
-    if (pbCCWPressed) {
+    if (pb_drive_square_pressed) {
         moveCCW(1);
-        pbCCWPressed = 0;
+        pb_drive_square_pressed = 0;
     }
-    if (pbROTPressed) {
-        if (ROTATE_FLAG && pbROTPressed) {
-            moveCW(200);
-            ROTATE_FLAG = !ROTATE_FLAG;
-            pbROTPressed = 0;
-        }
-        if (!ROTATE_FLAG & pbROTPressed) {
-            moveCCW(200);
-            ROTATE_FLAG = !ROTATE_FLAG;
-            pbROTPressed = 0;
-        }
+    if (pb_find_wall_pressed) {
+        moveCCW(1);
+        pb_find_wall_pressed = 0;
     }
 }

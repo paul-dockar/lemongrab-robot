@@ -1,10 +1,3 @@
-/* 
- * File:   stepper.h
- * Author: Paul
- *
- * Created on 6 April 2016, 11:46 PM
- */
-
 #ifndef STEPPER_H
 #define	STEPPER_H
 
@@ -21,14 +14,14 @@
 #define STEP7 0b00011110
 
 signed char cstep;                      //variable to count current step
-signed int stepperCount;                //LCD step count
+signed int stepper_count;                //LCD step count
 volatile bit cw_flag;                   //Flag for CW or CCW LCD display
 
 void moveCW (char steps);               //move stepper CW
 void moveCCW (char steps);              //move stepper CCW
 void lcdCW (void);                      //updates LCD step position
 void lcdCCW (void);                     //updates LCD step position
-void writeStep (signed int stepCount);  //updates LCD step position
+void writeStep (signed int step_count);  //updates LCD step position
 
 #endif	/* STEPPER_H */
 

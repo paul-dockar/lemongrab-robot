@@ -1,10 +1,3 @@
-/* 
- * File:   lcd.h
- * Author: Paul
- *
- * Created on 6 April 2016, 11:48 PM
- */
-
 #ifndef LCD_H
 #define	LCD_H
 
