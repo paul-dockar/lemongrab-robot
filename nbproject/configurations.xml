@@ -9,6 +9,8 @@
       <itemPath>interrupt.h</itemPath>
       <itemPath>lcd.h</itemPath>
       <itemPath>stepper.h</itemPath>
+      <itemPath>iRobot.h</itemPath>
+      <itemPath>ser.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,6 +24,8 @@
       <itemPath>interrupt.c</itemPath>
       <itemPath>lcd.c</itemPath>
       <itemPath>stepper.c</itemPath>
+      <itemPath>iRobot.c</itemPath>
+      <itemPath>ser.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -31,6 +35,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
+    <Elem>../../../temp</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

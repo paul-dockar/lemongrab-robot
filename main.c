@@ -8,6 +8,7 @@
 #include "main.h"
 
 //PB flags, 180 degree rotate flag to switch between CW and CCW
+volatile bit pb_start_pressed = 0;
 volatile bit pb_scan_pressed = 0;
 volatile bit pb_drive_4m_pressed = 0;
 volatile bit pb_drive_square_pressed = 0;
@@ -15,20 +16,26 @@ volatile bit pb_find_wall_pressed = 0;
 
 //setup PIC, enable interrupts
 void setup (void) {
-    TRISB = 0b00111100;         //set pins 2-5 to input, rest output
-    TRISC = 0b00000000;         //set all pins to output
+    __delay_ms(5000);   // Safety delay while iRobot serial buffers are streaming stuff
+    ser_init();
+    PEIE = 1;
+    GIE = 1;
+    TRISB = 0b00000010;
+    TRISC = 0b00000000;
         
     OPTION_REG = 0b00000100;
     TMR0 = TMR0_VAL;     
     TMR0IE = 1;                 //enable timer 0
     ei();                       //enable interrupt
+    
+    setupIRobot();
+    setupADC();
+    setupLCD();
 }
 
 //calls all setup functions, loops button checks and ADC
 void main (void) {
     setup();
-    setupADC();
-    setupLCD();
     
     while (1) {
         buttonControl();
@@ -38,6 +45,10 @@ void main (void) {
 
 //checks for button flags, performs actions if TRUE
 void buttonControl (void) {
+    if (pb_start_pressed) {
+        start();
+        pb_start_pressed = 0;
+    }
     if (pb_scan_pressed) {
         scan360(400);
         pb_scan_pressed = 0;
@@ -54,4 +65,13 @@ void buttonControl (void) {
         moveCCW(8);
         pb_find_wall_pressed = 0;
     }
+}
+
+void start (void) {
+        drive();
+        __delay_ms(10000);
+        stop();
+        test();
+        __delay_ms(10000);
+        stop();
 }
