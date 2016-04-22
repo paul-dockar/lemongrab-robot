@@ -19,9 +19,9 @@
 #include "ser.h"
 #include "iRobot.h"
 
-#define _XTAL_FREQ      20000000     //PIC crystal frequency
-#define LED0            RB0             //LED0(heartbeat) is set to PortB pin 0
-#define PB_START        !RB1             //LED1 is set to PortB pin 1
+#define _XTAL_FREQ      20000000        //PIC crystal frequency
+#define HB_LED          RB0             //LED0(heartbeat) is set to PortB pin 0
+#define PB_START        !RB1            //LED1 is set to PortB pin 1
 #define PB_SCAN         !RB2            //PBLED (to turn on LED1) is set to PortB pin 2
 #define PB_DRIVE_4M     !RB3            //PBCW (turn stepper CW) is set to PortB pin 3
 #define PB_DRVE_SQUARE  !RB4            //PBCCW (turn stepper CCW) is set to PortB pin 4

@@ -1,10 +1,3 @@
-/*
- * File:   main.c
- * Author: Paul Dockar
- *
- * Created on 6 April 2016, 11:43 PM
- */
-
 #include "main.h"
 
 //PB flags, 180 degree rotate flag to switch between CW and CCW
@@ -21,10 +14,8 @@ void setup (void) {
     PEIE = 1;
     GIE = 1;
     TRISB = 0b00000010;
-    TRISC = 0b00000000;
         
     OPTION_REG = 0b00000100;
-    TMR0 = TMR0_VAL;     
     TMR0IE = 1;                 //enable timer 0
     ei();                       //enable interrupt
     
@@ -67,11 +58,12 @@ void buttonControl (void) {
     }
 }
 
+//test code to check robot. Drive forward for 10 seconds, figure 8 for 10 seconds
 void start (void) {
         drive();
         __delay_ms(10000);
         stop();
-        test();
+        figureEightTest();
         __delay_ms(10000);
         stop();
 }

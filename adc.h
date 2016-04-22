@@ -15,4 +15,3 @@ void adcDisplay (void);                 //writes ADC raw and ADC distance to LCD
 void findClosestWall(void);
 
 #endif	/* ADC_H */
-

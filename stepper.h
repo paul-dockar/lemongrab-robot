@@ -25,4 +25,3 @@ void lcdCCW (void);                     //updates LCD step position
 void writeStep (signed int stepCount);  //updates LCD step position
 
 #endif	/* STEPPER_H */
-
