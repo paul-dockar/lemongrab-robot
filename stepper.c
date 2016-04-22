@@ -4,10 +4,30 @@ signed char cstep = 0;
 signed int stepper_count = 0;
 volatile bit cw_flag = 0;
 
-//move stepper CW
-void moveCW (char steps) {
+//rotate stepper CW 360 degrees. scan adc each half step.
+void scan360 (unsigned short steps){
+    resetADC();
 	for(steps; steps!=0; steps--){
-        lcdCW();
+        findClosestWall();
+		switch (cstep){
+            case 0:	PORTC = STEP1; cstep++; break;
+			case 1:	PORTC = STEP2; cstep++; break;
+            case 2:	PORTC = STEP3; cstep++; break;
+            case 3:	PORTC = STEP4; cstep++; break;
+            case 4:	PORTC = STEP5; cstep++; break;
+            case 5:	PORTC = STEP6; cstep++; break;
+            case 6:	PORTC = STEP7; cstep++; break;    
+			case 7:	PORTC = STEP0; cstep = 0; break;
+			default: PORTC = 0x00; break;
+		}
+		__delay_ms(10); 
+	}
+    moveCCW(scan_360_ccw_step_count);
+}
+
+//move stepper CW
+void moveCW (unsigned short steps) {
+	for(steps; steps!=0; steps--){
 		switch (cstep){
             case 0:	PORTC = STEP1; cstep++; break;
 			case 1:	PORTC = STEP2; cstep++; break;
@@ -24,9 +44,8 @@ void moveCW (char steps) {
 }
 
 //move stepper CCW
-void moveCCW (char steps) {
+void moveCCW (unsigned short steps) {
 	for(steps; steps!=0; steps--){
-        lcdCCW();
 		switch (cstep){
 			case 0:	PORTC = STEP7; cstep = 7; break;
             case 1:	PORTC = STEP0; cstep--; break;

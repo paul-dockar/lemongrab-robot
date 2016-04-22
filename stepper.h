@@ -17,11 +17,12 @@ signed char cstep;                      //variable to count current step
 signed int stepper_count;                //LCD step count
 volatile bit cw_flag;                   //Flag for CW or CCW LCD display
 
-void moveCW (char steps);               //move stepper CW
-void moveCCW (char steps);              //move stepper CCW
+void scan360 (unsigned short steps);
+void moveCW (unsigned short steps);               //move stepper CW
+void moveCCW (unsigned short steps);              //move stepper CCW
 void lcdCW (void);                      //updates LCD step position
 void lcdCCW (void);                     //updates LCD step position
-void writeStep (signed int step_count);  //updates LCD step position
+void writeStep (signed int stepCount);  //updates LCD step position
 
 #endif	/* STEPPER_H */
 

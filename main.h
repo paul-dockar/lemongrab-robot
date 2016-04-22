@@ -1,13 +1,10 @@
 /* 
- * File:   main.h
- * Authors:     Lemongrabs
- *                  Paul Dockar     - 12059869
- *                  Dennis Kim      - 12050466
- *                  Kim Izzo        - 11971278
- *                  Nick Rabey      - 11988589
- *                  Michael Smith   - 11745167
- *
- * Created on 22 April 2016
+ * Team:    Lemongrabs
+ * Authors: Paul Dockar     - 12059869
+ *          Dennis Kim      - 12050466
+ *          Kim Izzo        - 11971278
+ *          Nick Rabey      - 11988589
+ *          Michael Smith   - 11745167
  */
 
 #ifndef MAIN_H

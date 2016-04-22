@@ -12,7 +12,6 @@ volatile bit pb_scan_pressed = 0;
 volatile bit pb_drive_4m_pressed = 0;
 volatile bit pb_drive_square_pressed = 0;
 volatile bit pb_find_wall_pressed = 0;
-volatile bit ROTATE_FLAG = 0;
 
 //setup PIC, enable interrupts
 void setup (void) {
@@ -40,19 +39,19 @@ void main (void) {
 //checks for button flags, performs actions if TRUE
 void buttonControl (void) {
     if (pb_scan_pressed) {
-        UNUSED = !UNUSED;
+        scan360(400);
         pb_scan_pressed = 0;
     }
     if (pb_drive_4m_pressed) {
-        moveCW(1);
+        moveCW(100);
         pb_drive_4m_pressed = 0;
     }
     if (pb_drive_square_pressed) {
-        moveCCW(1);
+        moveCCW(100);
         pb_drive_square_pressed = 0;
     }
     if (pb_find_wall_pressed) {
-        moveCCW(1);
+        moveCCW(8);
         pb_find_wall_pressed = 0;
     }
 }
