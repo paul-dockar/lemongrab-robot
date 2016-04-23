@@ -27,4 +27,3 @@ void lcdWriteToDigitBCD(unsigned int data);
 void setupLCD(void);
 
 #endif	/* LCD_H */
-

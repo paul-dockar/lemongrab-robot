@@ -32,7 +32,7 @@ void stop(void){
     __delay_ms(5);
 }
 
-void test(void) {
+void figureEightTest(void) {
     ser_putch(136); 
     __delay_ms(5); 
     ser_putch(4); 

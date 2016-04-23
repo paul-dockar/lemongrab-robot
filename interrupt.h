@@ -14,4 +14,3 @@ void interrupt isr(void);               //setup PIC interrupt registers, control
 bit debounce (unsigned char count);     //debounces buttons
         
 #endif	/* INTERRUPT_H */
-

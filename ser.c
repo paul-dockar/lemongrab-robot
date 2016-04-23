@@ -40,8 +40,7 @@ bank1 unsigned char txfifo[SER_BUFFER_SIZE];
 volatile unsigned char txiptr, txoptr;
 unsigned char ser_tmp;
 
-bit ser_isrx(void)
-{
+bit ser_isrx(void) {
 	if(OERR) {
 		CREN = 0;
 		CREN = 1;
@@ -50,8 +49,7 @@ bit ser_isrx(void)
 	return (rxiptr!=rxoptr);
 }
 
-unsigned char ser_getch(void)
-{
+unsigned char ser_getch(void) {
 	unsigned char c;
 
 	while (ser_isrx()==0)
@@ -65,8 +63,7 @@ unsigned char ser_getch(void)
 	return c;
 }
 
-void ser_putch(unsigned char c)
-{
+void ser_putch(unsigned char c) {
 	while (((txiptr+1) & SER_FIFO_MASK)==txoptr)
 		continue;
 	GIE=0;
@@ -76,20 +73,17 @@ void ser_putch(unsigned char c)
 	GIE=1;
 }
 
-void ser_puts(const unsigned char * s)
-{
+void ser_puts(const unsigned char * s) {
 	while(*s)
 		ser_putch(*s++);
 }
 
-void ser_puts2(unsigned char * s)
-{
+void ser_puts2(unsigned char * s) {
 	while(*s)
 		ser_putch(*s++);
 }
 
-void ser_puthex(unsigned char v)
-{
+void ser_puthex(unsigned char v) {
 	unsigned char c;
 
 	c = v >> 4;
@@ -108,8 +102,7 @@ void ser_puthex(unsigned char v)
 }
 
 
-void ser_init(void)
-{
+void ser_init(void) {
 	TRISC |= 0b10000000;		//set RC7 to input for RX
 	TRISC &= 0b10111111;		//set RC6 to output for TX
 	BRGH=1;					//high speed
@@ -131,4 +124,3 @@ void ser_init(void)
 
 	rxiptr=rxoptr=txiptr=txoptr=0;
 }
-
