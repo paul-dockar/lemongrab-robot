@@ -1,6 +1,6 @@
 build/*
 debug/*
 dist/*
-nbproject/*
-!nbproject/configurations.xml
-!nbproject/project.xml
+nbproject/private/*
+nbproject/Makefile-genesis.properties
+nbproject/Makefile-local-default.mk
