@@ -15,7 +15,7 @@ void interrupt isr(void) {
         rtc_counter++;
         
         if (rtc_counter % 500 == 0) {        //cycle LED at 1Hz
-            HB_LED = !HB_LED;
+            LED0 = !LED0;
             rtc_counter = 0;
         }
         

@@ -33,8 +33,9 @@
 #include "main.h"
 
 /* Valid buffer size value are only power of 2 (ex: 2,4,..,64,128) */
-#define SER_BUFFER_SIZE     16
-#define SER_FIFO_MASK       (SER_BUFFER_SIZE-1)
+#define SER_BUFFER_SIZE		16
+		
+#define SER_FIFO_MASK 		(SER_BUFFER_SIZE-1)
 
 /* Insert this macro inside the interrupt routine */
 #define ser_int() 							\

@@ -1,7 +1,7 @@
 #include "lcd.h"
 
 //write controls to LCD
-void lcdWriteControl(unsigned char databyte) {
+void lcdWriteControl(unsigned char databyte){
     EN = 0;
     RW = 0;
     RS = 0;
@@ -12,7 +12,7 @@ void lcdWriteControl(unsigned char databyte) {
 }
 
 //write data to LCD
-void lcdWriteData(unsigned char databyte) {
+void lcdWriteData(unsigned char databyte){
     EN = 0;
     RW = 0;
     RS = 1;
@@ -23,18 +23,18 @@ void lcdWriteData(unsigned char databyte) {
 }
 
 //move the LCD cursor to a particular location
-void lcdSetCursor(unsigned char address) {
+void lcdSetCursor(unsigned char address){
     address |= 0b10000000;		//format address command using mask
     lcdWriteControl(address);	//write address command
 }
 
 //write strings to LCD
-void lcdWriteString(char * s) {
+void lcdWriteString(char * s){
     while(*s) lcdWriteData(*s++);
 }
 
 //function accepts char between 0 and 999 and writes it to lcd display in 3 digits
-void lcdWriteToDigitBCD(unsigned int data) {
+void lcdWriteToDigitBCD(unsigned int data){
     unsigned int ones_digit;
     unsigned char tens_digit, hundreds_digit;
 
@@ -59,7 +59,7 @@ void lcdWriteToDigitBCD(unsigned int data) {
 }
 
 //function initalises the LCD module - check that ADCON1 setting doesn't conflict
-void setupLCD(void) {
+void setupLCD(void){
     //setup ADCON1 register to make PortE Digital
     PORTD = 0;				//set all pins on portd low
     PORTE = 0;				//set all pins on porte low
