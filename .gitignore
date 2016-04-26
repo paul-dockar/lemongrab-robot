@@ -1,6 +1,13 @@
+#Ignore these compiled files
 build/*
 debug/*
 dist/*
 nbproject/*
+
+#files being edited
+*~
+
+#don't ignore these
 !nbproject/configurations.xml
 !nbproject/project.xml
+!*.hex
