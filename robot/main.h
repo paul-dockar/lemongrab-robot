@@ -20,24 +20,23 @@
 #include "iRobot.h"
 #include "spi.h"
 
-#define _XTAL_FREQ      20000000        //PIC crystal frequency
-#define HB_LED          RB0             //LED0(heartbeat) is set to PortB pin 0
-#define PB_START        !RB1            //LED1 is set to PortB pin 1
-#define PB_SCAN         !RB2            //PBLED (to turn on LED1) is set to PortB pin 2
-#define PB_DRIVE_4M     !RB3            //PBCW (turn stepper CW) is set to PortB pin 3
-#define PB_DRVE_SQUARE  !RB4            //PBCCW (turn stepper CCW) is set to PortB pin 4
-#define PB_FIND_WALL    !RB5            //PBROT (turn stepper 180) is set to PortB pin 5
+#define _XTAL_FREQ      20000000
+#define HB_LED          RB0
+#define PB_START        !RB1
+#define PB_SCAN         !RB2
+#define PB_DRIVE_4M     !RB3
+#define PB_DRVE_SQUARE  !RB4
+#define PB_FIND_WALL    !RB5
 
-//The four push button flags
 volatile bit pb_start_pressed;
 volatile bit pb_scan_pressed;
 volatile bit pb_drive_4m_pressed;
 volatile bit pb_drive_square_pressed;
 volatile bit pb_find_wall_pressed;
 
-void setup (void);          //setup PIC, enable interrupts
-void main (void);           //calls all setup functions, loops button checks and ADC
-void buttonControl (void);  //checks for button flags, performs actions if TRUE
-void start (void);
+void setup (void);
+void main (void);
+void buttonControl (void);
+void startTest (void);
 
 #endif	/* MAIN_H */

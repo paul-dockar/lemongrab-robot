@@ -1,21 +1,23 @@
 #include "iRobot.h"
 
 void setupIRobot(void){
+    ser_init();
+    
     ser_putch(START); //start create robot
     __delay_ms(5);
     ser_putch(FULL);
     __delay_ms(5);
 }
-void drive(void){
-    ser_putch(DRIVE); 
+void drive(unsigned char opscode, unsigned char right_high, unsigned char right_low, unsigned char left_high, unsigned char left_low){
+    ser_putch(opscode); 
     __delay_ms(5); 
-    ser_putch(0); 
+    ser_putch(right_high); 
     __delay_ms(5); 
-    ser_putch(200); 
+    ser_putch(right_low); 
     __delay_ms(5); 
-    ser_putch(200); 
+    ser_putch(left_high); 
     __delay_ms(5); 
-    ser_putch(0);
+    ser_putch(left_low);
     __delay_ms(5);
 }
 

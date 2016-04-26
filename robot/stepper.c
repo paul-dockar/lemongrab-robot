@@ -3,23 +3,20 @@
 signed char cstep = 0;
 signed int stepper_count = 0;
 volatile bit cw_flag = 0;
+unsigned char controlByte = 0;
+
+unsigned short scan_360_ccw_step_count = 0;
+float new_adc_distance = 0;
+float closest_adc_distance = 0;
 
 //rotate stepper CW 360 degrees. scan adc each half step.
 void scan360 (unsigned short steps){
     resetADC();
+    controlByte = 0b00001101;
+    spi_transfer(controlByte);
 	for(steps; steps!=0; steps--){
         findClosestWall();
-		switch (cstep){
-            case 0:	PORTC = STEP1; cstep++; break;
-			case 1:	PORTC = STEP2; cstep++; break;
-            case 2:	PORTC = STEP3; cstep++; break;
-            case 3:	PORTC = STEP4; cstep++; break;
-            case 4:	PORTC = STEP5; cstep++; break;
-            case 5:	PORTC = STEP6; cstep++; break;
-            case 6:	PORTC = STEP7; cstep++; break;
-			case 7:	PORTC = STEP0; cstep = 0; break;
-			default: PORTC = 0x00; break;
-		}
+        SM_STEP();
 		__delay_ms(10);
 	}
     moveCCW(scan_360_ccw_step_count);
@@ -28,17 +25,6 @@ void scan360 (unsigned short steps){
 //move stepper CW
 void moveCW (unsigned short steps) {
 	for(steps; steps!=0; steps--){
-		switch (cstep){
-            case 0:	PORTC = STEP1; cstep++; break;
-			case 1:	PORTC = STEP2; cstep++; break;
-            case 2:	PORTC = STEP3; cstep++; break;
-            case 3:	PORTC = STEP4; cstep++; break;
-            case 4:	PORTC = STEP5; cstep++; break;
-            case 5:	PORTC = STEP6; cstep++; break;
-            case 6:	PORTC = STEP7; cstep++; break;
-			case 7:	PORTC = STEP0; cstep = 0; break;
-			default: PORTC = 0x00; break;
-		}
 		__delay_ms(10);
 	}
 }
@@ -46,17 +32,6 @@ void moveCW (unsigned short steps) {
 //move stepper CCW
 void moveCCW (unsigned short steps) {
 	for(steps; steps!=0; steps--){
-		switch (cstep){
-			case 0:	PORTC = STEP7; cstep = 7; break;
-            case 1:	PORTC = STEP0; cstep--; break;
-			case 2:	PORTC = STEP1; cstep--; break;
-            case 3:	PORTC = STEP2; cstep--; break;
-            case 4:	PORTC = STEP3; cstep--; break;
-            case 5:	PORTC = STEP4; cstep--; break;
-            case 6:	PORTC = STEP5; cstep--; break;
-            case 7:	PORTC = STEP6; cstep--; break;
-			default: PORTC = 0x00; break;
-		}
 		__delay_ms(10);
 	}
 }
@@ -99,4 +74,20 @@ void lcdCCW (void) {
 void writeStep (signed int step_count) {
     lcdSetCursor(0X40);
     lcdWriteToDigitBCD(step_count);
+}
+
+//takes ADC and checks against old adc value, keeping the closest 'distance'
+void findClosestWall(void) {
+    new_adc_distance = getAdc();
+
+    if (new_adc_distance > closest_adc_distance) {
+        closest_adc_distance = new_adc_distance;
+        scan_360_ccw_step_count = 0;
+    }
+    scan_360_ccw_step_count++;
+}
+
+void resetADC(void) {
+    scan_360_ccw_step_count = 0;
+    closest_adc_distance = getAdc();
 }
