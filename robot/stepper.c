@@ -12,23 +12,29 @@ void scan360 (unsigned short steps){
     spi_transfer(controlByte);
     
 	for(steps; steps!=0; steps--){
- //       findClosestWall();
-        SM_STEP(steps);
-//		__delay_ms(10);
+        findClosestWall();
+        SM_STEP();
+		__delay_ms(10);
 	}
-//    moveCCW(scan_360_ccw_step_count);
+    moveCCW(scan_360_ccw_step_count);
 }
 
 //move stepper CW
 void moveCW (unsigned short steps) {
+    controlByte = 0b00001111;
+    spi_transfer(controlByte);
 	for(steps; steps!=0; steps--){
+        SM_STEP();
 		__delay_ms(10);
 	}
 }
 
 //move stepper CCW
 void moveCCW (unsigned short steps) {
+    controlByte = 0b00001101;
+    spi_transfer(controlByte);
 	for(steps; steps!=0; steps--){
+        SM_STEP();
 		__delay_ms(10);
 	}
 }

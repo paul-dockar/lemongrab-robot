@@ -30,7 +30,7 @@ void buttonControl (void) {
         pb_start_pressed = 0;
     }
     if (pb_scan_pressed) {
-        scan360(100);
+        scan360(400);
         pb_scan_pressed = 0;
     }
     if (pb_drive_4m_pressed) {

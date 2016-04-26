@@ -26,10 +26,6 @@ void interrupt isr(void) {
             HB_LED = !HB_LED;
             rtc_counter = 0;
         }
-        
-        if((rtc_counter % 1 == 0 && pb_scan_pressed)) {
-            SM_STEP();
-        }
 
         if (PB_START||PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){
             pb_debounce_count++;
