@@ -18,8 +18,12 @@ void interrupt isr(void) {
             HB_LED = !HB_LED;
             rtc_counter = 0;
         }
+        
+        if(rtc_counter % 1 == 0) {
+            SM_STEP();
+        }
 
-        if (PB_START|PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){                  //check for PB inputs
+        if (PB_START||PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){                  //check for PB inputs
             pb_debounce_count++;
             if (debounce(pb_debounce_count) && PB_START) {
                 pb_start_pressed = 1;

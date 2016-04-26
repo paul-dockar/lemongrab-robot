@@ -18,6 +18,7 @@
 #include "interrupt.h"
 #include "ser.h"
 #include "iRobot.h"
+#include "spi.h"
 
 #define _XTAL_FREQ      20000000        //PIC crystal frequency
 #define HB_LED          RB0             //LED0(heartbeat) is set to PortB pin 0

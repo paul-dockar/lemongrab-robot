@@ -18,7 +18,8 @@ void setup (void) {
     OPTION_REG = 0b00000100;
     TMR0IE = 1;                 //enable timer 0
     ei();                       //enable interrupt
-
+    
+    setupSPI();
     setupIRobot();
     setupADC();
     setupLCD();

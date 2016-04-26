@@ -11,6 +11,7 @@
       <itemPath>robot/main.h</itemPath>
       <itemPath>robot/ser.h</itemPath>
       <itemPath>robot/stepper.h</itemPath>
+      <itemPath>robot/spi.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -26,6 +27,7 @@
       <itemPath>robot/main.c</itemPath>
       <itemPath>robot/ser.c</itemPath>
       <itemPath>robot/stepper.c</itemPath>
+      <itemPath>robot/spi.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
