@@ -13,7 +13,7 @@ void setup (void) {
     ser_init();
     PEIE = 1;
     GIE = 1;
-    TRISB = 0b00000010;
+    TRISB = 0b00111110;
 
     OPTION_REG = 0b00000100;
     TMR0IE = 1;                 //enable timer 0
@@ -37,6 +37,7 @@ void main (void) {
 //checks for button flags, performs actions if TRUE
 void buttonControl (void) {
     if (pb_start_pressed) {
+        RB6 = !RB6;
         start();
         pb_start_pressed = 0;
     }
