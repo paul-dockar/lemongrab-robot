@@ -5,11 +5,13 @@ unsigned short scan_360_ccw_step_count = 0;
 unsigned short new_adc_distance = 0;
 unsigned short closest_adc_distance = 0;
 
+unsigned char CW_control_byte = SM_CLOCKWISE;
+unsigned char CCW_control_byte = SM_COUNTER_CLOCKWISE;
+
 //rotate stepper CW 360 degrees. scan adc each half step.
 void scan360 (unsigned short steps){
     resetADC();
-    controlByte = 0b00001111;
-    spi_transfer(controlByte);
+    spi_transfer(CW_control_byte);
     
 	for(steps; steps!=0; steps--){
         findClosestWall();
@@ -21,8 +23,7 @@ void scan360 (unsigned short steps){
 
 //move stepper CW
 void moveCW (unsigned short steps) {
-    controlByte = 0b00001111;
-    spi_transfer(controlByte);
+    spi_transfer(CW_control_byte);
 	for(steps; steps!=0; steps--){
         SM_STEP();
 		__delay_ms(10);
@@ -31,8 +32,7 @@ void moveCW (unsigned short steps) {
 
 //move stepper CCW
 void moveCCW (unsigned short steps) {
-    controlByte = 0b00001101;
-    spi_transfer(controlByte);
+    spi_transfer(CCW_control_byte);
 	for(steps; steps!=0; steps--){
         SM_STEP();
 		__delay_ms(10);
