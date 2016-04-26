@@ -8,17 +8,17 @@ volatile unsigned char pb_debounce_count = 0;
 void interrupt isr(void) {
     //Serial interrupt handler
     ser_int();
-    
+
     if (T0IF) {
-        T0IF = 0; 
+        T0IF = 0;
         TMR0 = TMR0_VAL;
         rtc_counter++;
-        
+
         if (rtc_counter % 500 == 0) {        //cycle LED at 1Hz
             HB_LED = !HB_LED;
             rtc_counter = 0;
         }
-        
+
         if (PB_START|PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){                  //check for PB inputs
             pb_debounce_count++;
             if (debounce(pb_debounce_count) && PB_START) {

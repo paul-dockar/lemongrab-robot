@@ -14,11 +14,11 @@ void setup (void) {
     PEIE = 1;
     GIE = 1;
     TRISB = 0b00000010;
-        
+
     OPTION_REG = 0b00000100;
     TMR0IE = 1;                 //enable timer 0
     ei();                       //enable interrupt
-    
+
     setupIRobot();
     setupADC();
     setupLCD();
@@ -27,7 +27,7 @@ void setup (void) {
 //calls all setup functions, loops button checks and ADC
 void main (void) {
     setup();
-    
+
     while (1) {
         buttonControl();
         adcDisplay();

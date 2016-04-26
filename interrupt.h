@@ -12,5 +12,5 @@ volatile unsigned char pb_debounce_count; //PB debounce counter
 
 void interrupt isr(void);               //setup PIC interrupt registers, control heartbeat and PB inputs
 bit debounce (unsigned char count);     //debounces buttons
-        
+
 #endif	/* INTERRUPT_H */

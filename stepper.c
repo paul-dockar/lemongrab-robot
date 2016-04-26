@@ -16,11 +16,11 @@ void scan360 (unsigned short steps){
             case 3:	PORTC = STEP4; cstep++; break;
             case 4:	PORTC = STEP5; cstep++; break;
             case 5:	PORTC = STEP6; cstep++; break;
-            case 6:	PORTC = STEP7; cstep++; break;    
+            case 6:	PORTC = STEP7; cstep++; break;
 			case 7:	PORTC = STEP0; cstep = 0; break;
 			default: PORTC = 0x00; break;
 		}
-		__delay_ms(10); 
+		__delay_ms(10);
 	}
     moveCCW(scan_360_ccw_step_count);
 }
@@ -35,11 +35,11 @@ void moveCW (unsigned short steps) {
             case 3:	PORTC = STEP4; cstep++; break;
             case 4:	PORTC = STEP5; cstep++; break;
             case 5:	PORTC = STEP6; cstep++; break;
-            case 6:	PORTC = STEP7; cstep++; break;    
+            case 6:	PORTC = STEP7; cstep++; break;
 			case 7:	PORTC = STEP0; cstep = 0; break;
 			default: PORTC = 0x00; break;
 		}
-		__delay_ms(10); 
+		__delay_ms(10);
 	}
 }
 
@@ -57,7 +57,7 @@ void moveCCW (unsigned short steps) {
             case 7:	PORTC = STEP6; cstep--; break;
 			default: PORTC = 0x00; break;
 		}
-		__delay_ms(10); 
+		__delay_ms(10);
 	}
 }
 
