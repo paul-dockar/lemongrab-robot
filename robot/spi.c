@@ -4,8 +4,7 @@ void setupSPI(void){
     SSPSTAT = 0b01000000;
     SSPCON = 0b00100000;
     TRISC = 0b11010000;
-    PORTC = 0b00000011;
-    
+    SELECT_SM();
 }
 
 //Transfers data through SPI using SSPBUF/SM_Control_Byte. Note used interchangeably here for illustration purposes

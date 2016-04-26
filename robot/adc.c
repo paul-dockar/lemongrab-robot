@@ -10,8 +10,8 @@ void setupADC(void) {
 }
 
 //return ADC 10bit raw value
-float getAdc(void) {
-    float adc_raw = 0;
+unsigned short getAdc(void) {
+    unsigned short adc_raw = 0;
     GO = 1;                                 //Starts ADC Conversion
     while(GO) {
         continue;
@@ -22,8 +22,8 @@ float getAdc(void) {
 }
 
 //takes ADC raw and calculates to cm
-float getAdcDist(float adc_raw) {
-    float adc_distance_cm;
+unsigned short getAdcDist(unsigned short adc_raw) {
+    short adc_distance_cm;
     if (adc_raw < 500) {                //equation for 20-110cm range
         adc_distance_cm = 1/(((adc_raw)-18.67)/10930);
     }

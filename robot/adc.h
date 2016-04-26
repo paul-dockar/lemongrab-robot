@@ -4,8 +4,8 @@
 #include "main.h"
 
 void setupADC(void);
-float getAdc(void);
-float getAdcDist(float adc_raw);
+unsigned short getAdc(void);
+unsigned short getAdcDist(unsigned short adc_raw);
 void adcDisplay (void);
 
 #endif	/* ADC_H */

@@ -5,7 +5,7 @@
 
 #define     START           128			//Create start command
 #define     FULL            132			//Create full control command
-#define     DRIVE           145			//Create Drive command
+#define     DRIVE           145			//Create Drive Direct command
 #define     BUTTONS         18			//state of the create push buttons
 #define     LEDS            139			//control the state of the create leds
 #define     IRBYTE          17			//IR byte recieved by create
