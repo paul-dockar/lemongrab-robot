@@ -12,13 +12,13 @@
 
 #include <xc.h>
 #pragma config BOREN = OFF, CPD = OFF, WRT = OFF, FOSC = HS, WDTE = OFF, CP = OFF, LVP = OFF, PWRTE = OFF
-#include "lcd.h"
-#include "stepper.h"
 #include "adc.h"
 #include "interrupt.h"
-#include "ser.h"
 #include "iRobot.h"
+#include "lcd.h"
+#include "ser.h"
 #include "spi.h"
+#include "stepper.h"
 
 #define _XTAL_FREQ      20000000        //pic crystal frequency
 #define HB_LED          RB0             //set PortB Pin 0 for heartbeat LED

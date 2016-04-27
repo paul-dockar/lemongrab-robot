@@ -2,9 +2,9 @@
 
 //setup PIC registers for ADC to function
 void setupADC(void) {
-    TRISA = 0xFF;                               //set all portA to input
-    ADCON0 = 0b10000001;                        //clock conversion FOSC/32, AD converter ON
-    ADCON1 = 0b00000010;                        //left justified, FOSC/32, pins 0-4 analogue
+    TRISA = 0xFF;               //set all portA to input
+    ADCON0 = 0b10000001;        //clock conversion FOSC/32, AD converter ON
+    ADCON1 = 0b00000010;        //left justified, FOSC/32, pins 0-4 analogue
 
     __delay_us(50);
 }
@@ -13,9 +13,7 @@ void setupADC(void) {
 unsigned short getAdc(void) {
     unsigned short adc_raw = 0;
     GO = 1;                                     //Starts ADC Conversion
-    while(GO) {
-        continue;
-    }
+    while(GO) continue;
 
     adc_raw = (ADRESH << 2) | (ADRESL >> 6);    //moves ADRESH and ADRESL to float
     return adc_raw;

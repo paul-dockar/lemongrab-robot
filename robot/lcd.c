@@ -52,8 +52,8 @@ void lcdWriteString(char * s) {
 
 //function accepts char between 0 and 999 and writes it to lcd display in 3 digits
 void lcdWriteToDigitBCD(unsigned int data) {
-    unsigned int ones_digit;
-    unsigned char tens_digit, hundreds_digit;
+    unsigned int    ones_digit;
+    unsigned char   tens_digit, hundreds_digit;
 
     //load number to be converted into OnesDigit
     ones_digit = data;

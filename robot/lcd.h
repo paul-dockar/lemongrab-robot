@@ -3,11 +3,10 @@
 
 #include "main.h"
 
-//defines
-#define RS RE0			                        //LCD Register Select
-#define RW RE1			                        //LCD Read Write
-#define EN RE2			                        //LCD Enable
-#define LCD_DATA PORTD	                        //LCD data pins are connected to Port D
+#define RS          RE0     //LCD Register Select
+#define RW          RE1     //LCD Read Write
+#define EN          RE2     //LCD Enable
+#define LCD_DATA    PORTD   //LCD data pins are connected to Port D
 
 void setupLCD(void);                            //function initalises the LCD module - check that ADCON1 setting doesn't conflict
 void lcdWriteControl(unsigned char databyte);   //write controls to LCD
