@@ -9,9 +9,9 @@ void setupADC(void) {
     __delay_us(50);
 }
 
-//converts ADRESH and ADRESL into 1 short variable and returns this variable
-unsigned short getAdc(void) {
-    unsigned short adc_raw = 0;
+//converts ADRESH and ADRESL into 1 int variable and returns this variable
+unsigned int getAdc(void) {
+    unsigned int adc_raw = 0;
     GO = 1;                                     //Starts ADC Conversion
     while(GO) continue;
 
@@ -20,13 +20,13 @@ unsigned short getAdc(void) {
 }
 
 //takes converted adc variable and converts into cm according to characterisation equation
-unsigned short getAdcDist(unsigned short adc_raw) {
-    short adc_distance_cm;
-    if (adc_raw < 500) {                        //equation for 20-110cm range
-        adc_distance_cm = 1/(((adc_raw)-18.67)/10930);
+unsigned int getAdcDist(unsigned int adc_raw) {
+    unsigned int adc_distance_cm;
+    if (adc_raw < 500) {
+        adc_distance_cm = round(1/(((adc_raw)-18.67)/10930));  //equation for 20-110cm range
     }
-    if (adc_raw >= 500) {                       //equation for <20cm range
-        adc_distance_cm = 1/(((adc_raw)-352.5)/3210);
+    if (adc_raw >= 500) {
+        adc_distance_cm = round(1/(((adc_raw)-352.5)/3210));   //equation for <20cm range
     }
 
     return adc_distance_cm;
@@ -37,4 +37,9 @@ void adcDisplay (void) {
     lcdSetCursor(0x00);
     lcdWriteToDigitBCD(getAdcDist(getAdc()));
     lcdWriteString("cm");
+}
+
+//rounds float to int
+unsigned int round (float x) {
+    return (unsigned int)(x + 0.5f);
 }
