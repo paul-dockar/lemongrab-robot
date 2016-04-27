@@ -20,7 +20,7 @@
 #include "spi.h"
 #include "stepper.h"
 
-#define _XTAL_FREQ      20000000        //pic crystal frequency
+#define _XTAL_FREQ      20000000        //oscillator (Hz)
 #define HB_LED          RB0             //set PortB Pin 0 for heartbeat LED
 #define PB_START        !RB1            //set PortB Pin 1 for pushbutton start
 #define PB_SCAN         !RB2            //set PortB Pin 2 for pushbutton scan closest wall

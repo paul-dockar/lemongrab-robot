@@ -1,8 +1,8 @@
 #include "interrupt.h"
 
-volatile unsigned int   rtc_counter = 0;        //timer0 interrupt overflow counter, used for heartbeat led
-volatile bit            pb_release = 0;         //push button flag when no buttons are pressed
+volatile unsigned int   hb_led_counter = 0;     //timer0 interrupt overflow counter, used for heartbeat led
 volatile unsigned char  pb_debounce_count = 0;  //push button debounce counter
+volatile bit            pb_release = 0;         //push button flag when no buttons are pressed
 
 //sets up pic interrupt registers, also push button/led input/output for portB
 void setupInterrupt (void) {
@@ -24,11 +24,11 @@ void interrupt isr(void) {
     if (T0IF) {
         T0IF = 0;
         TMR0 = TMR0_VAL;
-        rtc_counter++;
+        hb_led_counter++;
 
-        if (rtc_counter % 500 == 0) {
+        if (hb_led_counter % 500 == 0) {
             HB_LED = !HB_LED;
-            rtc_counter = 0;
+            hb_led_counter = 0;
         }
 
         if (PB_START||PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){
