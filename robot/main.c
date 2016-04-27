@@ -1,21 +1,24 @@
 #include "main.h"
 
+//set all push button flags to 0
 volatile bit pb_start_pressed = 0;
 volatile bit pb_scan_pressed = 0;
 volatile bit pb_drive_4m_pressed = 0;
 volatile bit pb_drive_square_pressed = 0;
 volatile bit pb_find_wall_pressed = 0;
 
+//calls all other module setup functions
 void setup (void) {
-    __delay_ms(5000);           //start-up delay
+    __delay_ms(5000);               //5 second startup delay to filter out irobot create serial crap
     
-    setupInterrupt();
-    setupSPI();
-    setupADC();
-    setupLCD();
-    setupIRobot();
+    setupInterrupt();               //calls pic interrupt setup function
+    setupSPI();                     //calls spi setup function for stepper motor control
+    setupADC();                     //calls adc setup function for ir reading control
+    setupLCD();                     //calls lcd setup function to allow writing to lcd
+    setupIRobot();                  //calls irobot create setup function
 }
 
+//main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main (void) {
     setup();
     while (1) {
@@ -24,7 +27,9 @@ void main (void) {
     }
 }
 
+//checks all push button flags. if one is true then call that desired function
 void buttonControl (void) {
+    //pb_start_pressed is temporary code. remove when ready
     if (pb_start_pressed) {
         startTest();
         pb_start_pressed = 0;
@@ -47,6 +52,7 @@ void buttonControl (void) {
     }
 }
 
+//this is temporary driving test code. remove when ready
 void startTest (void) {
         drive(DRIVE,0,200,0,200);
         __delay_ms(1000);

@@ -1,9 +1,10 @@
 #include "interrupt.h"
 
-volatile unsigned int rtc_counter = 0;
-volatile bit pb_release = 0;
-volatile unsigned char pb_debounce_count = 0;
+volatile unsigned int rtc_counter = 0;              //timer0 interrupt overflow counter, used for heartbeat led
+volatile bit pb_release = 0;                        //push button flag when no buttons are pressed
+volatile unsigned char pb_debounce_count = 0;       //push button debounce counter
 
+//sets up pic interrupt registers, also push button/led input/output for portB
 void setupInterrupt (void) {
     TRISB = 0b00111110;
     PEIE = 1;
@@ -14,6 +15,9 @@ void setupInterrupt (void) {
     ei();
 }
 
+//Interrupt function for the PIC. Uses timer0 interrupt overflow
+//Controls heartbeat LED
+//Controls push button debouncing and setting of push button flags
 void interrupt isr(void) {
     ser_int();
 
@@ -29,6 +33,7 @@ void interrupt isr(void) {
 
         if (PB_START||PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){
             pb_debounce_count++;
+            //NOTE THIS PB IS TEMP TEST CODE
             if (debounce(pb_debounce_count) && PB_START) {
                 pb_start_pressed = 1;
                 pb_release = 0;
@@ -57,7 +62,7 @@ void interrupt isr(void) {
     }
 }
 
-//debounces buttons
+//takes debounce counter and returns 1 if counter is > DEBOUNCE_REQ_COUNT
 bit debounce (unsigned char count) {
     if (count > DEBOUNCE_REQ_COUNT && pb_release) {
         return 1;

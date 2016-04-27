@@ -1,5 +1,6 @@
 #include "spi.h"
 
+//setup SPI module and port c input/output pins. sets stepper motor to be controlled from pic
 void setupSPI(void){
     SSPSTAT = 0b01000000;
     SSPCON = 0b00100000;

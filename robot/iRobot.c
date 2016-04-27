@@ -3,7 +3,7 @@
 void setupIRobot(void){
     ser_init();
     
-    ser_putch(START); //start create robot
+    ser_putch(START);
     __delay_ms(5);
     ser_putch(FULL);
     __delay_ms(5);
