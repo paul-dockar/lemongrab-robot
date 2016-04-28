@@ -43,3 +43,18 @@ void adcDisplay (void) {
 unsigned int round (float x) {
     return (unsigned int)(x + 0.5f);
 }
+
+int sensordistance (void)
+{
+    volatile int highbyte, lowbyte;			
+    volatile int finalbyte;
+	ser_putch(142); 							//get sensor data
+	ser_putch(19); 
+	highbyte = ser_getch();							//store sensor data to high
+	lowbyte = ser_getch();	
+    
+    finalbyte = (highbyte << 8 | lowbyte);
+    
+    return finalbyte;
+   
+}
