@@ -10,13 +10,13 @@ void setupIRobot(void) {
 }
 
 void moveStraight(void) {
-    distance_travel = 0;
-    drive(DRIVE,500,500);
+    total_distance_travel = 0;
+    drive(DRIVE,195,200);
     
-    while (distance_travel < 4000) {
-        distance_travel += sensorDistance();
+    while (total_distance_travel < 4000) {
+        total_distance_travel += sensorDistance();
         lcdSetCursor(0x40);
-        lcdWriteToDigitBCD (distance_travel);
+        lcdWriteToDigitBCD (total_distance_travel);
        
         lcdWriteString("cm driven   ");
     }
@@ -24,30 +24,35 @@ void moveStraight(void) {
 }
 void moveSquare(void) {
     angle_turn = 0;
+    total_distance_travel = 0;
     distance_travel = 0;
     
-//    char i = 4;
-//    for (i; i!=0; i--) {
-//        
-//    }
-
-    drive(DRIVE,500,500);
+    int temp_distance = 0;
     
-    while (distance_travel <= 1000) {
-        distance_travel += sensorDistance();
-        lcdSetCursor(0x40);
-        lcdWriteToDigitBCD (distance_travel);
-       
-        lcdWriteString("cm driven   ");
-    }
-    drive(DRIVE,0,0);
-    __delay_ms(200);
-    drive(DRIVE,500,-500);
+    char i = 0;
+    for (i; i!=4; i++) {
+        drive(DRIVE,195,200);
 
-    while(angle_turn < 90) {
-    angle_turn += angleDistance();
+        while (distance_travel <= 1000) {
+            distance_travel += sensorDistance();
+            total_distance_travel = distance_travel + (temp_distance);
+            lcdSetCursor(0x40);
+            lcdWriteToDigitBCD (total_distance_travel);
+            lcdWriteString("cm driven   ");
+        }
+        drive(DRIVE,0,0);
+        __delay_ms(200);
+        drive(DRIVE,195,-200);
+
+        while(angle_turn < 90) {
+        angle_turn += angleDistance();
+        }
+        drive(DRIVE,0,0);
+        
+        temp_distance += distance_travel;
+        distance_travel = 0;
+        angle_turn = 0;
     }
-    drive(DRIVE,0,0);
 }
 
 void drive(char opscode, int right_wheel, int left_wheel) {

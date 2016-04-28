@@ -12,6 +12,7 @@
 #define     SONG_PLAYING    37			//indicates if a song is currently being played
 #define     PLAY_SONG       141			//play a song (0 - 15)
 #define     SONG            140			//define a song
+int total_distance_travel = 0;
 int distance_travel = 0;
 int angle_turn = 0;
 
