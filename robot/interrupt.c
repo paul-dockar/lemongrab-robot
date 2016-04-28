@@ -25,10 +25,6 @@ void interrupt isr(void) {
         T0IF = 0;
         TMR0 = TMR0_VAL;
         hb_led_counter++;
-        
-        if (hb_led_counter % 50 == 0) {
-            adcDisplay();
-        }
 
         if (hb_led_counter % 500 == 0) {
             HB_LED = !HB_LED;

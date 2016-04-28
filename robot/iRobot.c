@@ -59,7 +59,7 @@ void moveStraight(void)
         lcdSetCursor(0x40);
         lcdWriteToDigitBCD (distance_travel);
        
-        lcdWriteString("cm");
+        lcdWriteString("cm driven   ");
     }
 
     drive(DRIVE,0,0, 0, 0);
