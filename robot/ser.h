@@ -53,13 +53,13 @@
 		}									\
 	}
 
-bit ser_isrx(void);
-unsigned char ser_getch(void);
-void ser_putch(unsigned char byte);
-void ser_puts(const char * s);
-void ser_puts2(unsigned char * s);
-void ser_puthex(unsigned char v);
-void ser_init(void);
+bit ser_isrx (void);
+unsigned char ser_getch (void);
+void ser_putch (unsigned char byte);
+void ser_puts (const char * s);
+void ser_puts2 (unsigned char * s);
+void ser_puthex (unsigned char v);
+void ser_init (void);
 
 #ifndef _SER_C_
 extern unsigned char rxfifo[SER_BUFFER_SIZE];

@@ -10,8 +10,8 @@
 #define     SELECT_SM()		RC0 = 1; RC1 = 1;
 #define     SM_STEP()		RC2 = 1; NOP(); RC2 = 0;
 
-void setupSPI(void);                                //setup SPI module and port c input/output pins. sets stepper motor to be controlled from pic
-unsigned char spi_transfer(unsigned char data);     //Transfers data through SPI using SSPBUF/SM_Control_Byte. Note used interchangeably here for illustration purposes
+void setupSPI (void);                               //setup SPI module and port c input/output pins. sets stepper motor to be controlled from pic
+unsigned char spi_transfer (unsigned char data);    //Transfers data through SPI using SSPBUF/SM_Control_Byte. Note used interchangeably here for illustration purposes
 
 #endif	/* SPI_H */
 

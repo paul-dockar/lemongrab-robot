@@ -1,6 +1,7 @@
 #include "lcd.h"
 
 //function initalises the LCD module - check that ADCON1 setting doesn't conflict
+//function contains start-up battery checks written to LCD. Clears after 8 seconds
 void setupLCD(void) {
     //setup ADCON1 register to make PortE Digital
     PORTD = 0;				        //set all pins on portd low
@@ -18,19 +19,21 @@ void setupLCD(void) {
     lcdWriteControl(0b00000001);    //clear display
     
     lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(displayBatteryCharge());
+    lcdWriteToDigitBCD(sensorPacket(BATTERY_CHARGE));
     lcdWriteString("/");
-    lcdWriteToDigitBCD(displayBatteryCapacity());
+    lcdWriteToDigitBCD(sensorPacket(BATTERY_CAPACITY));
     lcdWriteString("mAh");
     
     lcdSetCursor(0x40);
-    lcdWriteToDigitBCDx6(displayBatteryVoltage());
+    lcdWriteToDigitBCDx6(sensorPacket(VOLTAGE));
     lcdWriteString("mV");
-    __delay_ms(8000);
+    
+    __delay_ms(8000);               //display battery condition for 8 seconds
+    
     lcdWriteControl(0b00000001);    //clear display
     
     lcdSetCursor(0x40);
-    lcdWriteString("0cm driven      ");
+    lcdWriteString("0mm driven");
 }
 
 //write controls to LCD
@@ -66,7 +69,7 @@ void lcdWriteString(char * s) {
     while(*s) lcdWriteData(*s++);
 }
 
-//function accepts char between 0 and 999 and writes it to lcd display in seperate 3 digits
+//function accepts char between 0 and 9999 and writes it to lcd display in seperate 4 digits
 void lcdWriteToDigitBCD(unsigned int data) {
     unsigned int    ones_digit;
     unsigned char   tens_digit, hundreds_digit, thousands_digit;
@@ -97,6 +100,7 @@ void lcdWriteToDigitBCD(unsigned int data) {
     if (data >= 0)    lcdWriteData(ones_digit + 48);
 }
 
+//function accepts char between 0 and 999999 and writes it to lcd display in seperate 6 digits
 void lcdWriteToDigitBCDx6(unsigned int data) {
     unsigned int    ones_digit;
     unsigned char   tens_digit, hundreds_digit, thousands_digit, ten_thousands_digit, hund_thousands_digit;

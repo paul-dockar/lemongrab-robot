@@ -11,9 +11,9 @@ unsigned char CW_control_byte;      //stepper motor control byte for; enabled, c
 unsigned char CCW_control_byte;     //stepper motor control byte for; enabled, counterclockwise, half-steps
 
 void scan360 (unsigned int steps);  //rotate stepper CW 360 degrees. scan adc distance each half step.
+void findClosestWall (void);         //takes ADC and checks against old adc value, keeping the closest 'distance'
 void moveCW (unsigned int steps);   //move stepper CW
 void moveCCW (unsigned int steps);  //move stepper CCW
-void findClosestWall(void);         //takes ADC and checks against old adc value, keeping the closest 'distance'
-void resetADC(void);                //simple function to clear adc distance and step counters
+void resetADC (void);                //simple function to clear adc distance and step counters
 
 #endif	/* STEPPER_H */

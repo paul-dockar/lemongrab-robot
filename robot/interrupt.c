@@ -18,7 +18,7 @@ void setupInterrupt (void) {
 //Interrupt function for the PIC. Uses timer0 interrupt overflow
 //Controls heartbeat LED
 //Controls push button debouncing and setting of push button flags
-void interrupt isr(void) {
+void interrupt isr (void) {
     ser_int();
 
     if (T0IF) {
