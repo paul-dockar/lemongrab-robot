@@ -31,12 +31,8 @@ void interrupt isr(void) {
             hb_led_counter = 0;
         }
 
-        if (PB_START||PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){
+        if (PB_SCAN||PB_DRIVE_4M||PB_DRVE_SQUARE||PB_FIND_WALL){
             pb_debounce_count++;
-            if (debounce(pb_debounce_count) && PB_START) {  //NOTE THIS SINGLE FOLLOWING PB IS TEMP TEST CODE
-                pb_start_pressed = 1;
-                pb_release = 0;
-            }
             if (debounce(pb_debounce_count) && PB_SCAN) {
                 pb_scan_pressed = 1;
                 pb_release = 0;

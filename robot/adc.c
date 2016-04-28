@@ -45,8 +45,8 @@ unsigned int round (float x) {
 }
 
 int sensorDistance (void){
-    volatile int high_byte, low_byte;			
-    volatile int final_byte;
+    char high_byte, low_byte;			
+    int final_byte;
 	ser_putch(142); 							//get sensor data
 	ser_putch(19); 
 	high_byte = ser_getch();							//store sensor data to high
@@ -57,4 +57,19 @@ int sensorDistance (void){
     __delay_ms(15);
     
     return final_byte;
+}
+
+int angleDistance (void){
+    char high_angle, low_angle;
+    int final_angle;
+    ser_putch(142);
+    ser_putch(20);
+    high_angle = ser_getch();
+    low_angle = ser_getch();
+    
+    final_angle = (high_angle << 8 | low_angle);
+    
+    __delay_ms(15);
+    
+    return final_angle;
 }

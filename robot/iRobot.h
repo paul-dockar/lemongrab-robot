@@ -12,10 +12,13 @@
 #define     SONG_PLAYING    37			//indicates if a song is currently being played
 #define     PLAY_SONG       141			//play a song (0 - 15)
 #define     SONG            140			//define a song
+int distance_travel = 0;
+int angle_turn = 0;
 
 void setupIRobot(void);
+void moveStraight(void);
 void drive(char opscode, char right_high, char right_low, char left_high, char left_low);
 void stop(void);
 void figureEightTest(void);
-void moveStraight(void);
+
 #endif	/* IROBOT_H */
