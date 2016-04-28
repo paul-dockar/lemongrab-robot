@@ -27,7 +27,7 @@ void moveSquare(void) {
     total_distance_travel = 0;
     distance_travel = 0;
     
-    int temp_distance = 0;
+    int last_distance = 0;
     
     char i = 0;
     for (i; i!=4; i++) {
@@ -35,21 +35,22 @@ void moveSquare(void) {
 
         while (distance_travel <= 1000) {
             distance_travel += sensorDistance();
-            total_distance_travel = distance_travel + (temp_distance);
+            total_distance_travel = distance_travel + (last_distance);
             lcdSetCursor(0x40);
             lcdWriteToDigitBCD (total_distance_travel);
             lcdWriteString("cm driven   ");
         }
         drive(DRIVE,0,0);
-        __delay_ms(200);
+        __delay_ms(800);
         drive(DRIVE,195,-200);
 
-        while(angle_turn < 90) {
+        while(angle_turn < 92) {
         angle_turn += angleDistance();
         }
         drive(DRIVE,0,0);
+        __delay_ms(800);
         
-        temp_distance += distance_travel;
+        last_distance += distance_travel;
         distance_travel = 0;
         angle_turn = 0;
     }
