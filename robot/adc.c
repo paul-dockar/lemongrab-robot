@@ -44,17 +44,17 @@ unsigned int round (float x) {
     return (unsigned int)(x + 0.5f);
 }
 
-int sensordistance (void)
-{
-    volatile int highbyte, lowbyte;			
-    volatile int finalbyte;
+int sensorDistance (void){
+    volatile int high_byte, low_byte;			
+    volatile int final_byte;
 	ser_putch(142); 							//get sensor data
 	ser_putch(19); 
-	highbyte = ser_getch();							//store sensor data to high
-	lowbyte = ser_getch();	
+	high_byte = ser_getch();							//store sensor data to high
+	low_byte = ser_getch();	
     
-    finalbyte = (highbyte << 8 | lowbyte);
+    final_byte = (high_byte << 8 | low_byte);
     
-    return finalbyte;
-   
+    __delay_ms(15);
+    
+    return final_byte;
 }

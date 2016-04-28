@@ -17,5 +17,5 @@ void setupIRobot(void);
 void drive(char opscode, char right_high, char right_low, char left_high, char left_low);
 void stop(void);
 void figureEightTest(void);
-
+void moveStraight(void);
 #endif	/* IROBOT_H */
