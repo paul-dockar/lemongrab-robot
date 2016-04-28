@@ -11,7 +11,7 @@ void setupIRobot(void) {
 
 void moveStraight(void) {
     distance_travel = 0;
-    drive(DRIVE, 0, 200, 0, 200);
+    drive(DRIVE,500,500);
     
     while (distance_travel < 4000) {
         distance_travel += sensorDistance();
@@ -20,7 +20,7 @@ void moveStraight(void) {
        
         lcdWriteString("cm driven   ");
     }
-    drive(DRIVE,0,0,0,0);
+    drive(DRIVE,0,0);
 }
 void moveSquare(void) {
     angle_turn = 0;
@@ -31,7 +31,7 @@ void moveSquare(void) {
 //        
 //    }
 
-    drive(DRIVE, 0, 200, 0, 200);
+    drive(DRIVE,500,500);
     
     while (distance_travel <= 1000) {
         distance_travel += sensorDistance();
@@ -40,24 +40,27 @@ void moveSquare(void) {
        
         lcdWriteString("cm driven   ");
     }
-    drive(DRIVE,0,0,0,0);
+    drive(DRIVE,0,0);
     __delay_ms(200);
-    drive(DRIVE,0,200,0,-200);
+    drive(DRIVE,500,-500);
 
     while(angle_turn < 90) {
     angle_turn += angleDistance();
     }
-    drive(DRIVE,0,0,0,0);
-
+    drive(DRIVE,0,0);
 }
 
-void drive(char opscode, char right_high, char right_low, char left_high, char left_low) {
-    //change this function to take in just right and high ints, convert to high low chars
-    //adc_raw = (ADRESH << 2) | (ADRESL >> 6)
-//    int temp = right_wheel;
-//    
-//    right_high = (right_wheel << 8)
-//    
+void drive(char opscode, int right_wheel, int left_wheel) {
+    char right_high = 0;
+    char right_low = 0;
+    char left_high = 0;
+    char left_low = 0;
+    
+    right_high = (right_wheel >> 8);
+    right_low = right_wheel;
+    left_high = (left_wheel >> 8);
+    left_low = left_wheel;
+
     ser_putch(opscode); 
     __delay_ms(5); 
     ser_putch(right_high); 
