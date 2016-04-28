@@ -31,7 +31,7 @@ void main (void) {
 void buttonControl (void) {
     //pb_start_pressed is temporary code. remove when ready
     if (pb_start_pressed) {
-        startTest();
+        moveStraight();
         pb_start_pressed = 0;
     }
     if (pb_scan_pressed) {
@@ -39,7 +39,7 @@ void buttonControl (void) {
         pb_scan_pressed = 0;
     }
     if (pb_drive_4m_pressed) {
-        moveCW(100);
+        startTest();
         pb_drive_4m_pressed = 0;
     }
     if (pb_drive_square_pressed) {
