@@ -21,6 +21,7 @@ void setup (void) {
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main (void) {
     setup();
+    lcdWriteToDigitBCD(displayBattery());
     while (1) {
         buttonControl();
         adcDisplay();
