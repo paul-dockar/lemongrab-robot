@@ -8,5 +8,6 @@ unsigned int getAdc(void);                      //converts ADRESH and ADRESL int
 unsigned int getAdcDist(unsigned int adc_raw);  //takes converted adc variable and converts into cm according to characterisation equation
 void adcDisplay (void);                         //writes ADC distance in cm to LCD
 unsigned int round (float x);                   //rounds float to int
+int sensordistance (void);
 
 #endif	/* ADC_H */
