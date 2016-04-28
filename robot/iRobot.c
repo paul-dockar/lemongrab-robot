@@ -16,8 +16,6 @@ void drive(char opscode, char right_high, char right_low, char left_high, char l
 //    
 //    right_high = (right_wheel << 8)
 //    
-    
-    
     ser_putch(opscode); 
     __delay_ms(5); 
     ser_putch(right_high); 
@@ -46,4 +44,24 @@ void figureEightTest(void) {
     __delay_ms(5); 
     ser_putch(4); 
     __delay_ms(5); 
+}
+
+void moveStraight(void)
+{
+    int distance_travel = 0;
+    
+    
+    drive(DRIVE, 0, 200, 0, 200);
+    
+    while (distance_travel < 4000)
+    {
+        distance_travel += sensorDistance();
+        lcdSetCursor(0x40);
+        lcdWriteToDigitBCD (distance_travel);
+       
+        lcdWriteString("cm");
+    }
+
+    drive(DRIVE,0,0, 0, 0);
+
 }
