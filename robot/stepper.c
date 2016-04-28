@@ -42,7 +42,7 @@ void moveCCW (unsigned int steps) {
 void findClosestWall(void) {
     new_adc_distance = getAdc();
 
-    if (new_adc_distance > closest_adc_distance) {
+        if (new_adc_distance < closest_adc_distance) {
         closest_adc_distance = new_adc_distance;
         scan_360_ccw_step_count = 0;
     }

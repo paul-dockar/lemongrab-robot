@@ -22,10 +22,10 @@
 
 #define _XTAL_FREQ      20000000        //oscillator (Hz)
 #define HB_LED          RB0             //set PortB Pin 0 for heartbeat LED
-#define PB_SCAN         !RB1            //set PortB Pin 2 for pushbutton scan closest wall
-#define PB_DRIVE_4M     !RB2            //set PortB Pin 3 for pushbutton drive 4m straight line
-#define PB_DRVE_SQUARE  !RB3            //set PortB Pin 4 for pushbutton drive 1m square
-#define PB_FIND_WALL    !RB4            //set PortB Pin 5 for pushbutton drive along closest wall
+#define PB_SCAN         !RB1            //set PortB Pin 1 for pushbutton scan closest wall
+#define PB_DRIVE_4M     !RB2            //set PortB Pin 2 for pushbutton drive 4m straight line
+#define PB_DRVE_SQUARE  !RB3            //set PortB Pin 3 for pushbutton drive 1m square
+#define PB_FIND_WALL    !RB4            //set PortB Pin 4 for pushbutton drive along closest wall
 
 volatile bit pb_scan_pressed;           //push button flag for PB_SCAN
 volatile bit pb_drive_4m_pressed;       //push button flag for PB_DRIVE_4M

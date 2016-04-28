@@ -78,3 +78,16 @@ void drive(char opscode, int right_wheel, int left_wheel) {
     ser_putch(left_low);
     __delay_ms(5);
 }
+
+int displayBattery (void) {
+    char high_byte, low_byte;			
+    int final_byte;
+	ser_putch(142); 							//get sensor data
+	ser_putch(25); 
+	high_byte = ser_getch();							//store sensor data to high
+	low_byte = ser_getch();	
+    
+    final_byte = (high_byte << 8 | low_byte);
+    
+    return final_byte;
+}
