@@ -5,7 +5,7 @@ volatile unsigned char  pb_debounce_count = 0;  //push button debounce counter
 volatile bit            pb_release = 0;         //push button flag when no buttons are pressed
 
 //sets up pic interrupt registers, also push button/led input/output for portB
-void setupInterrupt (void) {
+void setupInterrupt(void) {
     TRISB = 0b00111110;
     PEIE = 1;
     GIE = 1;
@@ -18,7 +18,7 @@ void setupInterrupt (void) {
 //Interrupt function for the PIC. Uses timer0 interrupt overflow
 //Controls heartbeat LED
 //Controls push button debouncing and setting of push button flags
-void interrupt isr (void) {
+void interrupt isr(void) {
     ser_int();
 
     if (T0IF) {
@@ -58,7 +58,7 @@ void interrupt isr (void) {
 }
 
 //takes debounce counter and returns 1 if counter is > DEBOUNCE_REQ_COUNT
-bit debounce (unsigned char count) {
+bit debounce(unsigned char count) {
     if (count > DEBOUNCE_REQ_COUNT && pb_release) {
         return 1;
     }

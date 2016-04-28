@@ -26,8 +26,8 @@ void setupIRobot(void);
 void moveStraight(void);
 void moveSquare(void);
 void drive(int right_wheel, int left_wheel);
-int distanceAngleSensor (char packet_id);
-unsigned int sensorPacket (char packet_id);
-void writeDistanceToLcd (int distance);
+int distanceAngleSensor(char packet_id);
+unsigned int sensorPacket(char packet_id);
+void writeDistanceToLcd(int distance);
 
 #endif	/* IROBOT_H */

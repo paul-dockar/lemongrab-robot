@@ -32,8 +32,8 @@ volatile bit pb_drive_4m_pressed;       //push button flag for PB_DRIVE_4M
 volatile bit pb_drive_square_pressed;   //push button flag for PB_DRVE_SQUARE
 volatile bit pb_find_wall_pressed;      //push button flag for PB_FIND_WALL
 
-void setup (void);                      //calls all other module setup functions
-void main (void);                       //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
-void buttonControl (void);              //checks all push button flags. if one is true then call that desired function
+void setup(void);                       //calls all other module setup functions
+void main(void);                        //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
+void buttonControl(void);               //checks all push button flags. if one is true then call that desired function
 
 #endif	/* MAIN_H */
