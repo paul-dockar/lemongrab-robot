@@ -12,16 +12,15 @@ void setup (void) {
     __delay_ms(5000);               //5 second startup delay to filter out irobot create serial crap
     
     setupInterrupt();               //calls pic interrupt setup function
+    setupIRobot();                  //calls irobot create setup function
     setupSPI();                     //calls spi setup function for stepper motor control
     setupADC();                     //calls adc setup function for ir reading control
     setupLCD();                     //calls lcd setup function to allow writing to lcd
-    setupIRobot();                  //calls irobot create setup function
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main (void) {
     setup();
-    lcdWriteToDigitBCD(displayBattery());
     while (1) {
         buttonControl();
         adcDisplay();

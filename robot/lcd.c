@@ -16,6 +16,10 @@ void setupLCD(void) {
     lcdWriteControl(0b00000110);    //move to first digit
     lcdWriteControl(0b00000010);    //entry mode setup
     
+    lcdSetCursor(0x00);
+    lcdWriteToDigitBCD(displayBattery());
+    __delay_ms(5000);
+    
     lcdSetCursor(0x40);
     lcdWriteString("0cm driven   ");
 }

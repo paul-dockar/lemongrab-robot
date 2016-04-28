@@ -83,7 +83,5 @@ int displayBattery (void) {
     
     final_byte = (high_byte << 8 | low_byte);
     
-    __delay_ms(5000);
-    
     return final_byte;
 }
