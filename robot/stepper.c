@@ -13,7 +13,7 @@ void scan360 (unsigned int steps){
     spi_transfer(CW_control_byte);
     
 	for(steps; steps!=0; steps--){
-        findClosestWall();
+        //findClosestWall();
         SM_STEP();
 		__delay_ms(10);
 	}
