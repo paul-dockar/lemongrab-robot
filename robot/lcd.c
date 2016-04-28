@@ -15,13 +15,22 @@ void setupLCD(void) {
     lcdWriteControl(0b00001100);    //turn display on
     lcdWriteControl(0b00000110);    //move to first digit
     lcdWriteControl(0b00000010);    //entry mode setup
+    lcdWriteControl(0b00000001);    //clear display
     
     lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(displayBattery());
-    __delay_ms(5000);
+    lcdWriteToDigitBCD(displayBatteryCharge());
+    lcdWriteString("/");
+    lcdWriteToDigitBCD(displayBatteryCapacity());
+    lcdWriteString("mAh");
     
     lcdSetCursor(0x40);
-    lcdWriteString("0cm driven   ");
+    lcdWriteToDigitBCDx6(displayBatteryVoltage());
+    lcdWriteString("mV");
+    __delay_ms(8000);
+    lcdWriteControl(0b00000001);    //clear display
+    
+    lcdSetCursor(0x40);
+    lcdWriteString("0cm driven      ");
 }
 
 //write controls to LCD
@@ -86,4 +95,47 @@ void lcdWriteToDigitBCD(unsigned int data) {
     if (data >= 100)  lcdWriteData(hundreds_digit + 48);
     if (data >= 10)   lcdWriteData(tens_digit + 48);
     if (data >= 0)    lcdWriteData(ones_digit + 48);
+}
+
+void lcdWriteToDigitBCDx6(unsigned int data) {
+    unsigned int    ones_digit;
+    unsigned char   tens_digit, hundreds_digit, thousands_digit, ten_thousands_digit, hund_thousands_digit;
+
+    //load number to be converted into OnesDigit
+    ones_digit = data;
+    tens_digit = 0;
+    hundreds_digit = 0;
+    thousands_digit = 0;
+    ten_thousands_digit = 0;
+    hund_thousands_digit = 0;
+
+    //Perform a BCD Conversion
+    while (ones_digit >= 100000){
+        ones_digit = ones_digit - 100000;
+        hund_thousands_digit++;
+    }
+    while (ones_digit >= 10000){
+        ones_digit = ones_digit - 10000;
+        ten_thousands_digit++;
+    }
+    while (ones_digit >= 1000){
+        ones_digit = ones_digit - 1000;
+        thousands_digit++;
+    }
+    while (ones_digit >= 100){
+        ones_digit = ones_digit - 100;
+        hundreds_digit++;
+    }
+    while (ones_digit >= 10){
+        ones_digit = ones_digit - 10;
+        tens_digit++;
+    }
+   
+    
+    lcdWriteData(hund_thousands_digit + 48);
+    lcdWriteData(ten_thousands_digit + 48);
+    lcdWriteData(thousands_digit + 48);
+    lcdWriteData(hundreds_digit + 48);
+    lcdWriteData(tens_digit + 48);
+    lcdWriteData(ones_digit + 48);
 }

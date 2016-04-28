@@ -20,6 +20,7 @@ void setupIRobot(void);
 void moveStraight(void);
 void moveSquare(void);
 void drive(char opscode, int right_wheel, int left_wheel);
-int displayBattery (void);
+int displayBatteryCharge (void);
+int displayBatteryCapacity (void) ;
 
 #endif	/* IROBOT_H */

@@ -18,7 +18,7 @@ void moveStraight(void) {
         lcdSetCursor(0x40);
         lcdWriteToDigitBCD (total_distance_travel);
        
-        lcdWriteString("cm driven   ");
+        lcdWriteString("cm driven    ");
     }
     drive(DRIVE,0,0);
 }
@@ -33,18 +33,18 @@ void moveSquare(void) {
     for (i; i!=4; i++) {
         drive(DRIVE,195,200);
 
-        while (distance_travel <= 1000) {
+        while (distance_travel <= 998) {
             distance_travel += sensorDistance();
             total_distance_travel = distance_travel + (last_distance);
             lcdSetCursor(0x40);
             lcdWriteToDigitBCD (total_distance_travel);
-            lcdWriteString("cm driven   ");
+            lcdWriteString("cm driven    ");
         }
         drive(DRIVE,0,0);
         __delay_ms(800);
         drive(DRIVE,195,-200);
 
-        while(angle_turn < 92) {
+        while(angle_turn < 90) {
         angle_turn += angleDistance();
         }
         drive(DRIVE,0,0);
@@ -79,12 +79,38 @@ void drive(char opscode, int right_wheel, int left_wheel) {
     __delay_ms(5);
 }
 
-int displayBattery (void) {
-    char high_byte, low_byte;			
+int displayBatteryCharge (void) {
+    unsigned char high_byte, low_byte;			
     int final_byte;
 	ser_putch(142); 							//get sensor data
 	ser_putch(25); 
 	high_byte = ser_getch();							//store sensor data to high
+	low_byte = ser_getch();	
+    
+    final_byte = (high_byte << 8 | low_byte);
+    
+    return final_byte;
+}
+
+int displayBatteryCapacity (void) {
+    unsigned char high_byte, low_byte;			
+    int final_byte;
+	ser_putch(142);
+	ser_putch(26); 
+	high_byte = ser_getch();
+	low_byte = ser_getch();	
+    
+    final_byte = (high_byte << 8 | low_byte);
+    
+    return final_byte;
+}
+
+int displayBatteryVoltage (void) {
+    unsigned char high_byte, low_byte;			
+    int final_byte;
+	ser_putch(142);
+	ser_putch(22); 
+	high_byte = ser_getch();
 	low_byte = ser_getch();	
     
     final_byte = (high_byte << 8 | low_byte);

@@ -46,7 +46,7 @@ void adcDisplay (void) {
     if (average_adc > 80) lcdWriteToDigitBCD(getAdcDist(average_adc));
     else lcdWriteString(">160");
     
-    lcdWriteString("cm IR   ");
+    lcdWriteString("cm IR    ");
 }
 
 //rounds float to int
