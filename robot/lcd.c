@@ -15,6 +15,9 @@ void setupLCD(void) {
     lcdWriteControl(0b00001100);    //turn display on
     lcdWriteControl(0b00000110);    //move to first digit
     lcdWriteControl(0b00000010);    //entry mode setup
+    
+    lcdSetCursor(0x40);
+    lcdWriteString("0cm driven   ");
 }
 
 //write controls to LCD
@@ -75,8 +78,8 @@ void lcdWriteToDigitBCD(unsigned int data) {
         tens_digit++;
     }
    
-    lcdWriteData(thousands_digit + 48);
-    lcdWriteData(hundreds_digit + 48);
-    lcdWriteData(tens_digit + 48);
-    lcdWriteData(ones_digit + 48);
+    if (data >= 1000) lcdWriteData(thousands_digit + 48);
+    if (data >= 100)  lcdWriteData(hundreds_digit + 48);
+    if (data >= 10)   lcdWriteData(tens_digit + 48);
+    if (data >= 0)    lcdWriteData(ones_digit + 48);
 }

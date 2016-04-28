@@ -17,8 +17,7 @@ int angle_turn = 0;
 
 void setupIRobot(void);
 void moveStraight(void);
+void moveSquare(void);
 void drive(char opscode, char right_high, char right_low, char left_high, char left_low);
-void stop(void);
-void figureEightTest(void);
 
 #endif	/* IROBOT_H */

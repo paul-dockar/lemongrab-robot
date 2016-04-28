@@ -30,6 +30,7 @@ void main (void) {
 //checks all push button flags. if one is true then call that desired function
 void buttonControl (void) {
     if (pb_scan_pressed) {
+        moveSquare();
         scan360(400);
         pb_scan_pressed = 0;
     }

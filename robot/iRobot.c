@@ -1,6 +1,6 @@
 #include "iRobot.h"
 
-void setupIRobot(void){
+void setupIRobot(void) {
     ser_init();
     
     ser_putch(START);
@@ -9,20 +9,20 @@ void setupIRobot(void){
     __delay_ms(5);
 }
 
-void moveStraight(void){
+void moveStraight(void) {
     distance_travel = 0;
     drive(DRIVE, 0, 200, 0, 200);
     
-    while (distance_travel < 4000){
+    while (distance_travel < 4000) {
         distance_travel += sensorDistance();
         lcdSetCursor(0x40);
         lcdWriteToDigitBCD (distance_travel);
        
-        lcdWriteString("cm");
+        lcdWriteString("cm driven   ");
     }
     drive(DRIVE,0,0,0,0);
 }
-void moveSquare(void){
+void moveSquare(void) {
     angle_turn = 0;
     distance_travel = 0;
     
@@ -33,28 +33,25 @@ void moveSquare(void){
 
     drive(DRIVE, 0, 200, 0, 200);
     
-    while (distance_travel <= 1000){
+    while (distance_travel <= 1000) {
         distance_travel += sensorDistance();
         lcdSetCursor(0x40);
         lcdWriteToDigitBCD (distance_travel);
        
-        lcdWriteString("cm");
+        lcdWriteString("cm driven   ");
     }
     drive(DRIVE,0,0,0,0);
     __delay_ms(200);
     drive(DRIVE,0,200,0,-200);
 
-    while(angle_turn < 90){
+    while(angle_turn < 90) {
     angle_turn += angleDistance();
     }
     drive(DRIVE,0,0,0,0);
-    
 
-    
-    
 }
 
-void drive(char opscode, char right_high, char right_low, char left_high, char left_low){
+void drive(char opscode, char right_high, char right_low, char left_high, char left_low) {
     //change this function to take in just right and high ints, convert to high low chars
     //adc_raw = (ADRESH << 2) | (ADRESL >> 6)
 //    int temp = right_wheel;
@@ -71,22 +68,4 @@ void drive(char opscode, char right_high, char right_low, char left_high, char l
     __delay_ms(5); 
     ser_putch(left_low);
     __delay_ms(5);
-}
-
-void stop(void){
-    ser_putch(DRIVE); 
-    __delay_ms(5); 
-    
-    unsigned char i = 4;
-    for (i; i!=0; i--) {
-        ser_putch(0);
-        __delay_ms(5);
-    }    
-}
-
-void figureEightTest(void) {
-    ser_putch(136); 
-    __delay_ms(5); 
-    ser_putch(4); 
-    __delay_ms(5); 
 }
