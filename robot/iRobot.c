@@ -8,7 +8,16 @@ void setupIRobot(void){
     ser_putch(FULL);
     __delay_ms(5);
 }
-void drive(unsigned char opscode, unsigned char right_high, unsigned char right_low, unsigned char left_high, unsigned char left_low){
+
+void drive(char opscode, char right_high, char right_low, char left_high, char left_low){
+    //change this function to take in just right and high ints, convert to high low chars
+    //adc_raw = (ADRESH << 2) | (ADRESL >> 6)
+//    int temp = right_wheel;
+//    
+//    right_high = (right_wheel << 8)
+//    
+    
+    
     ser_putch(opscode); 
     __delay_ms(5); 
     ser_putch(right_high); 
@@ -24,14 +33,12 @@ void drive(unsigned char opscode, unsigned char right_high, unsigned char right_
 void stop(void){
     ser_putch(DRIVE); 
     __delay_ms(5); 
-    ser_putch(0); 
-    __delay_ms(5); 
-    ser_putch(0); 
-    __delay_ms(5); 
-    ser_putch(0); 
-    __delay_ms(5); 
-    ser_putch(0);
-    __delay_ms(5);
+    
+    unsigned char i = 4;
+    for (i; i!=0; i--) {
+        ser_putch(0);
+        __delay_ms(5);
+    }    
 }
 
 void figureEightTest(void) {

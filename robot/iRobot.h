@@ -14,7 +14,7 @@
 #define     SONG            140			//define a song
 
 void setupIRobot(void);
-void drive(unsigned char opscode, unsigned char right_high, unsigned char right_low, unsigned char left_high, unsigned char left_low);
+void drive(char opscode, char right_high, char right_low, char left_high, char left_low);
 void stop(void);
 void figureEightTest(void);
 
