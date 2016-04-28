@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-//OPSCODES
+//OPCODES
 #define     START               128			//Create start command
 #define     FULL                132			//Create full control command
 #define     DRIVE               145			//Create Drive Direct command
@@ -13,8 +13,9 @@
 #define     SONG_PLAYING        37			//indicates if a song is currently being played
 #define     PLAY_SONG           141			//play a song (0 - 15)
 #define     SONG                140			//define a song
+#define     SENSORS             142         //Create sensor command
 
-//SENSOR PACKET_ID's for OPSCODE 142
+//SENSOR PACKET_ID's for OPCODE 142
 #define     DISTANCE            19          //distance in mm
 #define     ANGLE               20          //angle in degrees
 #define     VOLTAGE             22          //voltage in mV
@@ -27,5 +28,6 @@ void moveSquare(void);
 void drive(int right_wheel, int left_wheel);
 int distanceAngleSensor (char packet_id);
 unsigned int sensorPacket (char packet_id);
+void writeDistanceToLcd (int distance);
 
 #endif	/* IROBOT_H */

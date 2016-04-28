@@ -14,9 +14,7 @@ void moveStraight(void) {
     while (total_distance_travel < 4000) {
         total_distance_travel += distanceAngleSensor(DISTANCE);
         
-        lcdSetCursor(0x40);
-        lcdWriteToDigitBCD(total_distance_travel);
-        lcdWriteString("cm driven    ");
+        writeDistanceToLcd(total_distance_travel);
     }
     drive(0,0);
 }
@@ -37,9 +35,7 @@ void moveSquare(void) {
             distance_travel += distanceAngleSensor(DISTANCE);
             total_distance_travel = distance_travel + last_distance;
             
-            lcdSetCursor(0x40);
-            lcdWriteToDigitBCD(total_distance_travel);
-            lcdWriteString("mm driven    ");
+            writeDistanceToLcd(total_distance_travel);
         }
         
         //After 1m, stop then start turning on the spot
@@ -87,7 +83,7 @@ int distanceAngleSensor (char packet_id) {
     char high_byte, low_byte;			
     int final_byte;
     
-	ser_putch(142);
+	ser_putch(SENSORS);
 	ser_putch(packet_id); 
     
 	high_byte = ser_getch();
@@ -103,7 +99,7 @@ unsigned int sensorPacket (char packet_id) {
     unsigned char high_byte, low_byte;			
     unsigned int final_byte;
     
-	ser_putch(142);
+	ser_putch(SENSORS);
 	ser_putch(packet_id); 
     
 	high_byte = ser_getch();
@@ -112,4 +108,10 @@ unsigned int sensorPacket (char packet_id) {
     __delay_ms(15);
     
     return final_byte = (high_byte << 8 | low_byte);
+}
+
+void writeDistanceToLcd (int distance) {
+        lcdSetCursor(0x40);
+        lcdWriteToDigitBCD(distance);
+        lcdWriteString("mm driven    ");
 }
