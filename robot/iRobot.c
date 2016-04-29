@@ -111,9 +111,9 @@ unsigned int sensorPacket(char packet_id) {
 }
 
 void writeDistanceToLcd(int distance) {
-        lcdSetCursor(0x40);
-        lcdWriteToDigitBCD(distance);
-        lcdWriteString("mm driven    ");
+    lcdSetCursor(0x40);
+    lcdWriteToDigitBCD(distance);
+    lcdWriteString("mm driven    ");
 }
 
 void writeBatteryStatusToLcd(void) {

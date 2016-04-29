@@ -12,6 +12,7 @@ void setupSPI(void){
 unsigned char spi_transfer(unsigned char data){
     unsigned char temp = 0;
 
+    __delay_ms(10);
     SSPIF = 0;
     SSPBUF = data;
 
@@ -19,6 +20,5 @@ unsigned char spi_transfer(unsigned char data){
     temp = SSPBUF;
     SSPIF = 0;
 
-    __delay_ms(10);
     return temp;
 }
