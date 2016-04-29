@@ -55,6 +55,7 @@ void moveSquare(void) {
         //Turn 90 degrees
         while(angle_turn < 90) {
             angle_turn += distanceAngleSensor(ANGLE);
+            refreshLcd(total_distance_travel);
         }
 
         //After turning 90 degrees, stop
@@ -68,46 +69,34 @@ void moveSquare(void) {
     }
 }
 
+void wallFollow (void){
+    int angle = 0;
+    int current_angle = 0;
+    scan(400);
+    
+    if(scan_360_closest_step_count > 200){
+        angle = (0.9 * scan_360_closest_step_count) - 180;
+        drive(-195,200);
+    } else {
+        angle = -0.9 * scan_360_closest_step_count;
+        drive(195,-200);
+    }
+    angle = abs(angle);
 
-  void wallFollow (void){
-      int angle = 0;
-      int current_angle = 0;
-      scan(400);
-     
-          if(scan_360_closest_step_count > 200){
-              angle = (0.9 * scan_360_closest_step_count) - 180;
-              drive(-195,200);
-          }
-          else 
-          {
-              angle = -0.9 * scan_360_closest_step_count;
-              drive(195,-200);
-          }
-          
-              
-              
-              
-              angle = abs(angle);
-          
-          //Turn 90 degrees
-          while(angle > current_angle) {
-              current_angle += abs(distanceAngleSensor(ANGLE));
-       
-              lcdSetCursor(0x00);
-              lcdWriteToDigitBCD(angle);
-              lcdSetCursor(0x40);
-              lcdWriteToDigitBCD(current_angle);
-          }
-  
-          //After turning 90 degrees, stop
-          drive(0,0);
-          __delay_ms(800);
-  
-          //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
-          angle = 0;
+    //Turn 90 degrees
+    while(angle > current_angle) {
+        current_angle += abs(distanceAngleSensor(ANGLE));
+        refreshLcd(total_distance_travel);
+    }
+
+    //After turning 90 degrees, stop
+    drive(0,0);
+    __delay_ms(800);
+
+    //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
+    angle = 0;
   }
   
-
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 void drive(int right_wheel, int left_wheel) {
     char right_high = 0;
