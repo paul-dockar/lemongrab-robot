@@ -29,5 +29,6 @@ void drive(int right_wheel, int left_wheel);
 int distanceAngleSensor(char packet_id);
 unsigned int sensorPacket(char packet_id);
 void writeDistanceToLcd(int distance);
+void writeBatteryStatusToLcd(void);
 
 #endif	/* IROBOT_H */

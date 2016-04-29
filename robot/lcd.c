@@ -18,21 +18,9 @@ void setupLCD(void) {
     lcdWriteControl(0b00000010);    //entry mode setup
     lcdWriteControl(0b00000001);    //clear display
 
-    //Display battery condition on startup
-    lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(sensorPacket(BATTERY_CHARGE));
-    lcdWriteString("/");
-    lcdWriteToDigitBCD(sensorPacket(BATTERY_CAPACITY));
-    lcdWriteString("mAh");
-
-    lcdSetCursor(0x40);
-    lcdWriteToDigitBCDx6(sensorPacket(VOLTAGE));
-    lcdWriteString("mV");
-
-    __delay_ms(8000);               //display battery condition for 8 seconds
-
+    writeBatteryStatusToLcd();      //Display battery condition on startup
+    
     lcdWriteControl(0b00000001);    //clear display
-
     lcdSetCursor(0x40);
     lcdWriteString("0mm driven");
 }

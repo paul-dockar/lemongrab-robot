@@ -115,3 +115,17 @@ void writeDistanceToLcd(int distance) {
         lcdWriteToDigitBCD(distance);
         lcdWriteString("mm driven    ");
 }
+
+void writeBatteryStatusToLcd(void) {
+    lcdSetCursor(0x00);
+    lcdWriteToDigitBCD(sensorPacket(BATTERY_CHARGE));
+    lcdWriteString("/");
+    lcdWriteToDigitBCD(sensorPacket(BATTERY_CAPACITY));
+    lcdWriteString("mAh");
+
+    lcdSetCursor(0x40);
+    lcdWriteToDigitBCDx6(sensorPacket(VOLTAGE));
+    lcdWriteString("mV");
+
+    __delay_ms(8000);               //display battery condition for 8 seconds
+}
