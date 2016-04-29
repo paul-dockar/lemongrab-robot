@@ -22,6 +22,10 @@
 #define     BATTERY_CHARGE      25          //battery current charge in mAh
 #define     BATTERY_CAPACITY    26          //battery capacity in mAh
 
+//WHEEL SPEED DEFINES
+#define     RIGHT_WHEEL_VELOCITY    195
+#define     LEFT_WHEEL_VELOCITY     200
+
 int total_distance_travel;
 
 void setupIRobot(void);

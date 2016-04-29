@@ -2,6 +2,8 @@
 
 int total_distance_travel = 0;
 
+volatile bit cw_flag = 0;
+
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
@@ -18,7 +20,7 @@ void distanceDisplay(int distance) {
 void moveStraight(void){
     total_distance_travel = 0;
     
-    drive(195,200);
+    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
     while (total_distance_travel < 4000) {
         total_distance_travel += distanceAngleSensor(DISTANCE);
 
@@ -37,7 +39,7 @@ void moveSquare(void) {
 
     char i = 4;
     for (i; i!=0; i--) {
-        drive(195,200);
+        drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
 
         //Drive 1m forward
         while (current_distance_travel <= 995) {
@@ -50,7 +52,7 @@ void moveSquare(void) {
         //After 1m, stop then start turning on the spot
         drive(0,0);
         __delay_ms(800);
-        drive(195,-200);
+        drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
 
         //Turn 90 degrees
         while(angle_turn < 90) {
@@ -72,19 +74,21 @@ void moveSquare(void) {
 void wallFollow (void){
     int angle = 0;
     int current_angle = 0;
-    scan(400);
+    total_distance_travel = 0;
+    scanCw(400);
     
     if(scan_360_closest_step_count > 200){
-        angle = (0.9 * scan_360_closest_step_count) - 180;
-        drive(-195,200);
+        angle = (400 - scan_360_closest_step_count) * 0.9;
+        drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+        cw_flag = 1;
     } else {
-        angle = -0.9 * scan_360_closest_step_count;
-        drive(195,-200);
+        angle = scan_360_closest_step_count * 0.9;
+        drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
+        cw_flag = 0;
     }
-    angle = abs(angle);
 
     //Turn 90 degrees
-    while(angle > current_angle) {
+    while(angle >= current_angle) {
         current_angle += abs(distanceAngleSensor(ANGLE));
         refreshLcd(total_distance_travel);
     }
@@ -92,9 +96,26 @@ void wallFollow (void){
     //After turning 90 degrees, stop
     drive(0,0);
     __delay_ms(800);
-
-    //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
-    angle = 0;
+    
+    if (cw_flag) moveCCW(400 - scan_360_closest_step_count);
+    if (!cw_flag) moveCW(400 - scan_360_closest_step_count);
+    
+    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    
+    scanCw(100);
+    while (closest_adc_distance > 30) {
+        scanCcw(200);
+        scanCw(200);
+    }
+    
+    drive(0,0);
+    
+    if (scan_counter < 0) {
+        moveCW(abs(scan_counter));
+    } else if (scan_counter >= 0) {
+        moveCCW(abs(scan_counter));
+    }
+    
   }
   
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
