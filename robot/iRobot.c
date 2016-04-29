@@ -57,6 +57,7 @@ void moveSquare(void) {
         //Turn 90 degrees
         while(angle_turn < 90) {
             angle_turn += distanceAngleSensor(ANGLE);
+            
             refreshLcd(total_distance_travel);
         }
 
@@ -76,6 +77,7 @@ void wallFollow (void){
     int current_angle = 0;
     total_distance_travel = 0;
     scanCw(400);
+    moveCCW(scan_360_closest_step_count);
     
     if(scan_360_closest_step_count > 200){
         angle = (400 - scan_360_closest_step_count) * 0.9;
@@ -95,27 +97,48 @@ void wallFollow (void){
 
     //After turning 90 degrees, stop
     drive(0,0);
-    __delay_ms(800);
+    __delay_ms(500);
     
-    if (cw_flag) moveCCW(400 - scan_360_closest_step_count);
-    if (!cw_flag) moveCW(400 - scan_360_closest_step_count);
+    moveCCW(400 - scan_360_closest_step_count);
     
     drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
     
-    scanCw(100);
-    while (closest_adc_distance > 30) {
-        scanCcw(200);
-        scanCw(200);
+    //drive forward till 30cm from wall
+    scanCw(50);
+    while (getAdc() < 400) {
+        scanCcw(100);
+        scanCw(100);
     }
     
     drive(0,0);
+    __delay_ms(500);
+    scanCcw(50);
     
-    if (scan_counter < 0) {
-        moveCW(abs(scan_counter));
-    } else if (scan_counter >= 0) {
-        moveCCW(abs(scan_counter));
+    //turn right or left 90 degrees
+    if (cw_flag)  drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
+    if (!cw_flag) drive(+RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    
+    int angle_turn = 0;
+    while(angle_turn < 90) {
+        angle_turn += distanceAngleSensor(ANGLE);
+
+        refreshLcd(total_distance_travel);
     }
     
+    //drive forward when perpendicular
+    drive(0,0);
+    __delay_ms(500);
+    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    
+    if (cw_flag) scanCcw(50);
+    if (!cw_flag) scanCw(50);
+    while ((getAdc() < 400) && (getAdc() > 250)) {
+        continue;
+    }
+    drive(0,0);
+    if (cw_flag) scanCw(50);
+    if (!cw_flag) scanCcw(50);
+    __delay_ms(500);
   }
   
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
