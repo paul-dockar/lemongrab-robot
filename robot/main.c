@@ -29,7 +29,7 @@ void main(void) {
 //checks all push button flags. if one is true then call that desired function
 void buttonControl(void) {
     if (pb_scan_pressed) {
-        scan360(400);
+        wallFollow();
         pb_scan_pressed = 0;
     }
     if (pb_drive_4m_pressed) {

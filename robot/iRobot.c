@@ -129,3 +129,43 @@ void writeBatteryStatusToLcd(void) {
 
     __delay_ms(4000);               //display battery condition for 8 seconds
 }
+
+void wallFollow (void){
+    int angle = 0;
+    int current_angle = 0;
+    scan360(400);
+   
+        if(scan_360_closest_step_count > 200){
+            angle = (0.9 * scan_360_closest_step_count) - 180;
+            drive(-195,200);
+        }
+        else 
+        {
+            angle = -0.9 * scan_360_closest_step_count;
+            drive(195,-200);
+        }
+        
+            lcdSetCursor(0x00);
+            lcdWriteToDigitBCD(angle);
+            
+            angle = abs(angle);
+        
+        //Turn 90 degrees
+        while(angle > current_angle) {
+            current_angle += distanceAngleSensor(ANGLE);
+        }
+
+        //After turning 90 degrees, stop
+        drive(0,0);
+        __delay_ms(800);
+
+        //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
+        angle = 0;
+}
+
+int abs(int a)
+{
+	if(a < 0)
+		return -a;
+	return a;
+}

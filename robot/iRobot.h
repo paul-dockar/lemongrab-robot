@@ -21,10 +21,11 @@
 #define     VOLTAGE             22          //voltage in mV
 #define     BATTERY_CHARGE      25          //battery current charge in mAh
 #define     BATTERY_CAPACITY    26          //battery capacity in mAh
-
+int abs(int a);
 void setupIRobot(void);
 void moveStraight(void);
 void moveSquare(void);
+void wallFollow (void);
 void drive(int right_wheel, int left_wheel);
 int distanceAngleSensor(char packet_id);
 unsigned int sensorPacket(char packet_id);
