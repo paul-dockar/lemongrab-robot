@@ -145,14 +145,19 @@ void wallFollow (void){
             drive(195,-200);
         }
         
-            lcdSetCursor(0x00);
-            lcdWriteToDigitBCD(angle);
+            
+            
             
             angle = abs(angle);
         
         //Turn 90 degrees
         while(angle > current_angle) {
-            current_angle += distanceAngleSensor(ANGLE);
+            current_angle += abs(distanceAngleSensor(ANGLE));
+     
+            lcdSetCursor(0x00);
+            lcdWriteToDigitBCD(angle);
+            lcdSetCursor(0x40);
+            lcdWriteToDigitBCD(current_angle);
         }
 
         //After turning 90 degrees, stop
