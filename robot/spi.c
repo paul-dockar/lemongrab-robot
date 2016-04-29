@@ -19,5 +19,6 @@ unsigned char spi_transfer(unsigned char data){
     temp = SSPBUF;
     SSPIF = 0;
 
+    __delay_ms(10);
     return temp;
 }

@@ -29,7 +29,8 @@ void main(void) {
 //checks all push button flags. if one is true then call that desired function
 void buttonControl(void) {
     if (pb_scan_pressed) {
-        moveSquare();
+        moveCW(100);
+        moveCCW(100);
         scan360(400);
         pb_scan_pressed = 0;
     }
@@ -37,12 +38,12 @@ void buttonControl(void) {
         moveStraight();
         pb_drive_4m_pressed = 0;
     }
-    if (pb_drive_square_pressed) {
+    if (pb_drive_square_pressed) { //this currently does not work
         moveSquare();
         pb_drive_square_pressed = 0;
     }
     if (pb_find_wall_pressed) {
-        moveCCW(8);
+        moveSquare();
         pb_find_wall_pressed = 0;
     }
 }

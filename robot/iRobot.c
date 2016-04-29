@@ -31,7 +31,7 @@ void moveSquare(void) {
         drive(195,200);
 
         //Drive 1m forward
-        while (current_distance_travel <= 998) {
+        while (current_distance_travel <= 995) {
             current_distance_travel += distanceAngleSensor(DISTANCE);
             total_distance_travel = current_distance_travel + last_distance;
 
@@ -127,5 +127,5 @@ void writeBatteryStatusToLcd(void) {
     lcdWriteToDigitBCDx6(sensorPacket(VOLTAGE));
     lcdWriteString("mV");
 
-    __delay_ms(8000);               //display battery condition for 8 seconds
+    __delay_ms(4000);               //display battery condition for 8 seconds
 }
