@@ -22,14 +22,14 @@ void main(void) {
     setup();
     while (1) {
         buttonControl();
-        adcDisplay();
+        refreshLcd(total_distance_travel);
     }
 }
 
 //checks all push button flags. if one is true then call that desired function
 void buttonControl(void) {
     if (pb_scan_pressed) {
-        scan360(400);
+        scan(400);
         pb_scan_pressed = 0;
     }
     if (pb_drive_4m_pressed) {
@@ -44,4 +44,9 @@ void buttonControl(void) {
         moveSquare();
         pb_find_wall_pressed = 0;
     }
+}
+
+void refreshLcd(int distance) {
+    adcDisplay();
+    distanceDisplay(distance);
 }

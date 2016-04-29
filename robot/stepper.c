@@ -8,7 +8,7 @@ unsigned char ccw_control_byte = 0b00001111;    //stepper motor control byte for
 unsigned char off_control_byte = 0b00000000;
 
 //rotate stepper CW 360 degrees. scan adc distance each half step.
-void scan360(unsigned int steps){
+void scan(unsigned int steps){
     resetADC();
     spi_transfer(cw_control_byte);
 
@@ -18,7 +18,6 @@ void scan360(unsigned int steps){
         __delay_ms(2);
 	}
     spi_transfer(off_control_byte);
-    __delay_ms(500);
     moveCCW(scan_360_closest_step_count);
 }
 

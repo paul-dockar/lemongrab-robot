@@ -9,7 +9,7 @@ int closest_adc_distance;                   //variable to store closest reading 
 unsigned char cw_control_byte;      //stepper motor control byte for; enabled, clockwise, half-steps
 unsigned char ccw_control_byte;     //stepper motor control byte for; enabled, counterclockwise, half-steps
 
-void scan360(unsigned int steps);   //rotate stepper CW 360 degrees. scan adc distance each half step.
+void scan(unsigned int steps);   //rotate stepper CW 360 degrees. scan adc distance each half step.
 void findClosestWall(void);         //takes ADC and checks against old adc value, keeping the closest 'distance'
 void moveCW(unsigned int steps);    //move stepper CW
 void moveCCW(unsigned int steps);   //move stepper CCW

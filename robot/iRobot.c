@@ -1,20 +1,28 @@
 #include "iRobot.h"
 
+int total_distance_travel = 0;
+
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
 }
 
+void distanceDisplay(int distance) {
+    lcdSetCursor(0x40);
+    lcdWriteToDigitBCD(distance);
+    lcdWriteString("mm driven    ");
+}
+
 //move iRobot straight 4m
 void moveStraight(void){
-    int total_distance_travel = 0;
-
+    total_distance_travel = 0;
+    
     drive(195,200);
     while (total_distance_travel < 4000) {
         total_distance_travel += distanceAngleSensor(DISTANCE);
 
-        writeDistanceToLcd(total_distance_travel);
+        refreshLcd(total_distance_travel);
     }
     drive(0,0);
 }
@@ -22,9 +30,10 @@ void moveStraight(void){
 //move iRobot in a 1m square shape
 void moveSquare(void) {
     int angle_turn = 0;
-    int total_distance_travel = 0;
     int current_distance_travel = 0;
     int last_distance = 0;
+    
+    total_distance_travel = 0;
 
     char i = 4;
     for (i; i!=0; i--) {
@@ -35,7 +44,7 @@ void moveSquare(void) {
             current_distance_travel += distanceAngleSensor(DISTANCE);
             total_distance_travel = current_distance_travel + last_distance;
 
-            writeDistanceToLcd(total_distance_travel);
+            refreshLcd(total_distance_travel);
         }
 
         //After 1m, stop then start turning on the spot
@@ -108,12 +117,6 @@ unsigned int sensorPacket(char packet_id) {
     __delay_ms(15);
 
     return final_byte = (high_byte << 8 | low_byte);
-}
-
-void writeDistanceToLcd(int distance) {
-    lcdSetCursor(0x40);
-    lcdWriteToDigitBCD(distance);
-    lcdWriteString("mm driven    ");
 }
 
 void writeBatteryStatusToLcd(void) {

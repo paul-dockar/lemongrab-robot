@@ -19,6 +19,7 @@ unsigned char spi_transfer(unsigned char data){
     while (SSPIF == 0);
     temp = SSPBUF;
     SSPIF = 0;
-
+    __delay_ms(10);
+    
     return temp;
 }
