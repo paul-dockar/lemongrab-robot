@@ -38,6 +38,7 @@ void drive(int right_wheel, int left_wheel);
 int distanceAngleSensor(char packet_id);
 unsigned int sensorPacket(char packet_id);
 unsigned char bumpPacket(char packet_id);
+unsigned bit cliffPacket(void);
 void writeBatteryStatusToLcd(void);
 int abs(int a);
 

@@ -155,6 +155,8 @@ void wallFollow (void){
                 }
             } else if (bumpPacket(BUMP_SENSOR) > 0) {
                 bump_flag = 1;
+            } else if (cliffPacket() == 1) {
+                bump_flag = 1;
             } else {
                 drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
             }
@@ -162,7 +164,7 @@ void wallFollow (void){
         if (bump_flag) {
             drive(0,0);
             __delay_ms(500);
-            drive(-400,-400);
+            drive(-RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
             __delay_ms(2000);
             bump_flag = 0;
         }
@@ -231,6 +233,18 @@ unsigned char bumpPacket(char packet_id) {
     __delay_ms(15);
 
     return bump_byte;
+}
+
+unsigned bit cliffPacket(void) {
+    unsigned char packet_cycle = 9;
+
+	ser_putch(SENSORS);
+    for (packet_cycle; packet_cycle < 13; packet_cycle++) {
+        ser_putch(packet_cycle);
+        if (ser_getch() > 0) return 1;
+        __delay_ms(15);
+    }
+    return 0;
 }
 
 void writeBatteryStatusToLcd(void) {
