@@ -83,10 +83,10 @@ void lcdWriteToDigitBCD(unsigned int data) {
         tens_digit++;
     }
 
-    if (data >= 1000) lcdWriteData(thousands_digit + 48);
-    if (data >= 100)  lcdWriteData(hundreds_digit + 48);
-    if (data >= 10)   lcdWriteData(tens_digit + 48);
-    if (data >= 0)    lcdWriteData(ones_digit + 48);
+    lcdWriteData(thousands_digit + 48);
+    lcdWriteData(hundreds_digit + 48);
+    lcdWriteData(tens_digit + 48);
+    lcdWriteData(ones_digit + 48);
 }
 
 //function accepts char between 0 and 999999 and writes it to lcd display in seperate 6 digits

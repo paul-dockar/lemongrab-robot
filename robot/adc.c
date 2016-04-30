@@ -25,6 +25,11 @@ void adcDisplay(void) {
     lcdWriteString("cm IR    ");
 }
 
+void adcDisplayQuick(int distance) {    
+    lcdSetCursor(0x00);
+    lcdWriteToDigitBCD(distance);
+}
+
 //converts ADRESH and ADRESL into 1 int variable and returns this variable
 int getAdc(void) {
     unsigned int adc_raw = 0;

@@ -104,6 +104,7 @@ void wallFollow (void){
     //drive forward till 30cm from wall
     while (distance > 50) {
         distance = getAdcDist(getAdc());
+        adcDisplayQuick(distance);
     }
     
     drive(0,0);
@@ -124,9 +125,10 @@ void wallFollow (void){
     if (wall_is_right_flag) moveCW(50);
     if (!wall_is_right_flag) moveCCW(50);
     
-        while (1){
-        bump_flag = 0;
+    bump_flag = 0;
+    while (1) {
         distance = getAdcDist(getAdc());
+        adcDisplayQuick(distance);
         
         if (!bump_flag) {
             if (distance > 60 && lost_wall_timer < 5000) {
