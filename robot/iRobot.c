@@ -162,8 +162,10 @@ void wallFollow (void){
         if (bump_flag) {
             drive(0,0);
             __delay_ms(500);
-            drive(-400,-400);
+            drive(-RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
             __delay_ms(2000);
+            drive(0,0);
+            __delay_ms(500);
             bump_flag = 0;
         }
     }
