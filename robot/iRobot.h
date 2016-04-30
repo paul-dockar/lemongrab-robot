@@ -21,6 +21,7 @@
 #define     VOLTAGE             22          //voltage in mV
 #define     BATTERY_CHARGE      25          //battery current charge in mAh
 #define     BATTERY_CAPACITY    26          //battery capacity in mAh
+#define     BUMP_SENSOR          7
 
 //WHEEL SPEED DEFINES
 #define     RIGHT_WHEEL_VELOCITY    195
@@ -36,6 +37,7 @@ void wallFollow(void);
 void drive(int right_wheel, int left_wheel);
 int distanceAngleSensor(char packet_id);
 unsigned int sensorPacket(char packet_id);
+unsigned char bumpPacket(char packet_id);
 void writeBatteryStatusToLcd(void);
 int abs(int a);
 

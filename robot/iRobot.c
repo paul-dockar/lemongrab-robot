@@ -2,8 +2,8 @@
 
 int total_distance_travel = 0;
 
-volatile bit cw_flag = 0;
-
+volatile bit wall_is_right_flag = 0;
+volatile bit bump_flag = 0;
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
@@ -78,14 +78,14 @@ void wallFollow (void){
     scanCw(400);
     moveCCW(scan_360_closest_step_count);
     
-    if(scan_360_closest_step_count > 200){
+    if (scan_360_closest_step_count > 200){
         angle = (400 - scan_360_closest_step_count) * 0.9;
         drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
-        cw_flag = 1;                                                //from initial position, the wall is on the right
+        wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     } else {
         angle = scan_360_closest_step_count * 0.9;
         drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-        cw_flag = 0;                                                //from initial position, the wall is on the left
+        wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     }
 
     //Turn 90 degrees
@@ -110,8 +110,8 @@ void wallFollow (void){
     __delay_ms(500);
     
     //turn right or left 90 degrees
-    if (cw_flag)  drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-    if (!cw_flag) drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    if (wall_is_right_flag)  drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
+    if (!wall_is_right_flag) drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
   
     
     int angle_turn = 0;
@@ -121,49 +121,51 @@ void wallFollow (void){
     
     drive(0,0);
     
-    if (cw_flag) moveCW(50);
-    if (!cw_flag) moveCCW(50);
+    if (wall_is_right_flag) moveCW(50);
+    if (!wall_is_right_flag) moveCCW(50);
     
-    while (1){
+        while (1){
+        bump_flag = 0;
         distance = getAdcDist(getAdc());
-        if (distance > 52) {
-            if (cw_flag) {
-                drive(145,LEFT_WHEEL_VELOCITY);
-            }
-            if (!cw_flag) {
-                drive(RIGHT_WHEEL_VELOCITY,145);
-            }
-
-        } else if (distance < 48) {
-            if (!cw_flag) {
-                drive(145,LEFT_WHEEL_VELOCITY);
-            }
-            if (cw_flag) {
-                drive(RIGHT_WHEEL_VELOCITY,145);
-            }
-        } else {
-            drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
-        }
         
-    } 
-
-	
-//    
-//    //drive forward when perpendicular
-//    drive(0,0);
-//    __delay_ms(500);
-//    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
-//    
-//    if (cw_flag) scanCcw(50);
-//    if (!cw_flag) scanCw(50);
-//    while ((getAdc() < 400) && (getAdc() > 250)) {
-//        continue;
-//    }
-//    drive(0,0);
-//    if (cw_flag) scanCw(50);
-//    if (!cw_flag) scanCcw(50);
-//    __delay_ms(500);
-  }
+        if (!bump_flag) {
+            if (distance > 60 && lost_wall_timer < 5000) {
+                if (wall_is_right_flag) {
+                    drive(150,LEFT_WHEEL_VELOCITY);
+                }
+                if (!wall_is_right_flag) {
+                    drive(RIGHT_WHEEL_VELOCITY,150);
+                }
+            } else if (distance < 48) {
+                lost_wall_timer = 0;
+                if (!wall_is_right_flag) {
+                    drive(-90,LEFT_WHEEL_VELOCITY);
+                }
+                if (wall_is_right_flag) {
+                    drive(RIGHT_WHEEL_VELOCITY,-90);
+                }
+            } else if (distance > 70 && lost_wall_timer >= 5000) {
+                if (!wall_is_right_flag) {
+                    drive(RIGHT_WHEEL_VELOCITY,-80);
+                }
+                if (wall_is_right_flag) {
+                    drive(-80,LEFT_WHEEL_VELOCITY);
+                }
+            } else if (bumpPacket(BUMP_SENSOR) > 0) {
+                bump_flag = 1;
+            } else {
+                drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+            }
+        }
+        if (bump_flag) {
+            drive(0,0);
+            __delay_ms(500);
+            drive(-400,-400);
+            __delay_ms(2000);
+            bump_flag = 0;
+        }
+    }
+}
   
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 void drive(int right_wheel, int left_wheel) {
@@ -214,6 +216,19 @@ unsigned int sensorPacket(char packet_id) {
     __delay_ms(15);
 
     return final_byte = (high_byte << 8 | low_byte);
+}
+
+unsigned char bumpPacket(char packet_id) {
+    unsigned char bump_byte;
+
+	ser_putch(SENSORS);
+	ser_putch(packet_id);
+
+	bump_byte = ser_getch();
+
+    __delay_ms(15);
+
+    return bump_byte;
 }
 
 void writeBatteryStatusToLcd(void) {

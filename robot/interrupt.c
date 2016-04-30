@@ -1,6 +1,7 @@
 #include "interrupt.h"
 
 volatile unsigned int   hb_led_counter = 0;     //timer0 interrupt overflow counter, used for heartbeat led
+volatile unsigned int   lost_wall_timer = 0;
 volatile unsigned char  pb_debounce_count = 0;  //push button debounce counter
 volatile bit            pb_release = 0;         //push button flag when no buttons are pressed
 
@@ -25,6 +26,7 @@ void interrupt isr(void) {
         T0IF = 0;
         TMR0 = TMR0_VAL;
         hb_led_counter++;
+        lost_wall_timer++;
 
         if (hb_led_counter % 500 == 0) {
             HB_LED = !HB_LED;
