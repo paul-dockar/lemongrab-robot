@@ -131,7 +131,7 @@ void wallFollow (void){
         adcDisplayQuick(distance);
         
         if (!bump_flag) {
-            if (distance > 60 && lost_wall_timer < 5000) {
+            if (distance > 60 && lost_wall_timer < 5500) {
                 if (wall_is_right_flag) {
                     drive(150,LEFT_WHEEL_VELOCITY);
                 }
@@ -146,7 +146,7 @@ void wallFollow (void){
                 if (wall_is_right_flag) {
                     drive(RIGHT_WHEEL_VELOCITY,-90);
                 }
-            } else if (distance > 70 && lost_wall_timer >= 5000) {
+            } else if (distance > 70 && lost_wall_timer >= 5500) {
                 if (!wall_is_right_flag) {
                     drive(RIGHT_WHEEL_VELOCITY,-80);
                 }
@@ -201,8 +201,6 @@ int distanceAngleSensor(char packet_id) {
 	high_byte = ser_getch();
 	low_byte = ser_getch();
 
-    __delay_ms(15);
-
     return final_byte = (high_byte << 8 | low_byte);
 }
 
@@ -217,8 +215,6 @@ unsigned int sensorPacket(char packet_id) {
 	high_byte = ser_getch();
 	low_byte = ser_getch();
 
-    __delay_ms(15);
-
     return final_byte = (high_byte << 8 | low_byte);
 }
 
@@ -229,8 +225,6 @@ unsigned char bumpPacket(char packet_id) {
 	ser_putch(packet_id);
 
 	bump_byte = ser_getch();
-
-    __delay_ms(15);
 
     return bump_byte;
 }
