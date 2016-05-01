@@ -21,31 +21,26 @@ void setup(void) {
 void main(void) {
     setup();
     while (1) {
-        buttonControl();
         refreshLcd(total_distance_travel);
-    }
-}
-
-//checks all push button flags. if one is true then call that desired function
-void buttonControl(void) {
-    if (pb_scan_pressed) {
-        scanCw(400);
-        moveCCW(scan_360_closest_step_count);
-        __delay_ms(5000);
-        moveCCW(400 - scan_360_closest_step_count);
-        pb_scan_pressed = 0;
-    }
-    if (pb_drive_4m_pressed) {
-        moveStraight();
-        pb_drive_4m_pressed = 0;
-    }
-    if (pb_drive_square_pressed) {
-        moveSquare();
-        pb_drive_square_pressed = 0;
-    }
-    if (pb_find_wall_pressed) {
-        wallFollow();
-        pb_find_wall_pressed = 0;
+        if (pb_scan_pressed) {
+            scanCw(400);
+            moveCCW(scan_360_closest_step_count);
+            __delay_ms(5000);
+            moveCCW(400 - scan_360_closest_step_count);
+            pb_scan_pressed = 0;
+        }
+        if (pb_drive_4m_pressed) {
+            moveStraight();
+            pb_drive_4m_pressed = 0;
+        }
+        if (pb_drive_square_pressed) {
+            moveSquare();
+            pb_drive_square_pressed = 0;
+        }
+        if (pb_find_wall_pressed) {
+            wallFollow();
+            pb_find_wall_pressed = 0;
+        }
     }
 }
 

@@ -44,16 +44,11 @@ int getAdcDist(int adc_raw) {
     int adc_distance_cm;
 
     if (adc_raw > 500) {
-        adc_distance_cm = round(1/(((adc_raw)-376)/2520));
+        adc_distance_cm = 1/(((adc_raw)-376)/2520);
     }
     if (adc_raw <= 500) {
-        adc_distance_cm = round(1/(((adc_raw)-7.5403)/11907));
+        adc_distance_cm = 1/(((adc_raw)-7.5403)/11907);
     }
 
     return adc_distance_cm;
-}
-
-//rounds float to int
-int round(float x) {
-    return (int)(x + 0.5f);
 }

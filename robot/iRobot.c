@@ -162,7 +162,7 @@ void wallFollow (void){
                 drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
             }
         }
-        if (bump_flag) {
+        if (bump_flag || cliff_flag) {
             drive(0,0);
             __delay_ms(500);
             drive(-RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
@@ -170,10 +170,7 @@ void wallFollow (void){
             drive(0,0);
             __delay_ms(500);
             bump_flag = 0;
-        }
-        if (cliff_flag){
-            lcdSetCursor (0x0B);
-            lcdWriteString ("cliff");
+            cliff_flag = 0;
         }
     }
 }
