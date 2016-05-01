@@ -32,11 +32,11 @@
 #define     SHARP_LEFT()        drive(RIGHT_WHEEL_200,-80);
 #define     SLOW_RIGHT()        drive(150,LEFT_WHEEL_200);
 #define     SLOW_LEFT()         drive(RIGHT_WHEEL_200,150);
-#define     SPIN_RIGHT()        drive(-100,100);
-#define     SPIN_LEFT()         drive(100,-100);
+#define     SPIN_RIGHT()        drive(-90,100);
+#define     SPIN_LEFT()         drive(90,-100);
 #define     DRIVE_STRAIGHT()    drive(RIGHT_WHEEL_200,LEFT_WHEEL_200);
 #define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_200,-LEFT_WHEEL_200);
-#define     DRIVE_STOP()        drive(0,0); __delay_ms(500);
+#define     DRIVE_STOP()        drive(0,0); __delay_ms(800);
 
 int total_distance_travel;
 

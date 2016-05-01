@@ -53,8 +53,8 @@ void moveSquare(void) {
         
         SPIN_LEFT();
         //Turn 90 degrees
-        while(angle_turn < 90) {
-            angle_turn += abs(distanceAngleSensor(ANGLE));
+        while(angle_turn < 70) {
+            angle_turn += distanceAngleSensor(ANGLE);
         }
 
         //After turning 90 degrees, stop
@@ -76,44 +76,16 @@ void wallFollow (void){
     scanCcw(400);
     moveCW(scan_360_closest_step_count);
     
+    __delay_ms(500);
+    
     if (scan_360_closest_step_count >= 200){
-        angle = (400 - scan_360_closest_step_count) * 0.9;
-        SPIN_LEFT();
         wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     } else {
-        angle = scan_360_closest_step_count * 0.9;
-        SPIN_RIGHT();
         wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
-
-    //Turn 90 degrees
-    while(angle >= current_angle) {
-        current_angle += abs(distanceAngleSensor(ANGLE));
-    }
-
-    //After turning 90 degrees, stop
-    DRIVE_STOP();
-    DRIVE_STRAIGHT();
+    
     moveCW(400 - scan_360_closest_step_count);
-    
-    //drive forward till 30cm from wall
-    while (distance > 55) {
-        distance = getAdcDist(getAdc());
-        adcDisplayQuick(distance);
-    }
-    DRIVE_STOP();
-    
-    //turn right or left 90 degrees
-    if (wall_is_right_flag)  SPIN_LEFT();
-    if (!wall_is_right_flag) SPIN_RIGHT();
-  
-    int angle_turn = 0;
-    while(angle_turn < 90) {
-        angle_turn += abs(distanceAngleSensor(ANGLE));
-    }
-    
-    DRIVE_STOP();
-    
+
     if (wall_is_right_flag)  moveCW(40);
     if (!wall_is_right_flag) moveCCW(40);
     
@@ -124,10 +96,10 @@ void wallFollow (void){
         adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
         if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
-            if (distance > 60 && lost_wall_timer >= 5500)   maneuver = 0;
-            if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
-            if (distance < 53)                              maneuver = 2;
-            if (distance >= 53 && distance <= 60)           maneuver = 3;
+            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 70 && lost_wall_timer < 5500)    maneuver = 1;
+            if (distance < 5)                              maneuver = 2;
+            if (distance >= 53 && distance <= 70)           maneuver = 3;
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
@@ -149,6 +121,8 @@ void wallFollow (void){
         }
         if (bump_cliff_flag) {                                                            //if bump_flag is set, stop, reverse, and then continue normal routine
             DRIVE_STOP();
+            _delay_ms(10000);
+            bump_cliff_flag = 0;
         }
     }
 }

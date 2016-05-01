@@ -22,12 +22,14 @@ void adcDisplay(void) {
     lcdSetCursor(0x00);
     if (average_adc > 80) lcdWriteToDigitBCD(getAdcDist(average_adc));
     else lcdWriteString(">160");
-    lcdWriteString("cm IR    ");
+    lcdWriteString("cm IR     ");
 }
 
 void adcDisplayQuick(int distance) {    
-    lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(distance);
+    lcdSetCursor(0x00);    
+    if (distance > 160) lcdWriteToDigitBCD(distance);
+    else lcdWriteString(">160");
+    lcdWriteString("cm IR     ");
 }
 
 //converts ADRESH and ADRESL into 1 int variable and returns this variable
@@ -45,8 +47,7 @@ int getAdcDist(int adc_raw) {
 
     if (adc_raw > 500) {
         adc_distance_cm = 1/(((adc_raw)-376)/2520);
-    }
-    if (adc_raw <= 500) {
+    } else {
         adc_distance_cm = 1/(((adc_raw)-7.5403)/11907);
     }
 
