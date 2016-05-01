@@ -10,7 +10,7 @@ void setupADC(void) {
 }
 
 //takes average of 4 ADRESH/ADRESL readings and writes ADC distance in cm to LCD
-void adcDisplay(void) {
+int adcDisplay(void) {
     int average_adc = 0;
 
     char i = 4;
@@ -23,17 +23,18 @@ void adcDisplay(void) {
     if (average_adc > 80) lcdWriteToDigitBCD(getAdcDist(average_adc));
     else lcdWriteString(">160");
     lcdWriteString("cm IR     ");
+    
+    return average_adc;
 }
 
-void adcDisplayQuick(unsigned int distance) {    
+void adcDisplayQuick(int distance) {    
     lcdSetCursor(0x00);    
-    if (distance > 160) lcdWriteToDigitBCD(distance);
-    else lcdWriteString(">160");
+    lcdWriteToDigitBCD(distance);
     lcdWriteString("cm IR     ");
 }
 
 //converts ADRESH and ADRESL into 1 int variable and returns this variable
-unsigned int getAdc(void) {
+int getAdc(void) {
     unsigned int adc_raw = 0;
     GO = 1;                                         //Starts ADC Conversion
     while(GO) continue;
@@ -42,12 +43,13 @@ unsigned int getAdc(void) {
 }
 
 //takes converted adc variable and converts into cm according to characterisation equation
-unsigned int getAdcDist(unsigned int adc_raw) {
-    unsigned int adc_distance_cm;
+int getAdcDist(int adc_raw) {
+    int adc_distance_cm;
 
     if (adc_raw > 500) {
         adc_distance_cm = 1/(((adc_raw)-376)/2520);
-    } else {
+    }
+    if (adc_raw <= 500) {
         adc_distance_cm = 1/(((adc_raw)-7.5403)/11907);
     }
 

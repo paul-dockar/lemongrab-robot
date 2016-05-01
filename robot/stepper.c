@@ -37,9 +37,9 @@ void scanCcw(unsigned int steps) {
 
 //takes ADC and checks against old adc value, keeping the closest 'distance'
 void findClosestWall(void) {
-    int new_adc_distance = getAdcDist(getAdc());
+    int new_adc_distance = getAdc();
 
-    if (new_adc_distance <= old_adc_distance) {
+    if (new_adc_distance >= old_adc_distance) {
         old_adc_distance = new_adc_distance;
         scan_360_closest_step_count = 0;
     } else {
