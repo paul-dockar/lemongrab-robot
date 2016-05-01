@@ -24,8 +24,19 @@
 #define     BUMP_SENSOR          7
 
 //WHEEL SPEED DEFINES
-#define     RIGHT_WHEEL_VELOCITY    195
-#define     LEFT_WHEEL_VELOCITY     200
+#define     RIGHT_WHEEL_200     195         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
+#define     LEFT_WHEEL_200      200         //left wheel speed in mm/s
+
+//WHEEL MANEUVERS
+#define     SHARP_RIGHT()       drive(-80,LEFT_WHEEL_200);
+#define     SHARP_LEFT()        drive(RIGHT_WHEEL_200,-80);
+#define     SLOW_RIGHT()        drive(150,LEFT_WHEEL_200);
+#define     SLOW_LEFT()         drive(RIGHT_WHEEL_200,150);
+#define     SPIN_RIGHT()        drive(-100,100);
+#define     SPIN_LEFT()         drive(100,-100);
+#define     DRIVE_STRAIGHT()    drive(RIGHT_WHEEL_200,LEFT_WHEEL_200);
+#define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_200,-LEFT_WHEEL_200);
+#define     DRIVE_STOP()        drive(0,0); __delay_ms(500);
 
 int total_distance_travel;
 

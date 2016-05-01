@@ -3,8 +3,8 @@
 int total_distance_travel = 0;
 
 volatile bit wall_is_right_flag = 0;
-volatile bit bump_flag = 0;
-volatile bit cliff_flag = 0;
+volatile bit bump_cliff_flag = 0;
+
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
@@ -21,13 +21,13 @@ void distanceDisplay(int distance) {
 void moveStraight(void){
     total_distance_travel = 0;
     
-    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    DRIVE_STRAIGHT();
     while (total_distance_travel < 4000) {
         total_distance_travel += distanceAngleSensor(DISTANCE);
 
         refreshLcd(total_distance_travel);
     }
-    drive(0,0);
+    DRIVE_STOP();
 }
 
 //move iRobot in a 1m square shape
@@ -40,29 +40,25 @@ void moveSquare(void) {
 
     char i = 4;
     for (i; i!=0; i--) {
-        drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
-
+        DRIVE_STRAIGHT();
         //Drive 1m forward
         while (current_distance_travel <= 995) {
             current_distance_travel += distanceAngleSensor(DISTANCE);
             total_distance_travel = current_distance_travel + last_distance;
-
             refreshLcd(total_distance_travel);
         }
 
         //After 1m, stop then start turning on the spot
-        drive(0,0);
-        __delay_ms(800);
-        drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-
+        DRIVE_STOP();    
+        
+        SPIN_LEFT();
         //Turn 90 degrees
         while(angle_turn < 90) {
             angle_turn += abs(distanceAngleSensor(ANGLE));
         }
 
         //After turning 90 degrees, stop
-        drive(0,0);
-        __delay_ms(800);
+        DRIVE_STOP();
 
         //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
         last_distance += current_distance_travel;
@@ -75,18 +71,19 @@ void wallFollow (void){
     int angle = 0;
     int current_angle = 0;
     unsigned int distance = getAdcDist(getAdc());
-    total_distance_travel = 0;
-    scanCw(400);
-    moveCCW(scan_360_closest_step_count);
     
-    if (scan_360_closest_step_count > 200){
+    total_distance_travel = 0;
+    scanCcw(400);
+    moveCW(scan_360_closest_step_count);
+    
+    if (scan_360_closest_step_count >= 200){
         angle = (400 - scan_360_closest_step_count) * 0.9;
-        drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
-        wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
+        SPIN_LEFT();
+        wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     } else {
         angle = scan_360_closest_step_count * 0.9;
-        drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-        wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
+        SPIN_RIGHT();
+        wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
 
     //Turn 90 degrees
@@ -95,82 +92,66 @@ void wallFollow (void){
     }
 
     //After turning 90 degrees, stop
-    drive(0,0);
-    __delay_ms(500);
-    
-    moveCCW(400 - scan_360_closest_step_count);
-    
-    drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    DRIVE_STOP();
+    DRIVE_STRAIGHT();
+    moveCW(400 - scan_360_closest_step_count);
     
     //drive forward till 30cm from wall
     while (distance > 50) {
         distance = getAdcDist(getAdc());
         adcDisplayQuick(distance);
     }
-    
-    drive(0,0);
-    __delay_ms(500);
+    DRIVE_STOP();
     
     //turn right or left 90 degrees
-    if (wall_is_right_flag)  drive(RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-    if (!wall_is_right_flag) drive(-RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
+    if (wall_is_right_flag)  SPIN_LEFT();
+    if (!wall_is_right_flag) SPIN_RIGHT();
   
-    
     int angle_turn = 0;
     while(angle_turn < 90) {
         angle_turn += abs(distanceAngleSensor(ANGLE));
     }
     
-    drive(0,0);
+    DRIVE_STOP();
     
-    if (wall_is_right_flag) moveCW(50);
+    if (wall_is_right_flag)  moveCW(50);
     if (!wall_is_right_flag) moveCCW(50);
     
-    bump_flag = 0;
-    cliff_flag = 0;
+    bump_cliff_flag = 0;
     while (1) {
-        distance = getAdcDist(getAdc());
-        adcDisplayQuick(distance);
+        unsigned char maneuver = 0;
+        distance = getAdcDist(getAdc());                                            //continuously read the adc distance
+        adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
-        if (!bump_flag && !cliff_flag) {
-            if (distance > 60 && lost_wall_timer < 5500) {
-                if (wall_is_right_flag) {
-                    drive(150,LEFT_WHEEL_VELOCITY);
+        if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
+            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
+            if (distance < 48)                              maneuver = 2;
+            if (distance >= 48 && distance <=60)            maneuver = 3;
+            
+            if (wall_is_right_flag) {
+                switch (maneuver) {
+                    case 0: SHARP_RIGHT();                          //when wall is not found for certain time, turn sharp to the right
+                    case 1: SLOW_RIGHT();                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
+                    case 2: SHARP_LEFT();     lost_wall_timer = 0;  //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0;  //when wall is at good distance, drive straight
                 }
-                if (!wall_is_right_flag) {
-                    drive(RIGHT_WHEEL_VELOCITY,150);
-                }
-            } else if (distance < 48) {
-                lost_wall_timer = 0;
-                if (!wall_is_right_flag) {
-                    drive(-90,LEFT_WHEEL_VELOCITY);
-                }
-                if (wall_is_right_flag) {
-                    drive(RIGHT_WHEEL_VELOCITY,-90);
-                }
-            } else if (distance > 70 && lost_wall_timer >= 5500) {
-                if (!wall_is_right_flag) {
-                    drive(RIGHT_WHEEL_VELOCITY,-80);
-                }
-                if (wall_is_right_flag) {
-                    drive(-80,LEFT_WHEEL_VELOCITY);
-                }
-            } else if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) {
-                bump_flag = 1;
-                cliff_flag = 1;
-            } else {
-                drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
             }
+            if (!wall_is_right_flag) {
+                switch (maneuver) {
+                    case 0: SHARP_LEFT();                           //when wall is not found for certain time, turn sharp to the left
+                    case 1: SLOW_LEFT();                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
+                    case 2: SHARP_RIGHT();    lost_wall_timer = 0;  //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0;  //when wall is at good distance, drive straight
+                }
+            }
+            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) bump_cliff_flag = 1;    //when bump sensor is triggered, set bump flag
         }
-        if (bump_flag || cliff_flag) {
-            drive(0,0);
-            __delay_ms(500);
-            drive(-RIGHT_WHEEL_VELOCITY,-LEFT_WHEEL_VELOCITY);
-            __delay_ms(2000);
-            drive(0,0);
-            __delay_ms(500);
-            bump_flag = 0;
-            cliff_flag = 0;
+        if (bump_cliff_flag) {                                                            //if bump_flag is set, stop, reverse, and then continue normal routine
+            DRIVE_STOP();
+            DRIVE_BACKWARD(); __delay_ms(2000);
+            DRIVE_STOP();
+            bump_cliff_flag = 0;
         }
     }
 }
@@ -204,7 +185,7 @@ int distanceAngleSensor(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
-
+    
     return final_byte = (high_byte << 8 | low_byte);
 }
 
@@ -256,12 +237,13 @@ void writeBatteryStatusToLcd(void) {
     lcdWriteString("mAh");
 
     lcdSetCursor(0x40);
-    lcdWriteToDigitBCDx6(sensorPacket(VOLTAGE));
+    lcdWriteToDigitBCD(sensorPacket(VOLTAGE));
     lcdWriteString("mV");
 
     __delay_ms(4000);               //display battery condition for 8 seconds
 }
 
+//returns the absolute value of an int
 int abs(int a) {
     if(a < 0)
         return -a;
