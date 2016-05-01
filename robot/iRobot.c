@@ -4,6 +4,7 @@ int total_distance_travel = 0;
 
 volatile bit wall_is_right_flag = 0;
 volatile bit bump_flag = 0;
+volatile bit cliff_flag = 0;
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
@@ -126,11 +127,12 @@ void wallFollow (void){
     if (!wall_is_right_flag) moveCCW(50);
     
     bump_flag = 0;
+    cliff_flag = 0;
     while (1) {
         distance = getAdcDist(getAdc());
         adcDisplayQuick(distance);
         
-        if (!bump_flag) {
+        if (!bump_flag && !cliff_flag) {
             if (distance > 60 && lost_wall_timer < 5500) {
                 if (wall_is_right_flag) {
                     drive(150,LEFT_WHEEL_VELOCITY);
@@ -153,8 +155,9 @@ void wallFollow (void){
                 if (wall_is_right_flag) {
                     drive(-80,LEFT_WHEEL_VELOCITY);
                 }
-            } else if (bumpPacket(BUMP_SENSOR) > 0) {
+            } else if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) {
                 bump_flag = 1;
+                cliff_flag = 1;
             } else {
                 drive(RIGHT_WHEEL_VELOCITY,LEFT_WHEEL_VELOCITY);
             }
@@ -167,6 +170,10 @@ void wallFollow (void){
             drive(0,0);
             __delay_ms(500);
             bump_flag = 0;
+        }
+        if (cliff_flag){
+            lcdSetCursor (0x0B);
+            lcdWriteString ("cliff");
         }
     }
 }
@@ -227,6 +234,21 @@ unsigned char bumpPacket(char packet_id) {
 	bump_byte = ser_getch();
 
     return bump_byte;
+}
+
+unsigned char cliffPacket(void){
+    unsigned char cliff_byte;
+    
+    for (cliff_byte = 9; cliff_byte < 13; cliff_byte++){
+        ser_putch(SENSORS);
+        ser_putch(cliff_byte);
+        
+        if(ser_getch() > 0)
+        {
+            return 1;
+        }
+    }  
+    return 0;
 }
 
 void writeBatteryStatusToLcd(void) {
