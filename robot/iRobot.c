@@ -96,10 +96,10 @@ void wallFollow (void){
         adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
         if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
-            if (distance > 55 && lost_wall_timer >= 5500)   maneuver = 0;
-            if (distance > 55 && lost_wall_timer < 5500)    maneuver = 1;
+            if (distance > 60 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
             if (distance < 48)                              maneuver = 2;
-            if (distance >= 48 && distance <= 55)           maneuver = 3;
+            if (distance >= 48 && distance <= 60)           maneuver = 3;
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
