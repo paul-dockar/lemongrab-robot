@@ -33,26 +33,23 @@ void interrupt isr(void) {
             hb_led_counter = 0;
         }
 
-        if (PB_SCAN||PB_DRIVE_4M||PB_DRIVE_SQUARE||PB_FIND_WALL){
+        if (PB_SCAN || PB_DRIVE_4M || PB_DRIVE_SQUARE || PB_FIND_WALL){
             pb_debounce_count++;
             if (debounce(pb_debounce_count) && PB_SCAN) {
                 pb_release = 0;
-                pb_debounce_count = 0;
                 pb_scan_pressed = 1;
-            } else if (debounce(pb_debounce_count) && PB_DRIVE_4M) {
+            }
+            if (debounce(pb_debounce_count) && PB_DRIVE_4M) {
                 pb_release = 0;
-                pb_debounce_count = 0;
                 pb_drive_4m_pressed = 1;
-            } else if (debounce(pb_debounce_count) && PB_DRIVE_SQUARE) {
+            }
+            if (debounce(pb_debounce_count) && PB_DRIVE_SQUARE) {
                 pb_release = 0;
-                pb_debounce_count = 0;
                 pb_drive_square_pressed = 1;
-            } else if (debounce(pb_debounce_count) && PB_FIND_WALL) {
+            }
+            if (debounce(pb_debounce_count) && PB_FIND_WALL) {
                 pb_release = 0;
-                pb_debounce_count = 0;
                 pb_find_wall_pressed = 1;
-            } else {
-                NOP();
             }
         }
         else {

@@ -97,7 +97,7 @@ void wallFollow (void){
     moveCW(400 - scan_360_closest_step_count);
     
     //drive forward till 30cm from wall
-    while (distance > 50) {
+    while (distance > 55) {
         distance = getAdcDist(getAdc());
         adcDisplayQuick(distance);
     }
@@ -114,8 +114,8 @@ void wallFollow (void){
     
     DRIVE_STOP();
     
-    if (wall_is_right_flag)  moveCW(50);
-    if (!wall_is_right_flag) moveCCW(50);
+    if (wall_is_right_flag)  moveCW(40);
+    if (!wall_is_right_flag) moveCCW(40);
     
     bump_cliff_flag = 0;
     while (1) {
@@ -124,34 +124,31 @@ void wallFollow (void){
         adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
         if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
-            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 60 && lost_wall_timer >= 5500)   maneuver = 0;
             if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
-            if (distance < 48)                              maneuver = 2;
-            if (distance >= 48 && distance <=60)            maneuver = 3;
+            if (distance < 53)                              maneuver = 2;
+            if (distance >= 53 && distance <= 60)           maneuver = 3;
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_RIGHT();                          //when wall is not found for certain time, turn sharp to the right
-                    case 1: SLOW_RIGHT();                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
-                    case 2: SHARP_LEFT();     lost_wall_timer = 0;  //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0;  //when wall is at good distance, drive straight
+                    case 0: SHARP_RIGHT(); break;                         //when wall is not found for certain time, turn sharp to the right
+                    case 1: SLOW_RIGHT(); break;                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
+                    case 2: SHARP_LEFT();     lost_wall_timer = 0; break;  //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0; break;  //when wall is at good distance, drive straight
                 }
             }
             if (!wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_LEFT();                           //when wall is not found for certain time, turn sharp to the left
-                    case 1: SLOW_LEFT();                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
-                    case 2: SHARP_RIGHT();    lost_wall_timer = 0;  //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0;  //when wall is at good distance, drive straight
+                    case 0: SHARP_LEFT(); break;                           //when wall is not found for certain time, turn sharp to the left
+                    case 1: SLOW_LEFT(); break;                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
+                    case 2: SHARP_RIGHT();    lost_wall_timer = 0; break;  //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0; break;  //when wall is at good distance, drive straight
                 }
             }
             if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) bump_cliff_flag = 1;    //when bump sensor is triggered, set bump flag
         }
         if (bump_cliff_flag) {                                                            //if bump_flag is set, stop, reverse, and then continue normal routine
             DRIVE_STOP();
-            DRIVE_BACKWARD(); __delay_ms(2000);
-            DRIVE_STOP();
-            bump_cliff_flag = 0;
         }
     }
 }

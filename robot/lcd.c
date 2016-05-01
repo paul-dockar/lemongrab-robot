@@ -58,41 +58,10 @@ void lcdWriteString(char * s) {
     while(*s) lcdWriteData(*s++);
 }
 
-//function accepts char between 0 and 9999 and writes it to lcd display in seperate 4 digits
+//function accepts char between 0 and 99999 and writes it to lcd display in seperate 5 digits
 void lcdWriteToDigitBCD(unsigned int data) {
     unsigned int    ones_digit;
-    unsigned char   tens_digit, hundreds_digit, thousands_digit;
-
-    //load number to be converted into OnesDigit
-    ones_digit = data;
-    tens_digit = 0;
-    hundreds_digit = 0;
-    thousands_digit = 0;
-
-    //Perform a BCD Conversion
-    while (ones_digit >= 1000){
-        ones_digit = ones_digit - 1000;
-        thousands_digit++;
-    }
-    while (ones_digit >= 100){
-        ones_digit = ones_digit - 100;
-        hundreds_digit++;
-    }
-    while (ones_digit >= 10){
-        ones_digit = ones_digit - 10;
-        tens_digit++;
-    }
-
-    lcdWriteData(thousands_digit + 48);
-    lcdWriteData(hundreds_digit + 48);
-    lcdWriteData(tens_digit + 48);
-    lcdWriteData(ones_digit + 48);
-}
-
-//function accepts char between 0 and 999999 and writes it to lcd display in seperate 6 digits
-void lcdWriteToDigitBCDx6(unsigned int data) {
-    unsigned int    ones_digit;
-    unsigned char   tens_digit, hundreds_digit, thousands_digit, ten_thousands_digit, hund_thousands_digit;
+    unsigned char   tens_digit, hundreds_digit, thousands_digit, ten_thousands_digit;
 
     //load number to be converted into OnesDigit
     ones_digit = data;
@@ -100,13 +69,8 @@ void lcdWriteToDigitBCDx6(unsigned int data) {
     hundreds_digit = 0;
     thousands_digit = 0;
     ten_thousands_digit = 0;
-    hund_thousands_digit = 0;
 
     //Perform a BCD Conversion
-    while (ones_digit >= 100000){
-        ones_digit = ones_digit - 100000;
-        hund_thousands_digit++;
-    }
     while (ones_digit >= 10000){
         ones_digit = ones_digit - 10000;
         ten_thousands_digit++;
@@ -124,10 +88,10 @@ void lcdWriteToDigitBCDx6(unsigned int data) {
         tens_digit++;
     }
     
-    lcdWriteData(hund_thousands_digit + 48);
-    lcdWriteData(ten_thousands_digit + 48);
-    lcdWriteData(thousands_digit + 48);
-    lcdWriteData(hundreds_digit + 48);
-    lcdWriteData(tens_digit + 48);
-    lcdWriteData(ones_digit + 48);
+    //write the digits to LCD
+    if (ten_thousands_digit != 0)    lcdWriteData((unsigned char)ten_thousands_digit + 48);
+    if (thousands_digit != 0)        lcdWriteData((unsigned char)thousands_digit + 48);
+    if (hundreds_digit != 0)         lcdWriteData((unsigned char)hundreds_digit + 48);
+    if (tens_digit != 0)             lcdWriteData((unsigned char)tens_digit + 48);
+    if (ones_digit != 0)             lcdWriteData((unsigned char)ones_digit + 48);
 }
