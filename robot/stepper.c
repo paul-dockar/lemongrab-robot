@@ -16,6 +16,7 @@ void scanCw(unsigned int steps) {
 	for(steps; steps!=0; steps--){
         findClosestWall();
         SM_STEP();
+        adcDisplay();
 	}
     spi_transfer(off_control_byte);
     __delay_ms(2);
@@ -28,6 +29,7 @@ void scanCcw(unsigned int steps) {
 	for(steps; steps!=0; steps--){
         findClosestWall();
         SM_STEP();
+        adcDisplay();
 	}
     spi_transfer(off_control_byte);
     __delay_ms(2);
@@ -36,7 +38,6 @@ void scanCcw(unsigned int steps) {
 //takes ADC and checks against old adc value, keeping the closest 'distance'
 void findClosestWall(void) {
     int new_adc_distance = getAdcDist(getAdc());
-    adcDisplayQuick(new_adc_distance);
 
     if (new_adc_distance <= old_adc_distance) {
         old_adc_distance = new_adc_distance;

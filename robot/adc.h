@@ -5,9 +5,8 @@
 
 void setupADC(void);           //setup PIC registers for ADC to function
 void adcDisplay(void);         //writes ADC distance in cm to LCD
-void adcDisplayQuick(int distance);
-int getAdc(void);              //converts ADRESH and ADRESL into 1 int variable and returns this variable
-int getAdcDist(int adc_raw);   //takes converted adc variable and converts into cm according to characterisation equation
-int round(float x);            //rounds float to int
+void adcDisplayQuick(unsigned int distance);
+unsigned int getAdc(void);              //converts ADRESH and ADRESL into 1 int variable and returns this variable
+unsigned int getAdcDist(unsigned int adc_raw);   //takes converted adc variable and converts into cm according to characterisation equation
 
 #endif	/* ADC_H */

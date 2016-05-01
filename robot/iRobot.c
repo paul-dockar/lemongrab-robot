@@ -86,8 +86,8 @@ void wallFollow (void){
     
     moveCW(400 - scan_360_closest_step_count);
 
-    if (wall_is_right_flag)  moveCW(40);
-    if (!wall_is_right_flag) moveCCW(40);
+    if (wall_is_right_flag)  moveCW(50);
+    if (!wall_is_right_flag) moveCCW(50);
     
     bump_cliff_flag = 0;
     while (1) {
@@ -96,10 +96,10 @@ void wallFollow (void){
         adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
         if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
-            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
-            if (distance > 70 && lost_wall_timer < 5500)    maneuver = 1;
-            if (distance < 5)                              maneuver = 2;
-            if (distance >= 53 && distance <= 70)           maneuver = 3;
+            if (distance > 60 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
+            if (distance < 48)                              maneuver = 2;
+            if (distance >= 48 && distance <= 60)           maneuver = 3;
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
@@ -121,7 +121,7 @@ void wallFollow (void){
         }
         if (bump_cliff_flag) {                                                            //if bump_flag is set, stop, reverse, and then continue normal routine
             DRIVE_STOP();
-            _delay_ms(10000);
+            __delay_ms(10000);
             bump_cliff_flag = 0;
         }
     }

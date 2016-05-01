@@ -25,7 +25,7 @@ void adcDisplay(void) {
     lcdWriteString("cm IR     ");
 }
 
-void adcDisplayQuick(int distance) {    
+void adcDisplayQuick(unsigned int distance) {    
     lcdSetCursor(0x00);    
     if (distance > 160) lcdWriteToDigitBCD(distance);
     else lcdWriteString(">160");
@@ -33,7 +33,7 @@ void adcDisplayQuick(int distance) {
 }
 
 //converts ADRESH and ADRESL into 1 int variable and returns this variable
-int getAdc(void) {
+unsigned int getAdc(void) {
     unsigned int adc_raw = 0;
     GO = 1;                                         //Starts ADC Conversion
     while(GO) continue;
@@ -42,8 +42,8 @@ int getAdc(void) {
 }
 
 //takes converted adc variable and converts into cm according to characterisation equation
-int getAdcDist(int adc_raw) {
-    int adc_distance_cm;
+unsigned int getAdcDist(unsigned int adc_raw) {
+    unsigned int adc_distance_cm;
 
     if (adc_raw > 500) {
         adc_distance_cm = 1/(((adc_raw)-376)/2520);
