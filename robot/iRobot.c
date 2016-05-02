@@ -93,11 +93,11 @@ void wallFollow (void){
      *  Also set a flag which determines which direction to follow the wall for the rest of the procedure.
      */
     if (scan_360_closest_step_count > 200){
-        angle = (400 - scan_360_closest_step_count) * 0.9;
+        angle = (400 - scan_360_closest_step_count) * 90 / 100;
         SPIN_LEFT();
         wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     } else {
-        angle = scan_360_closest_step_count * 0.9;
+        angle = scan_360_closest_step_count * 90 / 100;
         SPIN_RIGHT();
         wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
