@@ -190,6 +190,8 @@ int distanceAngleSensor(char packet_id) {
 	high_byte = ser_getch();
 	low_byte = ser_getch();
     
+    __delay_ms(15);
+    
     return final_byte = (high_byte << 8 | low_byte);
 }
 
