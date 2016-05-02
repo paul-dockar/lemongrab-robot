@@ -49,11 +49,11 @@ void moveSquare(void) {
         }
 
         //After 1m, stop then start turning on the spot
-        DRIVE_STOP();    
+        DRIVE_STOP(); 
         
         SPIN_LEFT();
         //Turn 90 degrees
-        while(angle_turn < 70) {
+        while(angle_turn < 90) {
             angle_turn += distanceAngleSensor(ANGLE);
         }
 
@@ -156,6 +156,8 @@ int distanceAngleSensor(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
+    
+    __delay_ms(15);
     
     return final_byte = (high_byte << 8 | low_byte);
 }
