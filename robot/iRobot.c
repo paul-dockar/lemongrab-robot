@@ -204,7 +204,6 @@ int distanceAngleSensor(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
-    
     __delay_ms(15);
     
     return final_byte = (high_byte << 8 | low_byte);
@@ -220,7 +219,6 @@ unsigned int sensorPacket(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
-    
      __delay_ms(15);
 
     return final_byte = (high_byte << 8 | low_byte);
@@ -234,7 +232,6 @@ unsigned char bumpPacket(char packet_id) {
 	ser_putch(packet_id);
 
 	bump_byte = ser_getch();
-    
      __delay_ms(15);
 
     return bump_byte;
@@ -248,12 +245,9 @@ unsigned char cliffPacket(void){
         ser_putch(SENSORS);
         ser_putch(cliff_byte);
         
-        if(ser_getch() > 0)
-        {
-            return 1;
-        }
-         __delay_ms(15);
-    }  
+        if(ser_getch() > 0) return 1;
+        __delay_ms(15);
+    }
     return 0;
 }
 
