@@ -54,7 +54,7 @@ void lcdSetCursor(unsigned char address) {
 }
 
 //write strings to LCD
-void lcdWriteString(char * s) {
+void lcdWriteString(const char * s) {
     while(*s) lcdWriteData(*s++);
 }
 
@@ -89,9 +89,9 @@ void lcdWriteToDigitBCD(unsigned int data) {
     }
     
     //write the digits to LCD
-    if (data > 10000)   lcdWriteData((unsigned char)ten_thousands_digit + 48);
-    if (data > 1000)    lcdWriteData((unsigned char)thousands_digit + 48);
-    if (data > 100)     lcdWriteData((unsigned char)hundreds_digit + 48);
-    if (data > 10)      lcdWriteData((unsigned char)tens_digit + 48);
-    if (data > 0)       lcdWriteData((unsigned char)ones_digit + 48);
+    if (data > 10000)   lcdWriteData((unsigned char) ten_thousands_digit + 48);
+    if (data > 1000)    lcdWriteData((unsigned char) thousands_digit + 48);
+    if (data > 100)     lcdWriteData((unsigned char) hundreds_digit + 48);
+    if (data > 10)      lcdWriteData((unsigned char) tens_digit + 48);
+    if (data > 0)       lcdWriteData((unsigned char) ones_digit + 48);
 }
