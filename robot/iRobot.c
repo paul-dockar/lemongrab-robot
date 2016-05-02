@@ -40,25 +40,29 @@ void moveSquare(void) {
 
     char i = 4;
     for (i; i!=0; i--) {
-        DRIVE_STRAIGHT();
+        drive(RIGHT_WHEEL_200,LEFT_WHEEL_200);
+
         //Drive 1m forward
         while (current_distance_travel <= 995) {
             current_distance_travel += distanceAngleSensor(DISTANCE);
             total_distance_travel = current_distance_travel + last_distance;
+
             refreshLcd(total_distance_travel);
         }
 
         //After 1m, stop then start turning on the spot
-        DRIVE_STOP();    
-        
-        SPIN_LEFT();
+        drive(0,0);
+        __delay_ms(800);
+        drive(RIGHT_WHEEL_200,-LEFT_WHEEL_200);
+
         //Turn 90 degrees
-        while(angle_turn < 70) {
-            angle_turn += distanceAngleSensor(ANGLE);
+        while(angle_turn < 90) {
+            angle_turn += abs(distanceAngleSensor(ANGLE));
         }
 
         //After turning 90 degrees, stop
-        DRIVE_STOP();
+        drive(0,0);
+        __delay_ms(800);
 
         //set distance travelled to last distance travelled, clear variables for use in 'for' loop again
         last_distance += current_distance_travel;
@@ -78,14 +82,43 @@ void wallFollow (void){
     
     __delay_ms(500);
     
-    if (scan_360_closest_step_count >= 200){
+    if (scan_360_closest_step_count > 200){
+        angle = scan_360_closest_step_count * 0.9;
+        SPIN_LEFT();
         wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     } else {
+        angle = (400 - scan_360_closest_step_count) * 0.9;
+        SPIN_RIGHT();
         wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
     
-    moveCW(400 - scan_360_closest_step_count);
+    //Turn 90 degrees
+    while(angle >= current_angle) {
+        current_angle += abs(distanceAngleSensor(ANGLE));
+    }
 
+    //After turning 90 degrees, stop
+    DRIVE_STOP();
+    moveCW(400 - scan_360_closest_step_count);
+    
+    DRIVE_STRAIGHT();
+    //drive forward till 30cm from wall
+    while (distance > 50) {
+        distance = getAdcDist(getAdc());
+        adcDisplayQuick(distance);
+    }
+    DRIVE_STOP();
+    
+    //turn right or left 90 degrees
+    if (wall_is_right_flag)  SPIN_LEFT();
+    if (!wall_is_right_flag) SPIN_RIGHT();
+
+    int angle_turn = 0;
+    while(angle_turn < 90) {
+        angle_turn += abs(distanceAngleSensor(ANGLE));
+    }
+    DRIVE_STOP();
+    
     if (wall_is_right_flag)  moveCW(50);
     if (!wall_is_right_flag) moveCCW(50);
     
@@ -96,25 +129,25 @@ void wallFollow (void){
         adcDisplayQuick(distance);                                                  //write the distance using the quick lcd update function
         
         if (!bump_cliff_flag) {                                                           //if bump_flag not set, do normal routine
-            if (distance > 60 && lost_wall_timer >= 5500)   maneuver = 0;
-            if (distance > 60 && lost_wall_timer < 5500)    maneuver = 1;
+            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
+            if (distance > 70 && lost_wall_timer < 5500)    maneuver = 1;
             if (distance < 48)                              maneuver = 2;
-            if (distance >= 48 && distance <= 60)           maneuver = 3;
+            if (distance >= 48 && distance <= 70)           maneuver = 3;
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_RIGHT(); break;                         //when wall is not found for certain time, turn sharp to the right
+                    case 0: SHARP_RIGHT2(); break;                         //when wall is not found for certain time, turn sharp to the right
                     case 1: SLOW_RIGHT(); break;                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
                     case 2: SHARP_LEFT();     lost_wall_timer = 0; break;  //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0; break;  //when wall is at good distance, drive straight
+                    case 3: DRIVE_STRAIGHT(); break;                       //when wall is at good distance, drive straight
                 }
             }
             if (!wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_LEFT(); break;                           //when wall is not found for certain time, turn sharp to the left
+                    case 0: SHARP_LEFT2(); break;                          //when wall is not found for certain time, turn sharp to the left
                     case 1: SLOW_LEFT(); break;                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
                     case 2: SHARP_RIGHT();    lost_wall_timer = 0; break;  //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT(); lost_wall_timer = 0; break;  //when wall is at good distance, drive straight
+                    case 3: DRIVE_STRAIGHT(); break;                       //when wall is at good distance, drive straight
                 }
             }
             if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) bump_cliff_flag = 1;    //when bump sensor is triggered, set bump flag

@@ -25,6 +25,7 @@ void main(void) {
         if (pb_scan_pressed) {
             scanCw(400);
             moveCCW(scan_360_closest_step_count);
+            adcDisplay();
             __delay_ms(5000);
             moveCCW(400 - scan_360_closest_step_count);
             pb_scan_pressed = 0;
