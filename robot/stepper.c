@@ -1,11 +1,11 @@
 #include "stepper.h"
 
 unsigned int scan_360_closest_step_count = 0;   //counter to count how many half steps since closest scanned object
-int old_adc_distance = 0;                   //variable to store closest reading of adc distance since push button press
+unsigned int old_adc_distance = 0;                       //variable to store closest reading of adc distance since push button press
 
 unsigned char cw_control_byte = 0b00001101;     //stepper motor control byte for; enabled, clockwise, half-steps
 unsigned char ccw_control_byte = 0b00001111;    //stepper motor control byte for; enabled, counterclockwise, half-steps
-unsigned char off_control_byte = 0b00001100;
+unsigned char off_control_byte = 0b00001100;    //stepper motor control byte for; off
 
 /*
  * Scan stepper motor clockwise. Finds the closest wall and stores this value to return to position later.
