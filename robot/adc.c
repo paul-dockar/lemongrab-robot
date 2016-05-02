@@ -27,6 +27,8 @@ int adcDisplay(void) {
     return average_adc;
 }
 
+//displays a distance value to the LCD. This function takes in the distance which is already captured during other functions, and does not average the value. 
+//Uses less time to write to LCD, which should not affect performance for manuevers that require precision.
 void adcDisplayQuick(int distance) {    
     lcdSetCursor(0x00);    
     lcdWriteToDigitBCD(distance);

@@ -21,7 +21,10 @@ void setup(void) {
 void main(void) {
     setup();
     while (1) {
+        //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
+        
+        //checks for pb flags. If flag is set then perform a function
         if (pb_scan_pressed) {
             scanCw(400);
             moveCCW(scan_360_closest_step_count);
@@ -45,6 +48,7 @@ void main(void) {
     }
 }
 
+//Refresh the LCD with ADC value and distance value
 void refreshLcd(int distance) {
     adcDisplay();
     distanceDisplay(distance);

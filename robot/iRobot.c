@@ -5,7 +5,7 @@ int total_distance_travel = 0;
 volatile bit wall_is_right_flag = 0;
 volatile bit bump_cliff_flag = 0;
 
-//  Starts robot and sets to Full mode. Initialises ser
+//Starts robot and sets to Full mode. Initialises ser
 void setupIRobot(void) {
     ser_init();
     ser_putch(START);
@@ -134,6 +134,7 @@ void wallFollow (void){
     if (!wall_is_right_flag) moveCCW(50);
     
     bump_cliff_flag = 0;
+    lost_wall_timer = 0;
     while (1) {
         unsigned char maneuver = 0;
         distance = getAdcDist(getAdc());    //continuously read the adc distance
@@ -225,6 +226,7 @@ unsigned int sensorPacket(char packet_id) {
     return final_byte = (high_byte << 8 | low_byte);
 }
 
+//returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
 unsigned char bumpPacket(char packet_id) {
     unsigned char bump_byte;
 
@@ -238,6 +240,7 @@ unsigned char bumpPacket(char packet_id) {
     return bump_byte;
 }
 
+//returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
 unsigned char cliffPacket(void){
     unsigned char cliff_byte;
     
@@ -254,6 +257,7 @@ unsigned char cliffPacket(void){
     return 0;
 }
 
+//Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 void writeBatteryStatusToLcd(void) {
     lcdSetCursor(0x00);
     lcdWriteToDigitBCD(sensorPacket(BATTERY_CHARGE));
@@ -265,7 +269,7 @@ void writeBatteryStatusToLcd(void) {
     lcdWriteToDigitBCD(sensorPacket(VOLTAGE));
     lcdWriteString("mV");
 
-    __delay_ms(4000);               //display battery condition for 8 seconds
+    __delay_ms(4000);
 }
 
 //returns the absolute value of an int

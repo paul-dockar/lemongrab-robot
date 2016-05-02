@@ -1,7 +1,7 @@
 #include "interrupt.h"
 
 volatile unsigned int   hb_led_counter = 0;     //timer0 interrupt overflow counter, used for heartbeat led
-volatile unsigned int   lost_wall_timer = 0;
+volatile unsigned int   lost_wall_timer = 0;    //lost wall timer for wallFollow mode. Is only reset during wallFollow
 volatile unsigned char  pb_debounce_count = 0;  //push button debounce counter
 volatile bit            pb_release = 0;         //push button flag when no buttons are pressed
 
@@ -28,11 +28,13 @@ void interrupt isr(void) {
         hb_led_counter++;
         lost_wall_timer++;
 
+        //toggles heartbeat LED every 0.5 seconds
         if (hb_led_counter % 500 == 0) {
             HB_LED = !HB_LED;
             hb_led_counter = 0;
         }
 
+        //checks for all 4 push buttons. If one is detected as pressed, start debounce counter. If debounce counter returns 1, then toggle push button flag.
         if (PB_SCAN || PB_DRIVE_4M || PB_DRIVE_SQUARE || PB_FIND_WALL){
             pb_debounce_count++;
             if (debounce(pb_debounce_count) && PB_SCAN) {

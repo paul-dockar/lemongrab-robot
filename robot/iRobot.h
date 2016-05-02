@@ -23,11 +23,11 @@
 #define     BATTERY_CAPACITY    26          //battery capacity in mAh
 #define     BUMP_SENSOR          7
 
-//WHEEL SPEED DEFINES
+//IROBOT WHEEL SPEED DEFINES
 #define     RIGHT_WHEEL_200     195         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
 #define     LEFT_WHEEL_200      200         //left wheel speed in mm/s
 
-//WHEEL MANEUVERS
+//IROBOT MANEUVERS
 #define     SHARP_RIGHT()       drive(-90,LEFT_WHEEL_200);
 #define     SHARP_LEFT()        drive(RIGHT_WHEEL_200,-90);
 #define     SHARP_RIGHT2()      drive(-80,LEFT_WHEEL_200);
@@ -40,19 +40,19 @@
 #define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_200,-LEFT_WHEEL_200);
 #define     DRIVE_STOP()        drive(0,0); __delay_ms(800);
 
-int total_distance_travel;
+int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
 
-void setupIRobot(void);
-void distanceDisplay(int distance);
-void moveStraight(void);
-void moveSquare(void);
-void wallFollow(void);
-void drive(int right_wheel, int left_wheel);
-int distanceAngleSensor(char packet_id);
-unsigned int sensorPacket(char packet_id);
-unsigned char bumpPacket(char packet_id);
-unsigned char cliffPacket(void);
-void writeBatteryStatusToLcd(void);
-int abs(int a);
+void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
+void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
+void moveStraight(void);                        //Drives the iRobot in a straight line for 4meters, refreshing the LCD as it goes.
+void moveSquare(void);                          //Drives the iRobot in a straight line for 1m, turns left 90 degrees, then repeats 3 more times. This manuever creates a square.
+void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
+void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
+int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor data per packet id in datasheet
+unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
+unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
+unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
+void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
+int abs(int a);                                 //returns the absolute value of an int
 
 #endif	/* IROBOT_H */
