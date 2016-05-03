@@ -5,9 +5,11 @@ dist/*
 nbproject/*
 
 #files being edited
-*~
+~*
 
 #don't ignore these
 !nbproject/configurations.xml
 !nbproject/project.xml
 !*.hex
+report/~$tegration_report_lemongrabs.docx
+report/~$signment_2_System_Integration.docx
