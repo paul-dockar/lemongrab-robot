@@ -52,7 +52,7 @@ int getAdcDist(int adc_raw) {
         adc_distance_cm = 1/(((adc_raw)-376)/2520);
     }
     if (adc_raw <= 500) {
-        adc_distance_cm = 1/(((adc_raw)-7)/11907);
+        adc_distance_cm = 1/(((adc_raw)-7.5403)/11907);
     }
 
     return adc_distance_cm;
