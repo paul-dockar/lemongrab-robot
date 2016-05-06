@@ -28,7 +28,7 @@ void main(void) {
         if (pb_scan_pressed) {
             scanCw(400);
             moveCCW(scan_360_closest_step_count);
-            adcDisplay();
+            adcDisplayDistance();
             __delay_ms(5000);
             moveCCW(400 - scan_360_closest_step_count);
             pb_scan_pressed = 0;
@@ -50,6 +50,6 @@ void main(void) {
 
 //Refresh the LCD with ADC value and distance value
 void refreshLcd(int distance) {
-    adcDisplay();
+    adcDisplayDistance();
     distanceDisplay(distance);
 }
