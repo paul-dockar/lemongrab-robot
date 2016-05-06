@@ -13,6 +13,7 @@
 #include <xc.h>
 #pragma config BOREN = OFF, CPD = OFF, WRT = OFF, FOSC = HS, WDTE = OFF, CP = OFF, LVP = OFF, PWRTE = OFF
 #include "adc.h"
+#include "explore.h"
 #include "interrupt.h"
 #include "iRobot.h"
 #include "lcd.h"

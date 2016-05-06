@@ -12,6 +12,7 @@
       <itemPath>src/ser.h</itemPath>
       <itemPath>src/stepper.h</itemPath>
       <itemPath>src/spi.h</itemPath>
+      <itemPath>src/explore.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -28,6 +29,7 @@
       <itemPath>src/ser.c</itemPath>
       <itemPath>src/stepper.c</itemPath>
       <itemPath>src/spi.c</itemPath>
+      <itemPath>src/explore.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
