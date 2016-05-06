@@ -149,17 +149,17 @@ void wallFollow (void){
             
             if (wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_RIGHT2(); break;                         //when wall is not found for certain time, turn sharp to the right
+                    case 0: SHARP_RIGHT(); break;                         //when wall is not found for certain time, turn sharp to the right
                     case 1: SLOW_RIGHT(); break;                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
-                    case 2: SHARP_LEFT(); lost_wall_timer = 0; break;      //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 2: SHARP_LEFT2(); lost_wall_timer = 0; break;      //when wall is too close, turn sharp to the left. reset lost wall timer
                     case 3: DRIVE_STRAIGHT(); break;                       //when wall is at good distance, drive straight
                 }
             }
             if (!wall_is_right_flag) {
                 switch (maneuver) {
-                    case 0: SHARP_LEFT2(); break;                          //when wall is not found for certain time, turn sharp to the left
+                    case 0: SHARP_LEFT(); break;                          //when wall is not found for certain time, turn sharp to the left
                     case 1: SLOW_LEFT(); break;                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
-                    case 2: SHARP_RIGHT(); lost_wall_timer = 0; break;     //when wall is too close, turn sharp to the left. reset lost wall timer
+                    case 2: SHARP_RIGHT2(); lost_wall_timer = 0; break;     //when wall is too close, turn sharp to the left. reset lost wall timer
                     case 3: DRIVE_STRAIGHT(); break;                       //when wall is at good distance, drive straight
                 }
             }
@@ -204,7 +204,6 @@ int distanceAngleSensor(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
-    
     __delay_ms(15);
     
     return final_byte = (high_byte << 8 | low_byte);
@@ -220,7 +219,6 @@ unsigned int sensorPacket(char packet_id) {
 
 	high_byte = ser_getch();
 	low_byte = ser_getch();
-    
      __delay_ms(15);
 
     return final_byte = (high_byte << 8 | low_byte);
@@ -234,7 +232,6 @@ unsigned char bumpPacket(char packet_id) {
 	ser_putch(packet_id);
 
 	bump_byte = ser_getch();
-    
      __delay_ms(15);
 
     return bump_byte;
@@ -248,12 +245,9 @@ unsigned char cliffPacket(void){
         ser_putch(SENSORS);
         ser_putch(cliff_byte);
         
-        if(ser_getch() > 0)
-        {
-            return 1;
-        }
-         __delay_ms(15);
-    }  
+        if(ser_getch() > 0) return 1;
+        __delay_ms(15);
+    }
     return 0;
 }
 
