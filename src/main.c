@@ -29,6 +29,7 @@ void main(void) {
             adcDisplayDistance();
             __delay_ms(5000);
             moveCCW(400 - scan_360_closest_step_count);
+            explore();
             pb_explore_pressed = 0;
         }
         if (pb_find_wall_pressed) {
