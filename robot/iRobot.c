@@ -19,57 +19,6 @@ void distanceDisplay(int distance) {
     lcdWriteString("mm driven    ");
 }
 
-//Drives the iRobot in a straight line for 4meters, refreshing the LCD as it goes.
-void moveStraight(void){
-    total_distance_travel = 0;
-    
-    DRIVE_STRAIGHT();                                               //Start driving forward at 200mm/s
-    while (total_distance_travel < 4000) {                          //While loop continues until total distance travelled is 4000mm
-        total_distance_travel += distanceAngleSensor(DISTANCE);     //Global variable stores total distance travelled from distancesSensor
-
-        refreshLcd(total_distance_travel);
-    }
-    DRIVE_STOP();                                                   //Stops iRobot after 4m is achieved.
-}
-
-//Drives the iRobot in a straight line for 1m, turns left 90 degrees, then repeats 3 more times. This manuever creates a square.
-void moveSquare(void) {
-    int angle_turn = 0;
-    int current_distance_travel = 0;
-    int last_distance = 0;
-    
-    total_distance_travel = 0;
-
-    char i = 4;
-    for (i; i!=0; i--) {
-        //Drive 1m forward
-        DRIVE_STRAIGHT();                                                       //Start driving forward at 200mm/s
-        while (current_distance_travel <= 995) {                                //While loop continues until total distance travelled is 1000mm
-            current_distance_travel += distanceAngleSensor(DISTANCE);           //Global variable stores total distance travelled from distancesSensor
-            total_distance_travel = current_distance_travel + last_distance;    //During first loop, last_distance shall be 0. Second loop it will be 1000m, Third loop 2000mm etc.
-
-            refreshLcd(total_distance_travel);
-        }
-
-        //After 1m, stop then start turning on the spot
-        DRIVE_STOP();
-        SPIN_LEFT();
-
-        //Turn 90 degrees, after 90 degrees exit the while loop.
-        while(angle_turn < 90) {
-            angle_turn += abs(distanceAngleSensor(ANGLE));
-        }
-
-        //After turning 90 degrees, stop
-        DRIVE_STOP();
-
-        //set current distance travelled to last distance travelled, clear variables for use in 'for' loop again
-        last_distance += current_distance_travel;
-        current_distance_travel = 0;
-        angle_turn = 0;
-    }
-}
-
 /*  
  *  Wall follow function. Starts with a 360 scan to find closest wall. Orientates robot to be facing the wall, then drives till it is 50cm from the wall.
  *  After 50cm from the wall, orientate robot to be perpendicular to the wall, depending on which direction it was initially. 

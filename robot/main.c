@@ -1,9 +1,7 @@
 #include "main.h"
 
 //set all push button flags to 0
-volatile bit pb_scan_pressed = 0;
-volatile bit pb_drive_4m_pressed = 0;
-volatile bit pb_drive_square_pressed = 0;
+volatile bit pb_explore_pressed = 0;
 volatile bit pb_find_wall_pressed = 0;
 
 //calls all other module setup functions
@@ -25,21 +23,13 @@ void main(void) {
         refreshLcd(total_distance_travel);
         
         //checks for pb flags. If flag is set then perform a function
-        if (pb_scan_pressed) {
+        if (pb_explore_pressed) {
             scanCw(400);
             moveCCW(scan_360_closest_step_count);
             adcDisplayDistance();
             __delay_ms(5000);
             moveCCW(400 - scan_360_closest_step_count);
-            pb_scan_pressed = 0;
-        }
-        if (pb_drive_4m_pressed) {
-            moveStraight();
-            pb_drive_4m_pressed = 0;
-        }
-        if (pb_drive_square_pressed) {
-            moveSquare();
-            pb_drive_square_pressed = 0;
+            pb_explore_pressed = 0;
         }
         if (pb_find_wall_pressed) {
             wallFollow();
