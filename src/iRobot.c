@@ -33,7 +33,7 @@ void wallFollow (void){
     
     total_distance_travel = 0;
     scanCcw(400);                           //CCWscan to find closest wall
-    moveCW(scan_360_closest_step_count);    //Point IR sensor towards the wall.
+    moveCW(scan_360_step_count);    //Point IR sensor towards the wall.
     
     __delay_ms(500);
     
@@ -41,12 +41,12 @@ void wallFollow (void){
      *  Depending on robot and IR sensor positions, orientate robot to face the wall in the quickest turn, either CW or CCW.
      *  Also set a flag which determines which direction to follow the wall for the rest of the procedure.
      */
-    if (scan_360_closest_step_count > 200){
-        angle = (400 - scan_360_closest_step_count) * 90 / 100;
+    if (scan_360_step_count > 200){
+        angle = (400 - scan_360_step_count) * 90 / 100;
         SPIN_LEFT();
         wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
     } else {
-        angle = scan_360_closest_step_count * 90 / 100;
+        angle = scan_360_step_count * 90 / 100;
         SPIN_RIGHT();
         wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
@@ -58,7 +58,7 @@ void wallFollow (void){
 
     //After turning 90 degrees, stop
     DRIVE_STOP();
-    moveCW(400 - scan_360_closest_step_count);
+    moveCW(400 - scan_360_step_count);
     
     //drive forward till 60cm from wall
     DRIVE_STRAIGHT();

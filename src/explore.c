@@ -1,13 +1,37 @@
 #include "explore.h"
 
-void explore(void) {
-    char map [4][5];        //4x5 array for the map of the maze. 4 rows. 5 columns.
-    
+void setupExplore(void) {
+    setupGlobalMap();
+    setupLocalMap();
+}
+
+void setupGlobalMap(void) {
     char x = 0;
     char y = 0;
     for (x; x!=4; x++) {
         for (y; y!=5; y++) {
-            map [x][y] = 0;
+            global_map [x][y] = 0;
         }
     }
+}
+
+void setupLocalMap(void) {
+    char x = 0;
+    char y = 0;
+    for (x; x!=3; x++) {
+        for (y; y!=3; y++) {
+            local_map [x][y] = 0;
+        }
+    }
+}
+
+void explore(void) {
+    still_exploring = 1;
+    scanLocal(400);
+
+    returnHome();
+}
+
+void returnHome(void) {
+    
 }

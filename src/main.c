@@ -13,6 +13,7 @@ void setup(void) {
     setupSPI();                     //calls spi setup function for stepper motor control
     setupADC();                     //calls adc setup function for ir reading control
     setupLCD();                     //calls lcd setup function to allow writing to lcd
+    setupExplore();
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
@@ -24,11 +25,6 @@ void main(void) {
         
         //checks for pb flags. If flag is set then perform a function
         if (pb_explore_pressed) {
-            scanCw(400);
-            moveCCW(scan_360_closest_step_count);
-            adcDisplayDistance();
-            __delay_ms(5000);
-            moveCCW(400 - scan_360_closest_step_count);
             explore();
             pb_explore_pressed = 0;
         }
