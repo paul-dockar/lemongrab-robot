@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>lemongrab-robot</name>
+            <name>assignment_2</name>
             <creation-uuid>47a2f9fd-f169-4c42-921d-8227ced4589a</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
