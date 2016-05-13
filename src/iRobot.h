@@ -24,8 +24,8 @@
 #define     BUMP_SENSOR          7
 
 //IROBOT WHEEL SPEED DEFINES
-#define     RIGHT_WHEEL_FAST     400         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
-#define     LEFT_WHEEL_FAST      400         //left wheel speed in mm/s
+#define     RIGHT_WHEEL_FAST     200         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
+#define     LEFT_WHEEL_FAST      200         //left wheel speed in mm/s
 #define     RIGHT_WHEEL_SLOW     50          //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
 #define     LEFT_WHEEL_SLOW      50         //left wheel speed in mm/s
 
