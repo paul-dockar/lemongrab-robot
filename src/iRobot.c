@@ -126,20 +126,16 @@ void wallFollow (void){
 
 void explore(void) {
     still_exploring = 1;
-    driveStraight(2000);
-    driveAngle(180);
-    driveStraight(2000);
-    driveAngle(-180);
-    driveStraight(2000);
-    driveAngle(180);
-    driveStraight(2000);
-    driveAngle(-180);
 
     returnHome();
 }
 
 void returnHome(void) {
     
+    
+    //go to sleep when finished
+    lcdWriteControl(0b00000000);
+    asm("CLRWDT \n SLEEP");
 }
 
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
