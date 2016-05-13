@@ -22,6 +22,7 @@
 #define     BATTERY_CHARGE      25          //battery current charge in mAh
 #define     BATTERY_CAPACITY    26          //battery capacity in mAh
 #define     BUMP_SENSOR          7
+#define     VIRTWALL_SENSOR     13
 
 //IROBOT WHEEL SPEED DEFINES
 #define     RIGHT_WHEEL_FAST     200         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
@@ -64,6 +65,7 @@ int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor d
 unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
 unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
 unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
+unsigned char VirtualWallPacket(char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 int abs(int a);                                 //returns the absolute value of an int
 

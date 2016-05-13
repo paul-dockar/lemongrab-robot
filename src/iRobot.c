@@ -112,15 +112,18 @@ void wallFollow (void){
                     case 3: DRIVE_STRAIGHT_F(); break;                       //when wall is at good distance, drive straight
                 }
             }
-            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
+            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || VirtualWallPacket(VIRTWALL_SENSOR) > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
         }
         
         //If during normal routine, bump_flag is set, then stop, delay, and then continue normal routine
-        if (bump_cliff_flag) {
+        /*if (bump_cliff_flag) {
             DRIVE_STOP();
             __delay_ms(10000);
             bump_cliff_flag = 0;
-        }
+        }*/
+        if (!wall_is_right_flag && bump_cliff_flag) SHARP_RIGHT();
+        if (wall_is_right_flag && bump_cliff_flag) SHARP_LEFT();
+        
     }
 }
 
@@ -248,6 +251,18 @@ unsigned char cliffPacket(void){
         __delay_ms(15);
     }
     return 0;
+}
+
+unsigned char VirtualWallPacket(char packet_id) {
+    unsigned char VirtWall_byte;
+
+	ser_putch(SENSORS);
+	ser_putch(packet_id);
+
+	VirtWall_byte = ser_getch();
+     __delay_ms(15);
+
+    return VirtWall_byte;
 }
 
 //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
