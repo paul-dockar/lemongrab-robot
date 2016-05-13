@@ -24,20 +24,27 @@
 #define     BUMP_SENSOR          7
 
 //IROBOT WHEEL SPEED DEFINES
-#define     RIGHT_WHEEL_200     195         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
-#define     LEFT_WHEEL_200      200         //left wheel speed in mm/s
+#define     RIGHT_WHEEL_FAST     400         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
+#define     LEFT_WHEEL_FAST      400         //left wheel speed in mm/s
+#define     RIGHT_WHEEL_SLOW     50          //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
+#define     LEFT_WHEEL_SLOW      50         //left wheel speed in mm/s
 
 //IROBOT MANEUVERS
-#define     SHARP_RIGHT()       drive(-80,LEFT_WHEEL_200);
-#define     SHARP_LEFT()        drive(RIGHT_WHEEL_200,-80);
-#define     SHARP_RIGHT2()      drive(-90,LEFT_WHEEL_200);
-#define     SHARP_LEFT2()       drive(RIGHT_WHEEL_200,-90);
-#define     SLOW_RIGHT()        drive(150,LEFT_WHEEL_200);
-#define     SLOW_LEFT()         drive(RIGHT_WHEEL_200,150);
-#define     SPIN_RIGHT()        drive(-RIGHT_WHEEL_200,LEFT_WHEEL_200);
-#define     SPIN_LEFT()         drive(RIGHT_WHEEL_200,-LEFT_WHEEL_200);
-#define     DRIVE_STRAIGHT()    drive(RIGHT_WHEEL_200,LEFT_WHEEL_200);
-#define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_200,-LEFT_WHEEL_200);
+#define     SHARP_RIGHT()       drive(-80,LEFT_WHEEL_FAST);
+#define     SHARP_LEFT()        drive(RIGHT_WHEEL_FAST,-80);
+#define     SHARP_RIGHT2()      drive(-90,LEFT_WHEEL_FAST);
+#define     SHARP_LEFT2()       drive(RIGHT_WHEEL_FAST,-90);
+#define     SLOW_RIGHT()        drive(150,LEFT_WHEEL_FAST);
+#define     SLOW_LEFT()         drive(RIGHT_WHEEL_FAST,150);
+
+#define     SPIN_RIGHT_F()        drive(-RIGHT_WHEEL_FAST,LEFT_WHEEL_FAST);
+#define     SPIN_LEFT_F()         drive(RIGHT_WHEEL_FAST,-LEFT_WHEEL_FAST);
+#define     SPIN_RIGHT_S()        drive(-RIGHT_WHEEL_SLOW,LEFT_WHEEL_FAST);
+#define     SPIN_LEFT_S()         drive(RIGHT_WHEEL_SLOW,-LEFT_WHEEL_FAST);
+
+#define     DRIVE_STRAIGHT_F()  drive(RIGHT_WHEEL_FAST,LEFT_WHEEL_FAST);
+#define     DRIVE_STRAIGHT_S()  drive(RIGHT_WHEEL_SLOW,LEFT_WHEEL_SLOW);
+#define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_FAST,-LEFT_WHEEL_FAST);
 #define     DRIVE_STOP()        drive(0,0); __delay_ms(800);
 
 int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
@@ -48,6 +55,8 @@ void moveStraight(void);                        //Drives the iRobot in a straigh
 void moveSquare(void);                          //Drives the iRobot in a straight line for 1m, turns left 90 degrees, then repeats 3 more times. This manuever creates a square.
 void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
+int driveStraight(int distance);
+int driveAngle(int angle);
 int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor data per packet id in datasheet
 unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
 unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
