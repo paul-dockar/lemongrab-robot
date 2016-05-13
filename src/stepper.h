@@ -14,7 +14,6 @@ void findClosestWall(int);         //takes ADC and checks against old adc value,
 void moveCW(unsigned int);    //move stepper CW
 void moveCCW(unsigned int);   //move stepper CCW
 void resetADC(void);                //simple function to clear adc distance and step counters
-void scanLocal(unsigned int steps);
-void findFurthestWall(int adc_distance);
+void scan360Local(void);
 
 #endif	/* STEPPER_H */

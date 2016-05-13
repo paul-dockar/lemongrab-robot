@@ -33,7 +33,7 @@ void wallFollow (void){
     
     total_distance_travel = 0;
     scanCcw(400);                           //CCWscan to find closest wall
-    moveCW(scan_360_step_count);    //Point IR sensor towards the wall.
+    moveCW(scan_360_step_count);            //Point IR sensor towards the wall.
     
     __delay_ms(500);
     
@@ -129,8 +129,10 @@ void wallFollow (void){
 
 void explore(void) {
     still_exploring = 1;
+    scan360Local();
+    __delay_ms(10000);
 
-    returnHome();
+    //returnHome();
 }
 
 void returnHome(void) {
@@ -191,6 +193,7 @@ int driveAngle(int angle) {
     while(angle_turned < abs(angle)) {
     angle_turned += abs(distanceAngleSensor(ANGLE));
     }
+    
     DRIVE_STOP();
     return angle_turned;
 }

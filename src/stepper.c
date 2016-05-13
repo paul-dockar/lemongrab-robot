@@ -78,39 +78,46 @@ void moveCCW(unsigned int steps) {
 void resetADC(void) {
     scan_360_step_count = 0;
     old_adc_distance = getAdcDist(getAdc());
+    lcdWriteControl(0b00000001);    //clear display
 }
 
 
 //explore functions down here for now
 
 //this is temp bullshit need to fix it later
-void scanLocal(unsigned int steps) {
+void scan360Local(void) {
     int adc_distance;
+    char i;
+    char x = 0;
+    char y = 0;
     resetADC();
-    moveCCW(100);
+    moveCCW(50);
     
-    spi_transfer(cw_control_byte);
-	for(steps; steps!=0; steps--){
-        adc_distance = adcDisplayDistance();
-        findFurthestWall(adc_distance);
-        SM_STEP();
-	}
-    spi_transfer(off_control_byte);
-    __delay_ms(2);
+    lcdSetCursor(0x00);
     
-    moveCCW(scan_360_step_count);
-    __delay_ms(5000);
-    moveCW(400 - scan_360_step_count);
-    moveCCW(100);
-}
+    for (i=8; i!=0; i--) {
+        adc_distance = getAdcDist(getAdc());
+        writeLocalMap(adc_distance, x, y);
+        moveCW(50);
+        
+        if (i == 4) lcdSetCursor(0x40);
+        getLocalMap(x,y);
+        lcdWriteString(" ");
+        
+        switch (i) {
+            case 0: y++; break;
+            case 1: y++; break;
+            case 2: x++; break;
+            case 3: x++; break;
+            case 4: y--; break;
+            case 5: y--; break;
+            case 6: x--; break;
+            case 7: x--; break;
+        }
+        
 
-void findFurthestWall(int adc_distance) {
-    unsigned int new_adc_distance = adc_distance;
-
-    if (new_adc_distance > old_adc_distance) {
-        old_adc_distance = new_adc_distance;
-        scan_360_step_count = 0;
-    } else {
-        scan_360_step_count++;
+        
     }
+    
+    moveCCW(350);
 }
