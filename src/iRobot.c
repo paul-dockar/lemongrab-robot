@@ -123,7 +123,25 @@ void wallFollow (void){
         }
     }
 }
-  
+
+void explore(void) {
+    still_exploring = 1;
+    driveStraight(2000);
+    driveAngle(180);
+    driveStraight(2000);
+    driveAngle(-180);
+    driveStraight(2000);
+    driveAngle(180);
+    driveStraight(2000);
+    driveAngle(-180);
+
+    returnHome();
+}
+
+void returnHome(void) {
+    
+}
+
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 void drive(int right_wheel, int left_wheel) {
     char right_high = 0;

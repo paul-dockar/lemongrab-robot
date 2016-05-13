@@ -54,6 +54,9 @@ void distanceDisplay(int distance);             //This function takes a distance
 void moveStraight(void);                        //Drives the iRobot in a straight line for 4meters, refreshing the LCD as it goes.
 void moveSquare(void);                          //Drives the iRobot in a straight line for 1m, turns left 90 degrees, then repeats 3 more times. This manuever creates a square.
 void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
+void explore(void);
+void returnHome(void);
+
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveStraight(int distance);
 int driveAngle(int angle);

@@ -24,21 +24,3 @@ void setupLocalMap(void) {
         }
     }
 }
-
-void explore(void) {
-    still_exploring = 1;
-    driveStraight(2000);
-    driveAngle(180);
-    driveStraight(2000);
-    driveAngle(-180);
-    driveStraight(2000);
-    driveAngle(180);
-    driveStraight(2000);
-    driveAngle(-180);
-
-    returnHome();
-}
-
-void returnHome(void) {
-    
-}

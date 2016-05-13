@@ -6,8 +6,6 @@
 void setupExplore(void);
 void setupGlobalMap(void);
 void setupLocalMap(void);
-void explore(void);
-void returnHome(void);
 
 bit still_exploring;
 char global_map [4][5];
