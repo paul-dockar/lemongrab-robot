@@ -35,21 +35,13 @@ void interrupt isr(void) {
         }
 
         //checks for all 4 push buttons. If one is detected as pressed, start debounce counter. If debounce counter returns 1, then toggle push button flag.
-        if (PB_SCAN || PB_DRIVE_4M || PB_DRIVE_SQUARE || PB_FIND_WALL){
+        if (PB_EXPLORE || PB_WALL_FOLLOW){
             pb_debounce_count++;
-            if (debounce(pb_debounce_count) && PB_SCAN) {
+            if (debounce(pb_debounce_count) && PB_EXPLORE) {
                 pb_release = 0;
-                pb_scan_pressed = 1;
+                pb_explore_pressed = 1;
             }
-            if (debounce(pb_debounce_count) && PB_DRIVE_4M) {
-                pb_release = 0;
-                pb_drive_4m_pressed = 1;
-            }
-            if (debounce(pb_debounce_count) && PB_DRIVE_SQUARE) {
-                pb_release = 0;
-                pb_drive_square_pressed = 1;
-            }
-            if (debounce(pb_debounce_count) && PB_FIND_WALL) {
+            if (debounce(pb_debounce_count) && PB_WALL_FOLLOW) {
                 pb_release = 0;
                 pb_find_wall_pressed = 1;
             }
