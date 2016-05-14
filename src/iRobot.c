@@ -128,12 +128,21 @@ void wallFollow (void){
 }
 
 void explore(void) {
+    
+    reset_flag = 1;
     exploring = 1;
-    scanLocal(FULL_SCAN);
-    scanLocal(HALF_SCAN);
-    scanLocal(HALF_SCAN);
+    while (exploring) {
+        if (reset_flag)  scanLocal(FULL_SCAN);
+        if (!reset_flag) scanLocal(HALF_SCAN);
+        
+        
+        
+        
+        
+        
+    }
 
-    //returnHome();
+    if (!exploring) returnHome();
 }
 
 void returnHome(void) {

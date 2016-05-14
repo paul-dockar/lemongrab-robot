@@ -6,6 +6,7 @@
 void setupExplore(void);
 void setupGlobalMap(void);
 void setupLocalMap(void);
+void writeGlobalMap(char, char, char);
 void writeLocalMap(int, char, char);
 
 bit exploring;

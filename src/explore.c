@@ -25,6 +25,10 @@ void setupLocalMap(void) {
     }
 }
 
+void writeGlobalMap(char pos, char x, char y) {
+    global_map [x][y] = pos;
+}
+
 void writeLocalMap(int adc_distance, char x, char y) {
     local_map [x][y] = adc_distance;
 }
