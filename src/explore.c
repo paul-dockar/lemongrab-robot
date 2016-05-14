@@ -28,9 +28,3 @@ void setupLocalMap(void) {
 void writeLocalMap(int adc_distance, char x, char y) {
     local_map [x][y] = adc_distance;
 }
-
-void getLocalMap(char x, char y) {
-    char temp;
-    temp = local_map [x][y];
-    lcdWriteToDigitBCD(temp);
-}

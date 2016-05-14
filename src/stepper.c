@@ -1,11 +1,11 @@
 #include "stepper.h"
 
-unsigned int scan_360_step_count = 0;   //counter to count how many half steps since closest scanned object
-unsigned int old_adc_distance = 0;                   //variable to store closest reading of adc distance since push button press
+unsigned int scan_360_step_count = 0;           //counter to count how many half steps since closest scanned object
+unsigned int old_adc_distance = 0;              //variable to store closest reading of adc distance since push button press
 
 unsigned char cw_control_byte = 0b00001101;     //stepper motor control byte for; enabled, clockwise, half-steps
 unsigned char ccw_control_byte = 0b00001111;    //stepper motor control byte for; enabled, counterclockwise, half-steps
-unsigned char off_control_byte = 0b00001100;
+unsigned char off_control_byte = 0b00000000;
 
 /*
  * Scan stepper motor clockwise. Finds the closest wall and stores this value to return to position later.
@@ -81,43 +81,32 @@ void resetADC(void) {
     lcdWriteControl(0b00000001);    //clear display
 }
 
-
 //explore functions down here for now
-
-//this is temp bullshit need to fix it later
-void scan360Local(void) {
+void scanLocal(char scan_steps) {
     int adc_distance;
-    char i;
-    char x = 0;
+    char x = 1;
     char y = 0;
+    int stepper_pos = 0;
     resetADC();
-    moveCCW(50);
+    moveCCW(100);
     
-    lcdSetCursor(0x00);
-    
-    for (i=8; i!=0; i--) {
-        adc_distance = getAdcDist(getAdc());
+    for (scan_steps; scan_steps!=0; scan_steps--) {
+        adc_distance = adcDisplayDistance();
         writeLocalMap(adc_distance, x, y);
-        moveCW(50);
         
-        if (i == 4) lcdSetCursor(0x40);
-        getLocalMap(x,y);
-        lcdWriteString(" ");
+        if (scan_steps > 1) moveCW(50);
         
-        switch (i) {
-            case 0: y++; break;
-            case 1: y++; break;
-            case 2: x++; break;
-            case 3: x++; break;
-            case 4: y--; break;
-            case 5: y--; break;
-            case 6: x--; break;
-            case 7: x--; break;
+        switch (stepper_pos) {
+            case 0: x--; stepper_pos++; break;
+            case 1: y++; stepper_pos++; break;
+            case 2: y++; stepper_pos++; break;
+            case 3: x++; stepper_pos++; break;
+            case 4: x++; stepper_pos++; break;
+            case 5: y--; stepper_pos++; break;
+            case 6: y--; stepper_pos++; break;
+            case 7: x--; stepper_pos++; break;
         }
-        
-
-        
     }
-    
-    moveCCW(350);
+    stepper_pos = (stepper_pos * 50) - 150;
+    moveCCW(stepper_pos);
 }

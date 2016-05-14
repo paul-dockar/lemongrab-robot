@@ -128,9 +128,10 @@ void wallFollow (void){
 }
 
 void explore(void) {
-    still_exploring = 1;
-    scan360Local();
-    __delay_ms(10000);
+    exploring = 1;
+    scanLocal(FULL_SCAN);
+    scanLocal(HALF_SCAN);
+    scanLocal(HALF_SCAN);
 
     //returnHome();
 }
