@@ -25,10 +25,39 @@ void setupLocalMap(void) {
     }
 }
 
-void writeGlobalMap(char pos, char x, char y) {
-    global_map [x][y] = pos;
+void writeGlobalMap(char value, char x, char y) {
+    global_map [x][y] = value;
 }
 
 void writeLocalMap(int adc_distance, char x, char y) {
     local_map [x][y] = adc_distance;
+}
+
+char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
+    char *closed_set [16];
+    char *open_set [4];
+    char *current_pos;
+
+    writeGlobalMap(ROBOT, robot_x, robot_y);
+    writeGlobalMap(GOAL, goal_x, goal_y);
+    
+    current_pos = global_map[robot_x, robot_y];
+    open_set[0] = current_pos;
+    
+    while (*open_set [0] != 0) {
+        char os = 0;
+        char cs = 0;
+        for (int i=3; i>=0; i--) {
+            char smallest_open_set = 255;
+            if (*open_set [i] != 0 && smallest_open_set > *open_set [i]) {
+                smallest_open_set = *open_set [i];   
+            }
+            
+        }
+        closed_set[cs] = open_set [os];
+    }
+    
+    
+    
+    return 0;
 }

@@ -128,14 +128,20 @@ void wallFollow (void){
 }
 
 void explore(void) {
+    char direction_to_travel = 0;
+    char robot_x = 0;
+    char robot_y = 1;
+    char goal_x = 0;
+    char goal_y = 3;
     
     reset_flag = 1;
     exploring = 1;
+    
     while (exploring) {
         if (reset_flag)  scanLocal(FULL_SCAN);
         if (!reset_flag) scanLocal(HALF_SCAN);
         
-        
+        direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
         
         
         
