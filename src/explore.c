@@ -29,30 +29,9 @@ void setupGlobalMap(void) {
             global_map [x][y] = 0;
         }
     }
-
-    //output array
-    for (char x = 0; x != GLOBAL_X; x++) {
-        for (char y = 0; y != GLOBAL_Y; y++) {
-            global_map [x][y] = 0;
-        }
-    }
-
-    //output array addresses
-    for (char x = 0; x != GLOBAL_X; x++) {
-        for (char y = 0; y != GLOBAL_Y; y++) {
-            global_map [x][y] = 0;
-        }
-    }
 }
 
 void setupLocalMap(void) {
-    for (char x = 0; x != LOCAL_X; x++) {
-        for (char y = 0; y != LOCAL_Y; y++) {
-            local_map [x][y] = 0;
-        }
-    }
-
-    //output array
     for (char x = 0; x != LOCAL_X; x++) {
         for (char y = 0; y != LOCAL_Y; y++) {
             local_map [x][y] = 0;
@@ -114,21 +93,8 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
         *neighbour.down     = checkNeighbour(neighbour.down, goal_position, goal_x, goal_y);
         *neighbour.left     = checkNeighbour(neighbour.left, goal_position, goal_x, goal_y);
 
-        for (char x = 0; x != GLOBAL_X; x++) {
-            for (char y = 0; y != GLOBAL_Y; y++) {
-            }
-        }
-
         //put current_open_set onto closed set
         pushToClosedSet(current_open_set);
-        
-        //print open set
-        for (char i = 0; i < OPEN_SET_SIZE; i++) {
-        }
-
-        //print closed set
-        for (char i = 0; i < CLOSED_SET_SIZE; i++) {
-        }
         
         count++;
     }
