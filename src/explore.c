@@ -43,18 +43,18 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     
     char g = 0;
     char h = 0;
-    char f = g + h
+    char f = g + h;
     
-    initialisePointersNULL(*closed_set[], 16);
-    initialisePointersNULL(*open_set[], 4);
+    initialisePointersNULL(*closed_set, 16);
+    initialisePointersNULL(*open_set, 4);
 
     writeGlobalMap(ROBOT, robot_x, robot_y);
     writeGlobalMap(GOAL, goal_x, goal_y);
     
-    global_map[robot_x, robot_y] = f;
-    open_set[0] = &global_map[robot_x, robot_y];
+    global_map[robot_x][robot_y] = f;
+    open_set[0] = &global_map[robot_x][robot_y];
     
-    while (*open_set [0] != NULL) {
+    while (*open_set [0] != 0) {
         char smallest_open_set = 255;
         for (char i = 3; i >= 0; i--) {
             if (*open_set [i] != 0 && smallest_open_set > *open_set [i]) {
@@ -74,6 +74,6 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
 
 void initialisePointersNULL(char *array[], char size) {
     for (char i = 0; i < size; i++) {
-        *array[i] = NULL;
+        *array[i] = 0;
     }
 }
