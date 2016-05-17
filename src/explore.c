@@ -143,7 +143,7 @@ void initialisePointersNULL(unsigned char *array[], char size) {
 }
 
 void removeFromOpenSet(unsigned char *item_to_remove) {
-    for (char i = 3; i >= 0; i--) {
+    for (char i = 0; i < OPEN_SET_SIZE; i++) {
         if (open_set [i] == item_to_remove) {
             open_set [i] = 0;
         }
