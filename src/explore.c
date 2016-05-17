@@ -15,25 +15,26 @@ struct NEIGHBOUR {
 void initialisePointersNULL(unsigned char *array[], char size);
 void removeFromOpenSet(unsigned char *item_to_remove);
 void pushToClosedSet(unsigned char *current_open_set);
+void rearrangeOpenSet(void);
 unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neighbour_node);
-unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, char goal_x, char goal_y);
+unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsigned char *robot, char goal_x, char goal_y);
 
 void setupExplore(void) {
-    setupGlobalMap();
-    setupLocalMap();
+    initialiseGlobalMap();
+    initialiseLocalMap();
 }
 
-void setupGlobalMap(void) {
-    for (char x = 0; x != GLOBAL_X; x++) {
-        for (char y = 0; y != GLOBAL_Y; y++) {
+void initialiseGlobalMap(void) {
+    for (char x = 0; x < GLOBAL_X; x++) {
+        for (char y = 0; y < GLOBAL_Y; y++) {
             global_map [x][y] = 0;
         }
     }
 }
 
-void setupLocalMap(void) {
-    for (char x = 0; x != LOCAL_X; x++) {
-        for (char y = 0; y != LOCAL_Y; y++) {
+void initialiseLocalMap(void) {
+    for (char x = 0; x < LOCAL_X; x++) {
+        for (char y = 0; y < LOCAL_Y; y++) {
             local_map [x][y] = 0;
         }
     }
@@ -52,22 +53,17 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     unsigned char *goal_position = &global_map[goal_x][goal_y];
     unsigned char *robot_position = &global_map[robot_x][robot_y];
     
-    char g = 0;
-    char h = 0;
-    char f = g + h;
-    
-    //setup robot/goal position, clear open and closed sets
+    //setup robot/goal position, clear open and closed sets, clear global map
+    initialiseGlobalMap();
     initialisePointersNULL(closed_set, CLOSED_SET_SIZE);
     initialisePointersNULL(open_set, OPEN_SET_SIZE);
 
-    //writeGlobalMap(ROBOT, robot_x, robot_y);
-    //writeGlobalMap(GOAL, goal_x, goal_y);
+    writeGlobalMap(ROBOT, robot_x, robot_y);
+    writeGlobalMap(GOAL, goal_x, goal_y);
 
-    writeGlobalMap(f, robot_x, robot_y);                //put starting node (robot) to 0.
     open_set[0] = robot_position;                       //put starting node on open set list
 
-    char count = 0;
-    while (count <= 50) {
+    while (*open_set [0] != 0) {
         unsigned char smallest_open_set = MAX;
 
         //find node with least f on the open list
@@ -88,17 +84,19 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
         neighbour.left  = getNeighbourNodes(current_open_set, LEFT);
         
         //for each neighbour; write f value to global map
-        *neighbour.up       = checkNeighbour(neighbour.up, goal_position, goal_x, goal_y);
-        *neighbour.right    = checkNeighbour(neighbour.right, goal_position, goal_x, goal_y);
-        *neighbour.down     = checkNeighbour(neighbour.down, goal_position, goal_x, goal_y);
-        *neighbour.left     = checkNeighbour(neighbour.left, goal_position, goal_x, goal_y);
+        *neighbour.up       = checkNeighbour(neighbour.up, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.right    = checkNeighbour(neighbour.right, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.down     = checkNeighbour(neighbour.down, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.left     = checkNeighbour(neighbour.left, goal_position, robot_position, goal_x, goal_y);
+
+        if (*neighbour.up       == GOAL) return UP;
+        if (*neighbour.right    == GOAL) return RIGHT;
+        if (*neighbour.down     == GOAL) return DOWN;
+        if (*neighbour.left     == GOAL) return LEFT;
 
         //put current_open_set onto closed set
         pushToClosedSet(current_open_set);
-        
-        count++;
     }
-    
     return 0;
 }
 
@@ -159,7 +157,7 @@ unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neig
     return &ignore;
 }
 
-unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, char goal_x, char goal_y) {
+unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsigned char *robot, char goal_x, char goal_y) {
     char distance=0;
     char distance_x=0;
     char distance_y=0;
@@ -167,7 +165,8 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, char
     char pos_y=0;
 
     if (neighbour == &ignore) return MAX;
-    if (neighbour == goal) return 0;
+    if (neighbour == goal) return GOAL;
+    if (neighbour == robot) return ROBOT;
     
     for (char x = 0; x != GLOBAL_X; x++) {
         for (char y = 0; y != GLOBAL_Y; y++) {
@@ -183,20 +182,19 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, char
     distance_y = pos_y - goal_y;
     distance = abs(distance_x) + abs(distance_y);
 
-    
-
-    //if a node with same position as successor is in the OPEN list, which has lower distance value, skip it
-    //for (char i = 0; i < OPEN_SET_SIZE; i++) {
-    //    if (neighbour == open_set[i]) {
-    //        if (*neighbour < &open_set[i]
-    //    }
-    //}
-    //for (char i = 0; i < CLOSED_SET_SIZE; i++) {
-    //    if *neighbour == closed_set[i]) {
-
-    //    }
-    //}
+    //if a node with same position as successor is in the OPEN list, skip it
+    for (char i = 0; i < OPEN_SET_SIZE; i++) {
+        if (neighbour == open_set[i]) {
+            return distance;
+        }
+    }
+    //if a node with same position as successor is in the CLOSE list, skip it
+    for (char i = 0; i < CLOSED_SET_SIZE; i++) {
+        if (neighbour == closed_set[i]) {
+            return distance;
+        }
+    }
+    //otherwise add node to open list
     pushToOpenSet(neighbour);
-
     return distance;
 }

@@ -143,9 +143,6 @@ void explore(void) {
         
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
         
-        
-        
-        
     }
 
     if (!exploring) returnHome();
