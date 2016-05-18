@@ -145,9 +145,9 @@ unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neig
         for (char y = 0; y < GLOBAL_Y; y++) {
             if (current_node == &global_map[x][y]) {
                 if (x == 0 && neighbour_direction == UP)    return &ignore;
-                if (x == 4 && neighbour_direction == DOWN)  return &ignore;
+                if (x == 3 && neighbour_direction == DOWN)  return &ignore;
                 if (y == 0 && neighbour_direction == LEFT)  return &ignore;
-                if (y == 5 && neighbour_direction == RIGHT) return &ignore;
+                if (y == 4 && neighbour_direction == RIGHT) return &ignore;
 
                 switch (neighbour_direction) {
                     case 1: x--; return (&global_map[x][y]);
