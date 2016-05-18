@@ -2,7 +2,6 @@
 
 unsigned char *closed_set [CLOSED_SET_SIZE];
 unsigned char *open_set [OPEN_SET_SIZE];
-unsigned char ignore = 0;
 
 struct NEIGHBOUR {
     unsigned char *up;
@@ -52,6 +51,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     unsigned char *current_open_set = 0;
     unsigned char *goal_position = &global_map[goal_x][goal_y];
     unsigned char *robot_position = &global_map[robot_x][robot_y];
+    unsigned char ignore = 0;
     
     //setup robot/goal position, clear open and closed sets, clear global map
     initialiseGlobalMap();
@@ -63,6 +63,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
 
     open_set[0] = robot_position;                       //put starting node on open set list
 
+    //this while loop test doesnt exactly work atm FYI. but it is exited once the goal is found via early return call
     while (*open_set [0] != 0) {
         unsigned char smallest_open_set = MAX;
 
@@ -88,7 +89,10 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
         *neighbour.right    = checkNeighbour(neighbour.right, goal_position, robot_position, goal_x, goal_y);
         *neighbour.down     = checkNeighbour(neighbour.down, goal_position, robot_position, goal_x, goal_y);
         *neighbour.left     = checkNeighbour(neighbour.left, goal_position, robot_position, goal_x, goal_y);
-
+        
+        //please note this is currently incorrect returns (its mostly correct, but not exactly lol)
+        //need to change to set the direction on the first iteration,
+        //if that path is followed through to the goal, then return the direction from the first iteration
         if (*neighbour.up       == GOAL) return UP;
         if (*neighbour.right    == GOAL) return RIGHT;
         if (*neighbour.down     == GOAL) return DOWN;
@@ -137,8 +141,8 @@ void pushToOpenSet(unsigned char *current_neighbour){
 }
 
 unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neighbour_direction) {
-    for (char x = 0; x != GLOBAL_X; x++) {
-        for (char y = 0; y != GLOBAL_Y; y++) {
+    for (char x = 0; x < GLOBAL_X; x++) {
+        for (char y = 0; y < GLOBAL_Y; y++) {
             if (current_node == &global_map[x][y]) {
                 if (x == 0 && neighbour_direction == UP)    return &ignore;
                 if (x == 4 && neighbour_direction == DOWN)  return &ignore;
@@ -168,8 +172,8 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsi
     if (neighbour == goal) return GOAL;
     if (neighbour == robot) return ROBOT;
     
-    for (char x = 0; x != GLOBAL_X; x++) {
-        for (char y = 0; y != GLOBAL_Y; y++) {
+    for (char x = 0; x < GLOBAL_X; x++) {
+        for (char y = 0; y < GLOBAL_Y; y++) {
             if (neighbour == &global_map[x][y]) {
                 pos_x = x;
                 pos_y = y;
@@ -177,7 +181,8 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsi
             }
         }
     }
-
+    
+    //this is just using the h value for f = g + h. Might add in g later where g = 1 (since it is always 1 anyway no need to over complicate it.
     distance_x = pos_x - goal_x;
     distance_y = pos_y - goal_y;
     distance = abs(distance_x) + abs(distance_y);
