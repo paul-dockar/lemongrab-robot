@@ -6,7 +6,6 @@
 #define     ROBOT       100
 #define     GOAL        200
 #define     WALL        255
-#define     DEADEND     254
 #define     CLIFF       253
 
 #define     GLOBAL_X        4
@@ -17,11 +16,12 @@
 #define     CLOSED_SET_SIZE 20
 #define     OPEN_SET_SIZE   6
 
+#define     DEADEND         -1
+#define     STOP            0
 #define     UP              1
 #define     RIGHT           2
 #define     DOWN            3
 #define     LEFT            4
-
 
 void setupExplore(void);
 char findPathAStar(char, char, char, char);
