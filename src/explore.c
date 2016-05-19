@@ -50,7 +50,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
 
     //check if robot is in goal positon
     if (goal_position == robot_position) return 0;
-    
+
     //setup robot/goal position, clear open and closed sets, clear global map
     setupGlobalMap();
     writeGlobalMap(ROBOT, robot_x, robot_y);
@@ -61,7 +61,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     marryUpLocalMapData(local, robot_x, robot_y);
     pushToOpenSet(robot_position);                       //put starting node on open set list
 
-    while (*open_set [0] != 0) {
+    while (open_set [0] != 0) {
         //find node with least f on the open list
         smallest_open_set = WALL;
         for (char i = 0; i < OPEN_SET_SIZE; i++) {
@@ -73,7 +73,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
 
         //remove the chosen one from the open list
         removeFromOpenSet(current_open_set);
-        
+
         //generate 4 neighbours from current node
         neighbour.up    = getNeighbourNodes(current_open_set, UP);
         neighbour.right = getNeighbourNodes(current_open_set, RIGHT);
@@ -95,7 +95,7 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
         if (*neighbour.right    == GOAL) return direction_to_travel;
         if (*neighbour.down     == GOAL) return direction_to_travel;
         if (*neighbour.left     == GOAL) return direction_to_travel;
-        
+
         pushToClosedSet(current_open_set);  //put current_open_set onto closed set
         rearrangeOpenSet();                 //make sure open_set[0] always has a value
 
@@ -132,7 +132,7 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, uns
     char hScore_y = 0;
     char pos_x = 0;
     char pos_y = 0;
-    
+
     neighbour_already_on_list_flag = 0;
 
     //wall check needs to beefore the rest
@@ -141,7 +141,7 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, uns
     if (neighbour == &ignore)   return WALL;
     if (neighbour == goal)      return GOAL;
     if (neighbour == robot)     return ROBOT;
-    
+
     for (char x = 0; x < GLOBAL_X; x++) {
         for (char y = 0; y < GLOBAL_Y; y++) {
             if (neighbour == &global_map[x][y]) {
@@ -183,8 +183,8 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
     neighbour_travel[1] = *neighbour.right;
     neighbour_travel[2] = *neighbour.down;
     neighbour_travel[3] = *neighbour.left;
-    
-    //the statement here checks for lowest values in neighbours, and saves it for direction to travel. 
+
+    //the statement here checks for lowest values in neighbours, and saves it for direction to travel.
     //note, because neighbour.left is checked LAST, and the sign <= is used, it is left justified.
     //therefore it chooses directions with same distance in order, left, down, right, up
     for (char i = 0; i < 4; i++){
@@ -219,30 +219,35 @@ void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     #define     back_wall_check()       (*local.back     < 100 || *local.back    >= 250)
     #define     left_wall_check()       (*local.left     < 100 || *local.left    >= 250)
 
+    #define     robot_x_min_check()     (robot_x > 0)
+    #define     robot_y_min_check()     (robot_y > 0)
+    #define     robot_x_max_check()     (robot_x < 3)
+    #define     robot_y_max_check()     (robot_y < 4)
+
     switch (local.robot_direction) {
         case UP:
-            if (robot_x > 0 && forward_wall_check())    X_minus_1() = WALL;
-            if (robot_y > 0 && right_wall_check())      Y_plus_1()  = WALL;
-            if (robot_x < 3 && back_wall_check())       X_plus_1()  = WALL;
-            if (robot_y < 4 && left_wall_check())       Y_minus_1() = WALL;
+            if (robot_x_min_check() && forward_wall_check())    X_minus_1() = WALL;
+            if (robot_y_max_check() && right_wall_check())      Y_plus_1()  = WALL;
+            if (robot_x_max_check() && back_wall_check())       X_plus_1()  = WALL;
+            if (robot_y_min_check() && left_wall_check())       Y_minus_1() = WALL;
             break;
         case RIGHT:
-            if (robot_x > 0 && forward_wall_check())    Y_plus_1()  = WALL;
-            if (robot_y > 0 && right_wall_check())      X_plus_1()  = WALL;
-            if (robot_x < 3 && back_wall_check())       Y_minus_1() = WALL;
-            if (robot_y < 4 && left_wall_check())       X_minus_1() = WALL;
+            if (robot_y_max_check() && forward_wall_check())    Y_plus_1()  = WALL;
+            if (robot_x_max_check() && right_wall_check())      X_plus_1()  = WALL;
+            if (robot_y_min_check() && back_wall_check())       Y_minus_1() = WALL;
+            if (robot_x_min_check() && left_wall_check())       X_minus_1() = WALL;
             break;
         case DOWN:
-            if (robot_x > 0 && forward_wall_check())    X_plus_1()  = WALL;
-            if (robot_y > 0 && right_wall_check())      Y_minus_1() = WALL;
-            if (robot_x < 3 && back_wall_check())       X_minus_1() = WALL;
-            if (robot_y < 4 && left_wall_check())       Y_plus_1()  = WALL;
+            if (robot_x_max_check() && forward_wall_check())    X_plus_1()  = WALL;
+            if (robot_y_min_check() && right_wall_check())      Y_minus_1() = WALL;
+            if (robot_x_min_check() && back_wall_check())       X_minus_1() = WALL;
+            if (robot_y_max_check() && left_wall_check())       Y_plus_1()  = WALL;
             break;
         case LEFT:
-            if (robot_x > 0 && forward_wall_check())    Y_minus_1() = WALL;
-            if (robot_y > 0 && right_wall_check())      X_minus_1() = WALL;
-            if (robot_x < 3 && back_wall_check())       Y_plus_1()  = WALL;
-            if (robot_y < 4 && left_wall_check())       X_plus_1()  = WALL;
+            if (robot_y_min_check() && forward_wall_check())    Y_minus_1() = WALL;
+            if (robot_x_min_check() && right_wall_check())      X_minus_1() = WALL;
+            if (robot_y_max_check() && back_wall_check())       Y_plus_1()  = WALL;
+            if (robot_x_max_check() && left_wall_check())       X_plus_1()  = WALL;
             break;
     }
 }
@@ -262,12 +267,12 @@ void removeFromOpenSet(unsigned char *item_to_remove) {
 }
 
 void pushToClosedSet(unsigned char *item_to_push) {
-    for (char i = 0; i < OPEN_SET_SIZE; i++) {
+    for (char i = 0; i < CLOSED_SET_SIZE; i++) {
         if (closed_set[i] == item_to_push) {
             return;
         }
     }
-    for (char i = 0; i < OPEN_SET_SIZE; i++) {
+    for (char i = 0; i < CLOSED_SET_SIZE; i++) {
         if (closed_set[i] == 0) {
             closed_set[i] = item_to_push;
             return;
