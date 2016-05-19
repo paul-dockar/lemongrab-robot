@@ -14,8 +14,8 @@
 #define     LOCAL_X         3
 #define     LOCAL_Y         3
 
-#define     CLOSED_SET_SIZE 10
-#define     OPEN_SET_SIZE   10
+#define     CLOSED_SET_SIZE 20
+#define     OPEN_SET_SIZE   6
 
 #define     UP              1
 #define     RIGHT           2
