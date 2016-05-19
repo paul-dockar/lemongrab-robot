@@ -169,7 +169,7 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, uns
         }
     }
     //otherwise add node to open list
-    if (neighbour_already_on_list_flag != 1) pushToOpenSet(neighbour);
+    if (!neighbour_already_on_list_flag) pushToOpenSet(neighbour);
 
     return fScore;
 }
@@ -199,7 +199,7 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
     //if walls are everywhere then its a deadend!
     if (lowest_travel > 250) direction = -1;
 
-    return direction; //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 for dead-end
+    return direction; //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
 }
 
 void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
