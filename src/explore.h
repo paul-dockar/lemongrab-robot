@@ -14,8 +14,8 @@
 #define     LOCAL_X         3
 #define     LOCAL_Y         3
 
-#define     CLOSED_SET_SIZE 10
-#define     OPEN_SET_SIZE   10
+#define     CLOSED_SET_SIZE 20
+#define     OPEN_SET_SIZE   20
 
 #define     UP              1
 #define     RIGHT           2
@@ -23,13 +23,9 @@
 #define     LEFT            4
 
 void setupExplore(void);
-void initialiseGlobalMap(void);
-void initialiseLocalMap(void);
-void writeGlobalMap(unsigned char, char, char);
-void writeLocalMap(unsigned int, char, char);
 char findPathAStar(char, char, char, char);
+void writeLocalMap(unsigned int, char, char);
 
-bit exploring;
 unsigned char global_map [GLOBAL_X][GLOBAL_Y];
 unsigned char local_map  [LOCAL_X][LOCAL_Y];
 
