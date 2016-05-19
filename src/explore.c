@@ -21,7 +21,6 @@ struct LOCAL {
 } local;
 
 //declare local functions
-char findPathAStar(char, char, char, char);
 unsigned char *getNeighbourNodes(unsigned char *, unsigned char );
 unsigned char checkNeighbour(unsigned char *, unsigned char *, unsigned char *, unsigned char *, char , char );
 char findDirectionToTravel(struct NEIGHBOUR);
