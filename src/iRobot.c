@@ -19,9 +19,9 @@ void distanceDisplay(int distance) {
     lcdWriteString("mm driven    ");
 }
 
-/*  
+/*
  *  Wall follow function. Starts with a 360 scan to find closest wall. Orientates robot to be facing the wall, then drives till it is 50cm from the wall.
- *  After 50cm from the wall, orientate robot to be perpendicular to the wall, depending on which direction it was initially. 
+ *  After 50cm from the wall, orientate robot to be perpendicular to the wall, depending on which direction it was initially.
  *  If wall was initally to the right, once next to the wall, put wall the right again and vice versa.
  *  Once next to wall and perpendicular to it, initiate a forever while loop, using the IR sensor to change wheel speed to follow the wall around the whole maze.
  *  Bump sensors or cliff sensors can be triggered, causing the robot to pause for 10 seconds whilst it is manually maneuvered.
@@ -30,14 +30,14 @@ void wallFollow (void){
     int angle = 0;
     int current_angle = 0;
     unsigned int distance = 0;
-    
+
     total_distance_travel = 0;
     scanCcw(400);                           //CCWscan to find closest wall
     moveCW(scan_360_step_count);            //Point IR sensor towards the wall.
-    
+
     __delay_ms(500);
-    
-    /*  
+
+    /*
      *  Depending on robot and IR sensor positions, orientate robot to face the wall in the quickest turn, either CW or CCW.
      *  Also set a flag which determines which direction to follow the wall for the rest of the procedure.
      */
@@ -50,7 +50,7 @@ void wallFollow (void){
         SPIN_RIGHT_F();
         wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
     }
-    
+
     //Turn 90 degrees
     while(angle > current_angle) {
         current_angle += abs(distanceAngleSensor(ANGLE));
@@ -59,7 +59,7 @@ void wallFollow (void){
     //After turning 90 degrees, stop
     DRIVE_STOP();
     moveCW(400 - scan_360_step_count);
-    
+
     //drive forward till 60cm from wall
     DRIVE_STRAIGHT_F();
     while (distance > 50) {
@@ -67,7 +67,7 @@ void wallFollow (void){
         adcDisplayQuick(distance);
     }
     DRIVE_STOP();
-    
+
     //turn right or left 90 degrees
     if (wall_is_right_flag)  SPIN_LEFT_F();
     if (!wall_is_right_flag) SPIN_RIGHT_F();
@@ -77,25 +77,25 @@ void wallFollow (void){
         angle += abs(distanceAngleSensor(ANGLE));
     }
     DRIVE_STOP();
-    
+
     //After turning 90 degrees, move stepper motor 50 degrees right or lefts
     if (wall_is_right_flag)  moveCW(50);
     if (!wall_is_right_flag) moveCCW(50);
-    
+
     bump_cliff_flag = 0;
     lost_wall_timer = 0;
     while (1) {
         unsigned char maneuver = 0;
         distance = getAdcDist(getAdc());    //continuously read the adc distance
         adcDisplayQuick(distance);          //write the distance using the quick lcd update function
-        
+
         //Normal routine for robot wallFollow. Changes wheel speeds depending on distance to wall, or if wall has not been found for 5.5 seconds
         if (!bump_cliff_flag) {
             if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
             if (distance > 70 && lost_wall_timer < 5500)    maneuver = 1;
             if (distance < 48)                              maneuver = 2;
             if (distance >= 48 && distance <= 70)           maneuver = 3;
-            
+
             if (wall_is_right_flag) {
                 switch (maneuver) {
                     case 0: SHARP_RIGHT(); break;                         //when wall is not found for certain time, turn sharp to the right
@@ -114,7 +114,7 @@ void wallFollow (void){
             }
             if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || VirtualWallPacket(VIRTWALL_SENSOR) > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
         }
-        
+
         //If during normal routine, bump_flag is set, then stop, delay, and then continue normal routine
         /*if (bump_cliff_flag) {
             DRIVE_STOP();
@@ -123,7 +123,7 @@ void wallFollow (void){
         }*/
         if (!wall_is_right_flag && bump_cliff_flag) SHARP_RIGHT();
         if (wall_is_right_flag && bump_cliff_flag) SHARP_LEFT();
-        
+
     }
 }
 
@@ -133,26 +133,26 @@ void explore(void) {
     char robot_y = 1;
     char goal_x = 0;
     char goal_y = 3;
-    
+
     reset_flag = 1;
     exploring = 1;
-    
+
     while (exploring) {
         if (reset_flag)  scanLocal(FULL_SCAN);
         if (!reset_flag) scanLocal(HALF_SCAN);
-        
+
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
-        
+
     }
 
     if (!exploring) returnHome();
 }
 
 void returnHome(void) {
-    
-    
+
+
     //go to sleep when finished
     lcdWriteControl(0b00000000);
     asm("CLRWDT \n SLEEP");
@@ -179,7 +179,7 @@ void drive(int right_wheel, int left_wheel) {
 
 int driveStraight(int distance) {
     int distance_traveled = 0;
-    
+
     DRIVE_STRAIGHT_F();
     while ((distance_traveled + 100) < distance) {
         distance_traveled += distanceAngleSensor(DISTANCE);
@@ -194,21 +194,21 @@ int driveStraight(int distance) {
 
 int driveAngle(int angle) {
     int angle_turned = 0;
-    
+
     if (angle > 0) SPIN_LEFT_F();
     if (angle < 0) SPIN_RIGHT_F();
 
     while((angle_turned + 30) < abs(angle)) {
         angle_turned += abs(distanceAngleSensor(ANGLE));
     }
-    
+
     if (angle > 0) SPIN_LEFT_S();
     if (angle < 0) SPIN_RIGHT_S();
-    
+
     while(angle_turned < abs(angle)) {
     angle_turned += abs(distanceAngleSensor(ANGLE));
     }
-    
+
     DRIVE_STOP();
     return angle_turned;
 }
@@ -225,7 +225,7 @@ int distanceAngleSensor(char packet_id) {
 	high_byte = ser_getch();
 	low_byte = ser_getch();
     __delay_ms(15);
-    
+
     return final_byte = (high_byte << 8 | low_byte);
 }
 
@@ -260,11 +260,11 @@ unsigned char bumpPacket(char packet_id) {
 //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
 unsigned char cliffPacket(void){
     unsigned char cliff_byte;
-    
+
     for (cliff_byte = 9; cliff_byte < 13; cliff_byte++){
         ser_putch(SENSORS);
         ser_putch(cliff_byte);
-        
+
         if(ser_getch() > 0) return 1;
         __delay_ms(15);
     }

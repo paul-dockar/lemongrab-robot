@@ -19,7 +19,7 @@ void setupLCD(void) {
     lcdWriteControl(0b00000001);    //clear display
 
     writeBatteryStatusToLcd();      //Display battery condition on startup
-    
+
     lcdWriteControl(0b00000001);    //clear display
     lcdSetCursor(0x40);
     lcdWriteString("0mm driven");
@@ -87,7 +87,7 @@ void lcdWriteToDigitBCD(unsigned int data) {
         ones_digit = ones_digit - 10;
         tens_digit++;
     }
-    
+
     //write the digits to LCD
     if (data >= 10000)  lcdWriteData((unsigned char) ten_thousands_digit + 48);
     if (data >= 1000)   lcdWriteData((unsigned char) thousands_digit + 48);
