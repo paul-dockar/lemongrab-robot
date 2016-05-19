@@ -5,7 +5,7 @@
 
 #define     ROBOT       100
 #define     GOAL        200
-#define     MAX         255
+#define     WALL        255
 #define     DEADEND     254
 #define     CLIFF       253
 
@@ -22,9 +22,10 @@
 #define     DOWN            3
 #define     LEFT            4
 
+
 void setupExplore(void);
 char findPathAStar(char, char, char, char);
-void writeLocalMap(unsigned int, char, char);
+void writeLocalMap(unsigned char, char, char);
 
 unsigned char global_map [GLOBAL_X][GLOBAL_Y];
 unsigned char local_map  [LOCAL_X][LOCAL_Y];
