@@ -10,6 +10,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
+    
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.

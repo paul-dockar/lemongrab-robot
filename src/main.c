@@ -14,11 +14,19 @@ void setup(void) {
     setupADC();                     //calls adc setup function for ir reading control
     setupLCD();                     //calls lcd setup function to allow writing to lcd
     setupExplore();
+    //setupSong();
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main(void) {
     setup();
+    
+    //eeprom_write(0x00,40);
+    unsigned char temp = eeprom_read(0x00);
+    lcdSetCursor(0x00);
+    lcdWriteToDigitBCD(temp);
+    __delay_ms(5000);
+    
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
