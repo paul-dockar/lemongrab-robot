@@ -22,7 +22,7 @@ struct LOCAL {
 
 //declare local functions
 unsigned char *getNeighbourNodes(unsigned char *, unsigned char );
-unsigned char checkNeighbour(unsigned char *, unsigned char *, unsigned char *, unsigned char *, char , char );
+unsigned char checkNeighbour(unsigned char *, unsigned char *, unsigned char *, char , char );
 char findDirectionToTravel(struct NEIGHBOUR);
 void marryUpLocalMapData(struct LOCAL, char, char);
 void initialisePointersNULL(unsigned char **, char);
@@ -39,6 +39,8 @@ void setupExplore(void) {
     setupLocalMap();
 }
 
+//function takes the robot and goal positions and determines the path to travel next using the A* algorithm.
+//function will return either -1 to 4 to handle all situations. these numbers are defined in the header
 char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     unsigned char *current_open_set = 0;
     unsigned char *goal_position = &global_map[goal_x][goal_y];
@@ -47,62 +49,62 @@ char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     unsigned char iteration = 0;
     unsigned char smallest_open_set = 0;
 
-    //check if robot is in goal positon
-    if (goal_position == robot_position) return 0;
+	//TODO: more flags may be added in here
+    if (goal_position == robot_position) { 						//check if robot is in goal positon
+		return STOP;
+	}
 
-    //setup robot/goal position, clear open and closed sets, clear global map
-    setupGlobalMap();
+    setupGlobalMap();											//setup robot/goal position, clear open and closed sets, clear global map
     writeGlobalMap(ROBOT, robot_x, robot_y);
     writeGlobalMap(GOAL, goal_x, goal_y);
     initialisePointersNULL(closed_set, CLOSED_SET_SIZE);
     initialisePointersNULL(open_set, OPEN_SET_SIZE);
 
-    marryUpLocalMapData(local, robot_x, robot_y);
-    pushToOpenSet(robot_position);                       //put starting node on open set list
+    marryUpLocalMapData(local, robot_x, robot_y);				//write relevent data from the IR scan (local_map) to the global map
 
+	//after the intial setup, the below while loop is the main part of the A* algorithm.
+	//in the ideal situation it will stop searching when the goal is found
+	//put starting node on open set list to start the algorithm
+    pushToOpenSet(robot_position);
     while (open_set [0] != 0) {
-        //find node with least f on the open list
         smallest_open_set = WALL;
-        for (char i = 0; i < OPEN_SET_SIZE; i++) {
-            if (open_set [i] != 0 && smallest_open_set > *open_set [i]) {
+        for (char i = 0; i < OPEN_SET_SIZE; i++) {							//find node with least f on the open list
+            if (open_set [i] != 0 && *open_set [i] < smallest_open_set) {
                 smallest_open_set = *open_set [i];
                 current_open_set = open_set [i];
             }
         }
 
-        //remove the chosen one from the open list
-        removeFromOpenSet(current_open_set);
+        removeFromOpenSet(current_open_set);								//remove the chosen one from the open list
 
-        //generate 4 neighbours from current node
-        neighbour.up    = getNeighbourNodes(current_open_set, UP);
+        neighbour.up    = getNeighbourNodes(current_open_set, UP);			//generate 4 neighbours from current node
         neighbour.right = getNeighbourNodes(current_open_set, RIGHT);
         neighbour.down  = getNeighbourNodes(current_open_set, DOWN);
         neighbour.left  = getNeighbourNodes(current_open_set, LEFT);
 
         //for each neighbour; write f value to global map
-        *neighbour.up       = checkNeighbour(neighbour.up, local.forward, goal_position, robot_position, goal_x, goal_y);
-        *neighbour.right    = checkNeighbour(neighbour.right, local.right, goal_position, robot_position, goal_x, goal_y);
-        *neighbour.down     = checkNeighbour(neighbour.down, local.back, goal_position, robot_position, goal_x, goal_y);
-        *neighbour.left     = checkNeighbour(neighbour.left, local.left, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.up       = checkNeighbour(neighbour.up, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.right    = checkNeighbour(neighbour.right, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.down     = checkNeighbour(neighbour.down, goal_position, robot_position, goal_x, goal_y);
+        *neighbour.left     = checkNeighbour(neighbour.left, goal_position, robot_position, goal_x, goal_y);
 
-        //set direction in first iteration.
-        if (iteration == 0) direction_to_travel = findDirectionToTravel(neighbour);
-        if (direction_to_travel == 255) return direction_to_travel;
+        if (iteration == 0) direction_to_travel = findDirectionToTravel(neighbour);	//set direction in first iteration.
 
-        //exit when neighbour is the goal
-        if (*neighbour.up       == GOAL) return direction_to_travel;
+        if (*neighbour.up       == GOAL) return direction_to_travel;				//exit when neighbour is the goal
         if (*neighbour.right    == GOAL) return direction_to_travel;
         if (*neighbour.down     == GOAL) return direction_to_travel;
         if (*neighbour.left     == GOAL) return direction_to_travel;
 
-        pushToClosedSet(current_open_set);  //put current_open_set onto closed set
-        rearrangeOpenSet();                 //make sure open_set[0] always has a value
+        pushToClosedSet(current_open_set); 										 	//put current_open_set onto closed set
+        rearrangeOpenSet();                 										//make sure open_set[0] always has a value
 
         iteration++;
     }
-    return -1;
+    return direction_to_travel;
 }
 
+//takes the current node and desired direction to return a pointer to the neighbouring node on the global_map
+//relative to the current node and direction. includes a quick check for out of bound conditions
 unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neighbour_direction) {
     for (char x = 0; x < GLOBAL_X; x++) {
         for (char y = 0; y < GLOBAL_Y; y++) {
@@ -113,10 +115,10 @@ unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neig
                 if (y == (GLOBAL_Y - 1) && neighbour_direction == RIGHT) return &ignore;
 
                 switch (neighbour_direction) {
-                    case 1: x--; return (&global_map[x][y]);
-                    case 2: y++; return (&global_map[x][y]);
-                    case 3: x++; return (&global_map[x][y]);
-                    case 4: y--; return (&global_map[x][y]);
+                    case UP:    x--; return (&global_map[x][y]);
+                    case RIGHT:	y++; return (&global_map[x][y]);
+                    case DOWN:  x++; return (&global_map[x][y]);
+                    case LEFT:  y--; return (&global_map[x][y]);
                 }
             }
         }
@@ -124,19 +126,19 @@ unsigned char *getNeighbourNodes(unsigned char *current_node, unsigned char neig
     return &ignore;
 }
 
-unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, unsigned char *goal, unsigned char *robot, char goal_x, char goal_y) {
+//returns the fScore for the neighbour node that is input into this function
+//includes checks if neighbour is a special item on the global map
+//includes checks if neighbour is already on the closed or open lists
+unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsigned char *robot, char goal_x, char goal_y) {
     char fScore = 0;
     char gScore = 1;
     char hScore_x = 0;
     char hScore_y = 0;
     char pos_x = 0;
     char pos_y = 0;
-
     neighbour_already_on_list_flag = 0;
 
-    //wall check needs to beefore the rest
-    if (*neighbour == WALL)     return WALL;
-
+    if (*neighbour == WALL)     return WALL;	//wall check needs to beefore the rest
     if (neighbour == &ignore)   return WALL;
     if (neighbour == goal)      return GOAL;
     if (neighbour == robot)     return ROBOT;
@@ -151,18 +153,20 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, uns
         }
     }
 
+	//fScore (distance) calculation.
+	//gScore should ideally be equal to the parent node - neighbour node distance,
+	//but due to the layout of the map, each node is always 1m from eachother, so gScore is a constant value (1m)
+	//hScore is determined by the distance from the neighbour node to the goal node
     hScore_x = pos_x - goal_x;
     hScore_y = pos_y - goal_y;
     fScore = gScore + abs(hScore_x) + abs(hScore_y);
 
-    //if a node with same position as successor is in the OPEN list, skip it
-    for (char i = 0; i < OPEN_SET_SIZE; i++) {
+    for (char i = 0; i < OPEN_SET_SIZE; i++) {    	//if a node with same position as successor is in the OPEN list, skip it
         if (neighbour == open_set[i]) {
             neighbour_already_on_list_flag = 1;
         }
     }
-    //if a node with same position as successor is in the CLOSE list, skip it
-    for (char i = 0; i < CLOSED_SET_SIZE; i++) {
+    for (char i = 0; i < CLOSED_SET_SIZE; i++) {	//if a node with same position as successor is in the CLOSE list, skip it
         if (neighbour == closed_set[i]) {
             neighbour_already_on_list_flag = 1;
         }
@@ -173,6 +177,8 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *local, uns
     return fScore;
 }
 
+//due to the layout of the map and the fact direction can change every single node, the direction to travel is determined
+//in the first iteration. So this function takes the first neighbour set and determines which way to go.
 char findDirectionToTravel(struct NEIGHBOUR neighbour) {
     unsigned char neighbour_travel[4];
     unsigned char lowest_travel = 255;
@@ -183,10 +189,7 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
     neighbour_travel[2] = *neighbour.down;
     neighbour_travel[3] = *neighbour.left;
 
-    //the statement here checks for lowest values in neighbours, and saves it for direction to travel.
-    //note, because neighbour.left is checked LAST, and the sign <= is used, it is left justified.
-    //therefore it chooses directions with same distance in order, left, down, right, up
-    for (char i = 0; i < 4; i++){
+    for (char i = 0; i < 4; i++){					//Checks for lowest values in neighbours, and saves it for direction to travel.
         if (neighbour_travel[i] == 200) {
             return i + 1;
         } else if (neighbour_travel[i] < 100 && neighbour_travel[i] < lowest_travel) {
@@ -195,12 +198,13 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
         }
     }
 
-    //if walls are everywhere then its a deadend!
-    if (lowest_travel > 250) direction = -1;
+    if (lowest_travel > 250) direction = DEADEND;	//if stuff is everywhere then its a deadend!
 
-    return direction; //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
+    return direction; 								//direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
 }
 
+//This function will write relevent data from the IR scan (local_map) to the global map before the A* algorithm is run
+//It is abit of spaghetti but unfortunately necessary because the global_map is only 20 bytes instead of the ideal 99+ bytes
 void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     local.forward         = &local_map[0][1];
     local.right           = &local_map[1][2];
@@ -208,20 +212,20 @@ void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     local.left            = &local_map[1][0];
     local.robot_direction = local_map[1][1];
 
-    #define     X_minus_1()   global_map[robot_x - 1][robot_y]
-    #define     Y_minus_1()   global_map[robot_x][robot_y - 1]
-    #define     X_plus_1()    global_map[robot_x + 1][robot_y]
-    #define     Y_plus_1()    global_map[robot_x][robot_y + 1]
+    #define     robot_x_min_check()     (robot_x > 0)
+    #define     robot_y_min_check()     (robot_y > 0)
+    #define     robot_x_max_check()     (robot_x < 3)
+    #define     robot_y_max_check()     (robot_y < 4)
 
     #define     forward_wall_check()    (*local.forward  < 100 || *local.forward >= 250)
     #define     right_wall_check()      (*local.right    < 100 || *local.right   >= 250)
     #define     back_wall_check()       (*local.back     < 100 || *local.back    >= 250)
     #define     left_wall_check()       (*local.left     < 100 || *local.left    >= 250)
 
-    #define     robot_x_min_check()     (robot_x > 0)
-    #define     robot_y_min_check()     (robot_y > 0)
-    #define     robot_x_max_check()     (robot_x < 3)
-    #define     robot_y_max_check()     (robot_y < 4)
+    #define     X_minus_1()   global_map[robot_x - 1][robot_y]
+    #define     Y_minus_1()   global_map[robot_x][robot_y - 1]
+    #define     X_plus_1()    global_map[robot_x + 1][robot_y]
+    #define     Y_plus_1()    global_map[robot_x][robot_y + 1]
 
     switch (local.robot_direction) {
         case UP:
