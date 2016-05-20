@@ -145,10 +145,19 @@ void explore(void) {
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
+        
+        if (direction_to_travel == 0) {
+            if (victim_one && victim_two) {
+                exploring = 1;
+                returnHome();
+            } else {
+                exploring = 0;
+            }
+        }
+        
 
     }
 
-    if (!exploring) returnHome();
 }
 
 void returnHome(void) {

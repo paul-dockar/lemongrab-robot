@@ -51,6 +51,8 @@
 int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
 bit reset_flag;
 bit exploring;
+bit victim_one;
+bit victim_two;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
