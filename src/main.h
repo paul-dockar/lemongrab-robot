@@ -18,6 +18,7 @@
 #include "iRobot.h"
 #include "lcd.h"
 #include "ser.h"
+#include "song.h"
 #include "spi.h"
 #include "stepper.h"
 
