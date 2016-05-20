@@ -51,6 +51,8 @@
 int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
 bit reset_flag;
 bit exploring;
+bit victim_one;
+bit victim_two;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -69,6 +71,7 @@ unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor
 unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
 unsigned char VirtualWallPacket(char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
+void writeSongsToRobot(void);
 int abs(int a);                                 //returns the absolute value of an int
 
 #endif	/* IROBOT_H */

@@ -10,6 +10,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
+    writeSongsToRobot();
     
 }
 
@@ -145,10 +146,19 @@ void explore(void) {
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
+        
+        if (direction_to_travel == 0) {
+            if (victim_one && victim_two) {
+                exploring = 1;
+                returnHome();
+            } else {
+                exploring = 0;
+            }
+        }
+        
 
     }
 
-    if (!exploring) returnHome();
 }
 
 void returnHome(void) {
@@ -297,6 +307,17 @@ void writeBatteryStatusToLcd(void) {
     lcdWriteString("mV");
 
     __delay_ms(4000);
+}
+
+void writeSongsToRobot (void) {
+    unsigned char *eeprom_address = 0x00;
+    unsigned char song_data = 0;
+    
+    for (char i = 0; i < 34; i++) {
+        song_data = eeprom_read(eeprom_address);
+        //do opscode stuff
+        
+    }
 }
 
 //returns the absolute value of an int
