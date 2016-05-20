@@ -10,6 +10,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
+    writeSongsToRobot();
     
 }
 
@@ -306,6 +307,17 @@ void writeBatteryStatusToLcd(void) {
     lcdWriteString("mV");
 
     __delay_ms(4000);
+}
+
+void writeSongsToRobot (void) {
+    unsigned char *eeprom_address = 0x00;
+    unsigned char song_data = 0;
+    
+    for (char i = 0; i < 34; i++) {
+        song_data = eeprom_read(eeprom_address);
+        //do opscode stuff
+        
+    }
 }
 
 //returns the absolute value of an int
