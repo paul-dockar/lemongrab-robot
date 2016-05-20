@@ -21,18 +21,18 @@ int adcDisplayDistance(void) {
     average_adc = average_adc/4;
 
     adc_distance = getAdcDist(average_adc);
-    
+
     lcdSetCursor(0x00);
     lcdWriteToDigitBCD(adc_distance);
     lcdWriteString("cm IR     ");
-    
+
     return adc_distance;
 }
 
-//displays a distance value to the LCD. This function takes in the distance which is already captured during other functions, and does not average the value. 
+//displays a distance value to the LCD. This function takes in the distance which is already captured during other functions, and does not average the value.
 //Uses less time to write to LCD, which should not affect performance for manuevers that require precision.
-void adcDisplayQuick(int distance) {    
-    lcdSetCursor(0x00);    
+void adcDisplayQuick(int distance) {
+    lcdSetCursor(0x00);
     lcdWriteToDigitBCD(distance);
     lcdWriteString("cm IR     ");
 }
