@@ -24,10 +24,10 @@ void main(void) {
     
     //eeprom temporary tests are here
     //eeprom_write(0x00,40);
-    unsigned char temp = eeprom_read(0x01);
-    lcdSetCursor(0x00);
-    lcdWriteToDigitBCD(temp);
-    __delay_ms(5000);
+//    unsigned char temp = eeprom_read(0x01);
+//    lcdSetCursor(0x00);
+//    lcdWriteToDigitBCD(temp);
+//    __delay_ms(5000);
     
     
     while (1) {
@@ -37,7 +37,7 @@ void main(void) {
         //checks for pb flags. If flag is set then perform a function
         if (pb_explore_pressed) {
             explore();
-            returnHome();
+            //returnHome();
             pb_explore_pressed = 0;
         }
         if (pb_find_wall_pressed) {

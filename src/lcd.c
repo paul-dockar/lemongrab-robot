@@ -93,5 +93,5 @@ void lcdWriteToDigitBCD(unsigned int data) {
     if (data >= 1000)   lcdWriteData((unsigned char) thousands_digit + 48);
     if (data >= 100)    lcdWriteData((unsigned char) hundreds_digit + 48);
     if (data >= 10)     lcdWriteData((unsigned char) tens_digit + 48);
-    if (data > 0)       lcdWriteData((unsigned char) ones_digit + 48);
+                        lcdWriteData((unsigned char) ones_digit + 48);
 }

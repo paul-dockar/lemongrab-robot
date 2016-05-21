@@ -8,8 +8,12 @@
 
 volatile unsigned int   hb_led_counter;     //timer0 interrupt overflow counter, used for heartbeat led
 volatile unsigned int   lost_wall_timer;    //lost wall timer for wallFollow mode. Is only reset during wallFollow
+volatile unsigned int   ir_move_timer;
 volatile unsigned char  pb_debounce_count;  //push button debounce counter
 volatile bit            pb_release;         //push button flag when no buttons are pressed
+volatile bit            looking_left;
+volatile bit            looking_straight;
+volatile bit            looking_right;
 
 void setupInterrupt(void);          //sets up pic interrupt registers, also push button/led input/output for portB
 void interrupt isr(void);           //interrupt function for the PIC. Uses timer0 interrupt overflow. Controls heartbeat LED. Controls push button debouncing and setting of push button flags

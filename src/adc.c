@@ -25,7 +25,7 @@ int adcDisplayDistance(void) {
     lcdSetCursor(0x00);
     lcdWriteToDigitBCD(adc_distance);
     lcdWriteString("cm IR     ");
-
+    
     return adc_distance;
 }
 

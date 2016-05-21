@@ -28,7 +28,7 @@
 #define     RIGHT_WHEEL_FAST     200         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
 #define     LEFT_WHEEL_FAST      200         //left wheel speed in mm/s
 #define     RIGHT_WHEEL_SLOW     50          //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
-#define     LEFT_WHEEL_SLOW      50         //left wheel speed in mm/s
+#define     LEFT_WHEEL_SLOW      50          //left wheel speed in mm/s
 
 //IROBOT MANEUVERS
 #define     SHARP_RIGHT()       drive(-80,LEFT_WHEEL_FAST);
@@ -46,13 +46,14 @@
 #define     DRIVE_STRAIGHT_F()  drive(RIGHT_WHEEL_FAST,LEFT_WHEEL_FAST);
 #define     DRIVE_STRAIGHT_S()  drive(RIGHT_WHEEL_SLOW,LEFT_WHEEL_SLOW);
 #define     DRIVE_BACKWARD()    drive(-RIGHT_WHEEL_FAST,-LEFT_WHEEL_FAST);
-#define     DRIVE_STOP()        drive(0,0); __delay_ms(800);
+#define     DRIVE_STOP()        drive(0,0);
 
 int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
 bit reset_flag;
 bit exploring;
 bit victim_one;
 bit victim_two;
+bit move_stepper;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -73,5 +74,6 @@ unsigned char VirtualWallPacket(char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 void writeSongsToRobot(void);
 int abs(int a);                                 //returns the absolute value of an int
+signed char abs_char(signed char a);
 
 #endif	/* IROBOT_H */

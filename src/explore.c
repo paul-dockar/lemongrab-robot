@@ -41,7 +41,7 @@ void setupExplore(void) {
 
 //function takes the robot and goal positions and determines the path to travel next using the A* algorithm.
 //function will return either -1 to 4 to handle all situations. these numbers are defined in the header
-char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
+signed char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) {
     unsigned char *current_open_set = 0;
     unsigned char *goal_position = &global_map[goal_x][goal_y];
     unsigned char *robot_position = &global_map[robot_x][robot_y];
@@ -138,6 +138,7 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsi
     char pos_y = 0;
     neighbour_already_on_list_flag = 0;
 
+    if (*neighbour == DEADEND)  return DEADEND;
     if (*neighbour == WALL)     return WALL;	//wall check needs to beefore the rest
     if (neighbour == &ignore)   return WALL;
     if (neighbour == goal)      return GOAL;
@@ -159,7 +160,7 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsi
 	//hScore is determined by the distance from the neighbour node to the goal node
     hScore_x = pos_x - goal_x;
     hScore_y = pos_y - goal_y;
-    fScore = gScore + abs(hScore_x) + abs(hScore_y);
+    fScore = gScore + abs_char(hScore_x) + abs_char(hScore_y);
 
     for (char i = 0; i < OPEN_SET_SIZE; i++) {    	//if a node with same position as successor is in the OPEN list, skip it
         if (neighbour == open_set[i]) {
@@ -197,7 +198,7 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
         }
     }
 
-    if (lowest_travel > 250) direction = DEADEND;	//if stuff is everywhere then its a deadend!
+    if (lowest_travel > 250) direction = TURN_AROUND;	//if stuff is everywhere then its a deadend!
 
     return direction; 								//direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
 }
@@ -216,10 +217,10 @@ void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     #define     robot_x_max_check()     (robot_x < 3)
     #define     robot_y_max_check()     (robot_y < 4)
 
-    #define     forward_wall_check()    (*local.forward  < 100 || *local.forward >= 250)
-    #define     right_wall_check()      (*local.right    < 100 || *local.right   >= 250)
-    #define     back_wall_check()       (*local.back     < 100 || *local.back    >= 250)
-    #define     left_wall_check()       (*local.left     < 100 || *local.left    >= 250)
+    #define     forward_wall_check()    (*local.forward  < 100 || *local.forward == 250)
+    #define     right_wall_check()      (*local.right    < 100 || *local.right   == 250)
+    #define     back_wall_check()       (*local.back     < 100 || *local.back    == 250)
+    #define     left_wall_check()       (*local.left     < 100 || *local.left    == 250)
 
     #define     x_minus_one()   global_map[robot_x - 1][robot_y]
     #define     y_minus_one()   global_map[robot_x][robot_y - 1]
@@ -316,7 +317,11 @@ void writeLocalMap(unsigned char value, char x, char y) {
 void setupGlobalMap(void) {
     for (char x = 0; x < GLOBAL_X; x++) {
         for (char y = 0; y < GLOBAL_Y; y++) {
-            global_map [x][y] = 0;
+            if (global_map [x][y] == DEADEND) {
+                continue;
+            } else {
+                global_map [x][y] = 0;
+            }
         }
     }
 }
@@ -324,7 +329,11 @@ void setupGlobalMap(void) {
 void setupLocalMap(void) {
     for (char x = 0; x < LOCAL_X; x++) {
         for (char y = 0; y < LOCAL_Y; y++) {
-            local_map [x][y] = 250;
+            if (local_map [x][y] == local_map [1][1]) {
+                continue;
+            } else {
+                local_map [x][y] = 250;
+            }
         }
     }
 }
