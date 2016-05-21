@@ -149,10 +149,10 @@ void explore(void) {
         
         if (direction_to_travel == 0) {
             if (victim_one && victim_two) {
-                exploring = 1;
-                returnHome();
-            } else {
                 exploring = 0;
+                return;
+            } else {
+                exploring = 1;
             }
         }
         
@@ -310,7 +310,7 @@ void writeBatteryStatusToLcd(void) {
 }
 
 void writeSongsToRobot (void) {
-    unsigned char *eeprom_address = 0x00;
+    unsigned char eeprom_address = 0x00;
     unsigned char song_data = 0;
     
     for (char i = 0; i < 34; i++) {
