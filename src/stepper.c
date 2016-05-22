@@ -16,7 +16,7 @@ void scanCw(unsigned int steps) {
     resetADC();
     spi_transfer(cw_control_byte);
 
-	for(steps; steps!=0; steps--){
+	for(steps; steps > 0; steps--){
         adc_distance = adcDisplayDistance();
         findClosestWall(adc_distance);
         SM_STEP();
@@ -33,7 +33,7 @@ void scanCcw(unsigned int steps) {
     resetADC();
     spi_transfer(ccw_control_byte);
 
-	for(steps; steps!=0; steps--){
+	for(steps; steps > 0; steps--){
         adc_distance = adcDisplayDistance();
         findClosestWall(adc_distance);
         SM_STEP();
@@ -57,7 +57,7 @@ void findClosestWall(int adc_distance) {
 //move stepper CW
 void moveCW(unsigned int steps) {
     spi_transfer(cw_control_byte);
-    for(steps; steps!=0; steps--){
+    for(steps; steps > 0; steps--){
         SM_STEP();
 		__delay_ms(1);
     }
@@ -67,7 +67,7 @@ void moveCW(unsigned int steps) {
 //move stepper CCW
 void moveCCW(unsigned int steps) {
     spi_transfer(ccw_control_byte);
-    for(steps; steps!=0; steps--){
+    for(steps; steps > 0; steps--){
         SM_STEP();
 		__delay_ms(1);
     }

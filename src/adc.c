@@ -15,7 +15,7 @@ int adcDisplayDistance(void) {
     int adc_distance = 0;
 
     char i = 4;
-    for (i; i!=0; i--) {
+    for (i; i > 0; i--) {
         average_adc += getAdc();
     }
     average_adc = average_adc/4;
