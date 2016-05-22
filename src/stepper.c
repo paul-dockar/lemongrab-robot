@@ -95,9 +95,9 @@ void scanLocal(char scan_steps) {
         __delay_ms(100);
         adc_distance = adcDisplayDistance();
         writeLocalMap(adc_distance, x, y);
-        
+
         if (scan_steps > 1) moveCW(50);
-        
+
         switch (stepper_pos) {
             case 0: x--; stepper_pos++; break;
             case 1: y++; stepper_pos++; break;

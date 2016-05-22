@@ -10,8 +10,8 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
-    //writeSongsToRobot();
-    
+    writeSongsToRobot();
+
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -114,7 +114,7 @@ void wallFollow (void){
                     case 3: DRIVE_STRAIGHT_F(); break;                       //when wall is at good distance, drive straight
                 }
             }
-            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || VirtualWallPacket(VIRTWALL_SENSOR) > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
+            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || virtualWallPacket(VIRTWALL_SENSOR) > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
         }
         if (!wall_is_right_flag && bump_cliff_flag) SHARP_RIGHT();
         if (wall_is_right_flag && bump_cliff_flag) SHARP_LEFT();
@@ -125,7 +125,7 @@ void wallFollow (void){
 void explore(void) {
     signed char direction_to_travel = 0;
     int angle_to_turn = 0;
-    
+
     //set robot starting variables
     unsigned char *current_facing_direction = &local_map[1][1];
     unsigned char robot_x = 0;
@@ -139,11 +139,11 @@ void explore(void) {
     while (exploring) {
         if (reset_flag)  scanLocal(FULL_SCAN);
         if (!reset_flag) scanLocal(HALF_SCAN);
-        
+
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
-        
+
                             lcdWriteControl(0b00000001);    //clear display
                             for (char x = 0; x < GLOBAL_X; x++) {
                                     if (x == 0 || x == 2) lcdSetCursor(0x00);
@@ -182,7 +182,7 @@ void explore(void) {
             }
             reset_flag = 0;
         }
-        
+
         driveAngle(angle_to_turn);          //spin desired direction
 
         //update robot position
@@ -192,11 +192,11 @@ void explore(void) {
             case 3: robot_x++; break;
             case 4: robot_y--; break;
         }
-        
+
         *current_facing_direction = direction_to_travel;
-        
+
         driveStraight(1000);                //drive straight 1m
-        
+
     }
 
 }
@@ -232,19 +232,19 @@ int driveStraight(int distance) {
     int distance_traveled = 0;
     int distance_adc = 0;
     unsigned char maneuver = 0;
-    
+
     move_stepper = 0;
     looking_straight = 0;
     looking_right = 0;
     looking_left = 1;
     moveCCW(100);
     ir_move_timer = 0;
-    
+
     while (distance_traveled < distance) {
         DRIVE_STRAIGHT_F();
         distance_traveled += distanceAngleSensor(DISTANCE);
         distance_adc = adcDisplayDistance();
-        
+
         if (ir_move_timer > 200) {
             if (distance_adc >= 80)                         maneuver = 0;
             if (distance_adc < 48)                          maneuver = 1;
@@ -252,7 +252,7 @@ int driveStraight(int distance) {
             if (distance_adc >= 48 && distance_adc <= 52)   maneuver = 3;
 
             if (looking_left) {
-//                if (move_stepper) { 
+//                if (move_stepper) {
 //                    moveCCW(200);
 //                    move_stepper = 0;
 //                    ir_move_timer = 0;
@@ -265,7 +265,7 @@ int driveStraight(int distance) {
                 }
             }
             if (looking_right) {
-                if (move_stepper) { 
+                if (move_stepper) {
                     moveCW(200);
                     move_stepper = 0;
                     ir_move_timer = 0;
@@ -278,7 +278,7 @@ int driveStraight(int distance) {
                 }
             }
             if (looking_straight) {
-                if (move_stepper) { 
+                if (move_stepper) {
                     moveCCW(100);
                     move_stepper = 0;
                     ir_move_timer = 0;
@@ -293,10 +293,10 @@ int driveStraight(int distance) {
         }
     }
     DRIVE_STOP();
-    
+
     if (looking_left) moveCW(100);
     if (looking_right) moveCCW(100);
-    
+
     return distance_traveled;
 }
 
@@ -379,16 +379,16 @@ unsigned char cliffPacket(void){
     return 0;
 }
 
-unsigned char VirtualWallPacket(char packet_id) {
-    unsigned char VirtWall_byte;
+unsigned char virtualWallPacket(char packet_id) {
+    unsigned char virtual_wall_byte;
 
 	ser_putch(SENSORS);
 	ser_putch(packet_id);
 
-	VirtWall_byte = ser_getch();
+	virtual_wall_byte = ser_getch();
      __delay_ms(15);
 
-    return VirtWall_byte;
+    return virtual_wall_byte;
 }
 
 //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
@@ -407,13 +407,13 @@ void writeBatteryStatusToLcd(void) {
 }
 
 void writeSongsToRobot (void) {
-    unsigned char eeprom_address = 0x00;
     unsigned char song_data = 0;
-    
-    for (char i = 0; i < 34; i++) {
-        song_data = eeprom_read(eeprom_address);
+
+    //write song one
+    for (char i = 0; i < SONG_ONE_SIZE; i++) {
+        song_data = eepromRead(EEPROM_ADDRESS_SONG_ONE);
         //do opscode stuff
-        
+
     }
 }
 

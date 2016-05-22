@@ -1,6 +1,6 @@
 #include "eeprom.h"
 
-void eeprom_write(unsigned char address, unsigned char value) {
+void eepromWrite(unsigned char address, unsigned char value) {
 	EEADR = address;                                            //selects the address to write to on EEPROM
     EEDATA = value;                                             //inputs the data value you want to write to the EEDATA register
     GIE = 0;                                                    //disables interrupts while the writing process is occurring
@@ -16,7 +16,7 @@ void eeprom_write(unsigned char address, unsigned char value) {
     EEIF = 0;                                                   //clear the write interrupt flag bit
 }
 
-unsigned char eeprom_read(unsigned char address) {
+unsigned char eepromRead(unsigned char address) {
     EEADR = address;                                            //selects the address to read
     EEPGD = 0;                                                  //indicate that you want to read from EEPROM memory
     RD = 1;                                                     //read

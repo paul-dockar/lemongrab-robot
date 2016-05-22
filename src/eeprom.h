@@ -10,8 +10,8 @@
 
 #include "main.h"
 
-void eeprom_write(unsigned char address, unsigned char value);
-unsigned char eeprom_read(unsigned char address);
+void eepromWrite(unsigned char address, unsigned char value);
+unsigned char eepromRead(unsigned char address);
 
 #endif	/* EEPROM_H */
 

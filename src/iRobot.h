@@ -70,7 +70,7 @@ int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor d
 unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
 unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
 unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
-unsigned char VirtualWallPacket(char packet_id);
+unsigned char virtualWallPacket(char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 void writeSongsToRobot(void);
 int abs(int a);                                 //returns the absolute value of an int
