@@ -19,7 +19,7 @@
 void WriteSongToEeprom(void);
 void songOne(unsigned char eeprom_address);
 void songTwo(unsigned char eeprom_address);
-void songThree(unsigned char eeprom_address);
+//void songThree(unsigned char eeprom_address);
 
 #endif	/* SONG_H */
 

@@ -10,7 +10,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
-    writeSongsToRobot();
+    //writeSongsToRobot();
 
 }
 
@@ -246,6 +246,18 @@ int driveStraight(int distance) {
         distance_traveled += distanceAngleSensor(DISTANCE);
         distance_adc = adcDisplayDistance();
 
+        if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || virtualWallPacket(VIRTWALL_SENSOR) > 0){
+            DRIVE_STOP();
+            distance = -distance_traveled;
+            distance_traveled = 0;
+            DRIVE_BACKWARD();
+            while (distance_traveled > distance) {
+                distance_traveled += distanceAngleSensor(DISTANCE);
+                adcDisplayQuick(distance_traveled);
+            }
+            
+            
+        }
         if (ir_move_timer > 200) {
             if (distance_adc >= 80)                         maneuver = 0;
             if (distance_adc < 48)                          maneuver = 1;
