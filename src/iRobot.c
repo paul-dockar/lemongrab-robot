@@ -11,7 +11,6 @@ void setupIRobot(void) {
     ser_putch(START);
     ser_putch(FULL);
     writeSongsToRobot();
-
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -409,13 +408,20 @@ void writeBatteryStatusToLcd(void) {
 
 void writeSongsToRobot (void) {
     unsigned char song_data = 0;
+    unsigned char eeprom_address = EEPROM_ADDRESS_SONG_ONE;
 
     //write song one
+    ser_putch(SONG);
     for (char i = 0; i < SONG_ONE_SIZE; i++) {
-        song_data = eepromRead(EEPROM_ADDRESS_SONG_ONE);
-        //do opscode stuff
-
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
     }
+}
+
+void playSong(unsigned char song_number) {
+    ser_putch(PLAY_SONG);
+    ser_putch(song_number);
 }
 
 //returns the absolute value of an int

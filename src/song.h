@@ -16,8 +16,8 @@
 #define     SONG_TWO_SIZE               34
 #define     SONG_THREE_SIZE             34
 
-void WriteSongToEeprom(void);
-void songOne(unsigned char eeprom_address);
+void writeSongToEeprom(void);
+void songOne(unsigned char *eeprom_address);
 void songTwo(unsigned char eeprom_address);
 void songThree(unsigned char eeprom_address);
 

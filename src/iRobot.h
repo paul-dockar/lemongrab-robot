@@ -57,8 +57,6 @@ bit move_stepper;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
-void moveStraight(void);                        //Drives the iRobot in a straight line for 4meters, refreshing the LCD as it goes.
-void moveSquare(void);                          //Drives the iRobot in a straight line for 1m, turns left 90 degrees, then repeats 3 more times. This manuever creates a square.
 void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
 void explore(void);
 void returnHome(void);
@@ -73,6 +71,7 @@ unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor
 unsigned char virtualWallPacket(char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 void writeSongsToRobot(void);
+void playSong(unsigned char song_number);
 int abs(int a);                                 //returns the absolute value of an int
 signed char abs_char(signed char a);
 

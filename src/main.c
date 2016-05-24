@@ -21,6 +21,18 @@ void setup(void) {
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main(void) {
     setup();
+
+    lcdWriteString(" ");
+    lcdWriteToDigitBCD(EEPROM_ADDRESS_SONG_ONE);
+    
+    unsigned char temp = eepromRead(0x05);
+    lcdSetCursor(0x00);
+    lcdWriteToDigitBCD(temp);
+    
+
+
+    
+    //playSong(0);
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
