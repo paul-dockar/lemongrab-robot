@@ -144,18 +144,19 @@ void explore(void) {
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
 
-                            lcdWriteControl(0b00000001);    //clear display
+                            lcdWriteControl(0b00000001);
                             for (char x = 0; x < GLOBAL_X; x++) {
                                     if (x == 0 || x == 2) lcdSetCursor(0x00);
                                     if (x == 1 || x == 3) lcdSetCursor(0x40);
                                 for (char y = 0; y < GLOBAL_Y; y++) {
-                                    lcdWriteToDigitBCD(global_map [x][y]);
+                                    lcdWriteToDigitBCD(global_map[x][y]);
                                     lcdWriteString(" ");
                                 }
-                                if (x == 1) __delay_ms(2000);
+                                if (x == 1) __delay_ms(4000);
                                 if (x == 1) lcdWriteControl(0b00000001);
                             }
-                            __delay_ms(2000);
+                            __delay_ms(4000);
+                            lcdWriteControl(0b00000001);
 
         if (direction_to_travel == 0) {
             if (victim_one && victim_two) {
@@ -173,7 +174,7 @@ void explore(void) {
                 case 3: direction_to_travel = 1; break;
                 case 4: direction_to_travel = 2; break;
             }
-            global_map [robot_x][robot_y] = DEADEND;
+            global_map[robot_x][robot_y] = DEADEND;
         } else {
             //determine new direction
             angle_to_turn = 90 * abs((*current_facing_direction - direction_to_travel));

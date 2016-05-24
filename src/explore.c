@@ -1,7 +1,7 @@
 #include "explore.h"
 
-unsigned char *closed_set [CLOSED_SET_SIZE];
-unsigned char *open_set [OPEN_SET_SIZE];
+unsigned char *closed_set[CLOSED_SET_SIZE];
+unsigned char *open_set[OPEN_SET_SIZE];
 unsigned char ignore = 0;
 bit neighbour_already_on_list_flag;
 
@@ -66,12 +66,12 @@ signed char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) 
 	//in the ideal situation it will stop searching when the goal is found
 	//put starting node on open set list to start the algorithm
     pushToOpenSet(robot_position);
-    while (open_set [0] != 0) {
+    while (open_set[0] != 0) {
         smallest_open_set = WALL;
         for (char i = 0; i < OPEN_SET_SIZE; i++) {							//find node with least f on the open list
-            if (open_set [i] != 0 && *open_set [i] < smallest_open_set) {
-                smallest_open_set = *open_set [i];
-                current_open_set = open_set [i];
+            if (open_set[i] != 0 && *open_set[i] < smallest_open_set) {
+                smallest_open_set = *open_set[i];
+                current_open_set = open_set[i];
             }
         }
 
@@ -268,8 +268,8 @@ void initialisePointersNULL(unsigned char *array[], char size) {
 
 void removeFromOpenSet(unsigned char *item_to_remove) {
     for (char i = 0; i < OPEN_SET_SIZE; i++) {
-        if (open_set [i] == item_to_remove) {
-            open_set [i] = 0;
+        if (open_set[i] == item_to_remove) {
+            open_set[i] = 0;
         }
     }
 }
@@ -312,20 +312,20 @@ void rearrangeOpenSet(void) {
 }
 
 void writeGlobalMap(unsigned char value, char x, char y) {
-    global_map [x][y] = value;
+    global_map[x][y] = value;
 }
 
 void writeLocalMap(unsigned char value, char x, char y) {
-    local_map [x][y] = value;
+    local_map[x][y] = value;
 }
 
 void setupGlobalMap(void) {
     for (char x = 0; x < GLOBAL_X; x++) {
         for (char y = 0; y < GLOBAL_Y; y++) {
-            if (global_map [x][y] == DEADEND) {
+            if (global_map[x][y] == DEADEND) {
                 continue;
             } else {
-                global_map [x][y] = 0;
+                global_map[x][y] = 0;
             }
         }
     }
@@ -334,10 +334,10 @@ void setupGlobalMap(void) {
 void setupLocalMap(void) {
     for (char x = 0; x < LOCAL_X; x++) {
         for (char y = 0; y < LOCAL_Y; y++) {
-            if (local_map [x][y] == local_map [1][1]) {
+            if (local_map[x][y] == local_map[1][1]) {
                 continue;
             } else {
-                local_map [x][y] = 250;
+                local_map[x][y] = 250;
             }
         }
     }

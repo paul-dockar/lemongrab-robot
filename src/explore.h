@@ -29,7 +29,7 @@ void setupLocalMap(void);
 signed char findPathAStar(char, char, char, char);
 void writeLocalMap(unsigned char, char, char);
 
-unsigned char global_map [GLOBAL_X][GLOBAL_Y];
-unsigned char local_map  [LOCAL_X][LOCAL_Y];
+unsigned char global_map[GLOBAL_X][GLOBAL_Y];
+unsigned char local_map[LOCAL_X][LOCAL_Y];
 
 #endif	/* EXPLORE_H */
