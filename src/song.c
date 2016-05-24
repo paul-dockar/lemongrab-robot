@@ -1,6 +1,6 @@
 #include "song.h"
 
-void WriteSongToEeprom(void){
+/*void WriteSongToEeprom(void){
     songOne(EEPROM_ADDRESS_SONG_ONE);
     songTwo(EEPROM_ADDRESS_SONG_TWO);
     songThree(EEPROM_ADDRESS_SONG_THREE);
@@ -31,4 +31,4 @@ void songThree(unsigned char eeprom_address) {
         eepromWrite(eeprom_address, song_three[i]);
         eeprom_address++;
     }
-}
+}*/
