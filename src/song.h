@@ -12,7 +12,7 @@
 #define     EEPROM_ADDRESS_SONG_ONE     0x00
 #define     EEPROM_ADDRESS_SONG_TWO     0x20
 #define     EEPROM_ADDRESS_SONG_THREE   0x40
-#define     SONG_ONE_SIZE               34
+#define     SONG_ONE_SIZE               24
 #define     SONG_TWO_SIZE               34
 #define     SONG_THREE_SIZE             34
 
