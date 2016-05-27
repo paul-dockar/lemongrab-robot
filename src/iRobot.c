@@ -5,6 +5,10 @@ int total_distance_travel = 0;
 volatile bit wall_is_right_flag = 0;
 volatile bit bump_cliff_flag = 0;
 
+volatile bit cliff_flag = 0;
+volatile bit bump_flag = 0;
+volatile bit virtWall_flag = 0;
+
 //Starts robot and sets to Full mode. Initialises ser
 void setupIRobot(void) {
     ser_init();
@@ -185,18 +189,17 @@ void explore(void) {
 
         driveAngle(angle_to_turn);          //spin desired direction
 
-        //update robot position
-        switch (direction_to_travel) {
-            case 1: robot_x--; break;
-            case 2: robot_y++; break;
-            case 3: robot_x++; break;
-            case 4: robot_y--; break;
-        }
 
         *current_facing_direction = direction_to_travel;
 
         driveStraight(1000);                //drive straight 1m
-
+        //update robot position
+        switch (direction_to_travel) {
+            case UP: robot_x--; break;
+            case RIGHT: robot_y++; break;
+            case DOWN: robot_x++; break;
+            case LEFT: robot_y--; break;
+        }
     }
 
 }
@@ -245,17 +248,32 @@ int driveStraight(int distance) {
         distance_traveled += distanceAngleSensor(DISTANCE);
         distance_adc = adcDisplayDistance();
         
-        if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || virtualWallPacket(VIRTWALL_SENSOR) > 0){
+        if (bumpPacket(BUMP_SENSOR) > 0){
+            bump_flag = 1;
+        }
+        
+        if (cliffPacket() > 0){
+           cliff_flag = 1; 
+        }
+        
+        if (virtualWallPacket(VIRTWALL_SENSOR) > 0){
+           virtWall_flag = 1;
+        }
+        
+        if(cliff_flag || bump_flag || virtWall_flag){
             DRIVE_STOP();
             distance_traveled = 0;
             DRIVE_BACKWARD();
-            while (distance_traveled < 500) {
+            while (distance_traveled > -500) {
                 distance_traveled += distanceAngleSensor(DISTANCE);
                 adcDisplayQuick(distance_traveled);
             }
-            distance_traveled =1000;
+            distance_traveled = 1000;
+            cliff_flag = 0;
+            bump_flag = 0;
+            virtWall_flag = 0;
         }
-
+        
         if (ir_move_timer > 200) {
             if (distance_adc >= 80)                         maneuver = 0;
             if (distance_adc < 48)                          maneuver = 1;
