@@ -17,12 +17,14 @@ void setup(void) {
     setupExplore();
     
     playSong(0);
+    playSong(1);
+    playSong(2);
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main(void) {
     setup();
-    
+
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);

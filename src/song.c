@@ -16,7 +16,7 @@ void songOne(unsigned char eeprom_address) {
 }
 
 void songTwo(unsigned char eeprom_address) {
-    unsigned char song_two[] = {1, 16, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32};
+    unsigned char song_two[] = {1, 16, 97, 8, 95, 8, 97, 32, 90, 32, 1, 48, 98, 8, 97, 8, 98, 16, 97, 16, 95, 48, 1, 32, 98, 8, 97, 8, 98, 32, 90, 32, 1, 128};
 
     for (char i = 0; i < SONG_TWO_SIZE; i++) {
         eepromWrite(eeprom_address, song_two[i]);
@@ -25,7 +25,7 @@ void songTwo(unsigned char eeprom_address) {
 }
 
 void songThree(unsigned char eeprom_address) {
-    unsigned char song_three[] = {2, 16, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32, 72, 32};
+    unsigned char song_three[] = {2, 7, 95, 8, 93, 8, 95, 16, 93, 16, 92, 16, 95, 16, 93, 48};
 
     for (char i = 0; i < SONG_THREE_SIZE; i++) {
         eepromWrite(eeprom_address, song_three[i]);

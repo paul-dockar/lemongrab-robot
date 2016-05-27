@@ -208,6 +208,7 @@ void explore(void) {
     }
 
 }
+ 
 
 void returnHome(void) {
 
@@ -452,9 +453,29 @@ void writeSongsToRobot (void) {
         ser_putch(song_data);
         eeprom_address++;
     }
+    eeprom_address = EEPROM_ADDRESS_SONG_TWO;
+    //write song two
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_TWO_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    eeprom_address = EEPROM_ADDRESS_SONG_THREE;
+    //write song three
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_THREE_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
 }
 
 void playSong(unsigned char song_number) {
+    while (bumpPacket(SONG_PLAYING) > 0){
+        continue;
+    }
     ser_putch(PLAY_SONG);
     ser_putch(song_number);
 }
