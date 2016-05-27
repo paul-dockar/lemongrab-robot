@@ -244,6 +244,17 @@ int driveStraight(int distance) {
         DRIVE_STRAIGHT_F();
         distance_traveled += distanceAngleSensor(DISTANCE);
         distance_adc = adcDisplayDistance();
+        
+        if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || virtualWallPacket(VIRTWALL_SENSOR) > 0){
+            DRIVE_STOP();
+            distance_traveled = 0;
+            DRIVE_BACKWARD();
+            while (distance_traveled < 500) {
+                distance_traveled += distanceAngleSensor(DISTANCE);
+                adcDisplayQuick(distance_traveled);
+            }
+            distance_traveled =1000;
+        }
 
         if (ir_move_timer > 200) {
             if (distance_adc >= 80)                         maneuver = 0;
