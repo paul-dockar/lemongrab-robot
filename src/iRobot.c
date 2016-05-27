@@ -7,8 +7,8 @@ volatile bit bump_cliff_flag;
 
 volatile bit cliff_flag;
 volatile bit bump_flag;
-volatile bit virtWall_flag;
-volatile bit update_flag;
+volatile bit virt_wall_flag;
+volatile bit update_pos_flag;
 
 //Starts robot and sets to Full mode. Initialises ser
 void setupIRobot(void) {
@@ -195,16 +195,16 @@ void explore(void) {
 
         driveStraight(1000);                //drive straight 1m
         
-        if(!update_flag){
+        if(!update_pos_flag){
             //update robot position
             switch (direction_to_travel) {
-                case UP: robot_x--; break;
+                case UP:    robot_x--; break;
                 case RIGHT: robot_y++; break;
-                case DOWN: robot_x++; break;
-                case LEFT: robot_y--; break;
+                case DOWN:  robot_x++; break;
+                case LEFT:  robot_y--; break;
             }
         }
-        update_flag = 0;
+        update_pos_flag = 0;
     }
 
 }
@@ -262,11 +262,11 @@ int driveStraight(int distance) {
         }
         
         if (virtualWallPacket(VIRTWALL_SENSOR) > 0){
-           virtWall_flag = 1;
+           virt_wall_flag = 1;
         }
         
-        if(cliff_flag || bump_flag || virtWall_flag){
-            update_flag = 1;
+        if(cliff_flag || bump_flag || virt_wall_flag){
+            update_pos_flag = 1;
             DRIVE_STOP();
             distance_traveled = 0;
             DRIVE_BACKWARD();
@@ -277,7 +277,7 @@ int driveStraight(int distance) {
             distance_traveled = distance;
             cliff_flag = 0;
             bump_flag = 0;
-            virtWall_flag = 0;
+            virt_wall_flag = 0;
         }
         
         if (ir_move_timer > 200) {
