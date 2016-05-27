@@ -59,7 +59,7 @@ signed char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) 
     writeGlobalMap(GOAL, goal_x, goal_y);
     initialisePointersNULL(closed_set, CLOSED_SET_SIZE);
     initialisePointersNULL(open_set, OPEN_SET_SIZE);
-
+    
     marryUpLocalMapData(local, robot_x, robot_y);				//write relevent data from the IR scan (local_map) to the global map
 
 	//after the intial setup, the below while loop is the main part of the A* algorithm.
@@ -139,7 +139,10 @@ unsigned char checkNeighbour(unsigned char *neighbour, unsigned char *goal, unsi
     neighbour_already_on_list_flag = 0;
 
     if (*neighbour == DEADEND)  return DEADEND;
-    if (*neighbour == WALL)     return WALL;	//wall check needs to beefore the rest
+    if (*neighbour == WALL)     return WALL;
+    if (*neighbour == CLIFF)    return CLIFF;
+    if (*neighbour == BUMP)     return BUMP;
+    if (*neighbour == VIRTWALL) return VIRTWALL;
     if (neighbour == &ignore)   return WALL;
     if (neighbour == goal)      return GOAL;
     if (neighbour == robot)     return ROBOT;
@@ -190,7 +193,7 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
     neighbour_travel[3] = *neighbour.left;
 
     for (char i = 0; i < 4; i++){					//Checks for lowest values in neighbours, and saves it for direction to travel.
-        if (neighbour_travel[i] == 200) {
+        if (neighbour_travel[i] == GOAL) {
             return i + 1;
         } else if (neighbour_travel[i] < 100 && neighbour_travel[i] < lowest_travel) {
             lowest_travel = neighbour_travel[i];
@@ -222,15 +225,15 @@ void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     #define     back_wall_check()       (*local.back     < 100 || *local.back    == 250)
     #define     left_wall_check()       (*local.left     < 100 || *local.left    == 250)
 
-    #define     global_check_x_minus()  global_map[robot_x - 1][robot_y] != DEADEND
-    #define     global_check_y_minus()  global_map[robot_x][robot_y - 1] != DEADEND
-    #define     global_check_x_plus()   global_map[robot_x + 1][robot_y] != DEADEND
-    #define     global_check_y_plus()   global_map[robot_x][robot_y + 1] != DEADEND
-
     #define     x_minus_one()           global_map[robot_x - 1][robot_y]
     #define     y_minus_one()           global_map[robot_x][robot_y - 1]
     #define     x_plus_one()            global_map[robot_x + 1][robot_y]
     #define     y_plus_one()            global_map[robot_x][robot_y + 1]
+
+    #define     global_check_x_minus()  (x_minus_one() != DEADEND && x_minus_one() != CLIFF && x_minus_one() != BUMP  && x_minus_one() != VIRTWALL)
+    #define     global_check_y_minus()  (y_minus_one() != DEADEND && y_minus_one() != CLIFF && y_minus_one() != BUMP  && y_minus_one() != VIRTWALL)
+    #define     global_check_x_plus()   (x_plus_one() != DEADEND  && x_plus_one() != CLIFF  && x_plus_one() != BUMP   && x_plus_one() != VIRTWALL)
+    #define     global_check_y_plus()   (y_plus_one() != DEADEND  && y_plus_one() != CLIFF  && y_plus_one() != BUMP   && y_plus_one() != VIRTWALL)
 
     switch (local.robot_direction) {
         case UP:
@@ -320,15 +323,20 @@ void writeLocalMap(unsigned char value, char x, char y) {
 }
 
 void setupGlobalMap(void) {
+    #define     GLOBAL_MAP_TEMP_CHECKS() (global_map[x][y] == CLIFF || global_map[x][y] == BUMP)
+
     for (char x = 0; x < GLOBAL_X; x++) {
         for (char y = 0; y < GLOBAL_Y; y++) {
-            if (global_map[x][y] == DEADEND) {
+            if (global_map[x][y] == DEADEND || global_map[x][y] == VIRTWALL) {
+                continue;
+            } else if (temp_global_info_flag && GLOBAL_MAP_TEMP_CHECKS()) {
                 continue;
             } else {
                 global_map[x][y] = 0;
             }
         }
     }
+    temp_global_info_flag = 0;
 }
 
 void setupLocalMap(void) {

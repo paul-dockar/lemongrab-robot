@@ -8,6 +8,8 @@
 #define     WALL        255
 #define     DEADEND     254
 #define     CLIFF       253
+#define     BUMP        252
+#define     VIRTWALL    251
 
 #define     GLOBAL_X        4
 #define     GLOBAL_Y        5
@@ -31,5 +33,6 @@ void writeLocalMap(unsigned char, char, char);
 
 unsigned char global_map[GLOBAL_X][GLOBAL_Y];
 unsigned char local_map[LOCAL_X][LOCAL_Y];
+volatile bit temp_global_info_flag;
 
 #endif	/* EXPLORE_H */

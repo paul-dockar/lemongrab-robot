@@ -15,7 +15,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
-    writeSongsToRobot();
+    //writeSongsToRobot();
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -156,10 +156,10 @@ void explore(void) {
                                     lcdWriteToDigitBCD(global_map[x][y]);
                                     lcdWriteString(" ");
                                 }
-                                if (x == 1) __delay_ms(4000);
+                                if (x == 1) __delay_ms(2000);
                                 if (x == 1) lcdWriteControl(0b00000001);
                             }
-                            __delay_ms(4000);
+                            __delay_ms(2000);
                             lcdWriteControl(0b00000001);
 
         if (direction_to_travel == 0) {
@@ -169,6 +169,7 @@ void explore(void) {
             } else {
                 // keep exploring and set a new goal
                 exploring = 1;
+                return;         //temp return for now
             }
         } else if (direction_to_travel == -1) {
             angle_to_turn = 180;
@@ -188,27 +189,35 @@ void explore(void) {
             reset_flag = 0;
         }
 
-        driveAngle(angle_to_turn);          //spin desired direction
-
-
-        *current_facing_direction = direction_to_travel;
-
-        driveStraight(1000);                //drive straight 1m
+        driveAngle(angle_to_turn);                          //spin desired direction
+        *current_facing_direction = direction_to_travel;    //update facing direction
+        driveStraight(1000);                                //drive straight 1m
         
-        if(!update_pos_flag){
-            //update robot position
-            switch (direction_to_travel) {
-                case UP:    robot_x--; break;
-                case RIGHT: robot_y++; break;
-                case DOWN:  robot_x++; break;
-                case LEFT:  robot_y--; break;
-            }
+        //update robot position
+        switch (direction_to_travel) {
+            case UP:    robot_x--; break;
+            case RIGHT: robot_y++; break;
+            case DOWN:  robot_x++; break;
+            case LEFT:  robot_y--; break;
         }
-        update_pos_flag = 0;
+        
+        if (update_pos_flag) {
+            if (cliff_flag)     global_map[robot_x][robot_y] = CLIFF;
+            if (bump_flag)      global_map[robot_x][robot_y] = BUMP;
+            if (virt_wall_flag) global_map[robot_x][robot_y] = VIRTWALL;
+            
+            //revert robot position
+            switch (direction_to_travel) {
+                case UP:    robot_x++; break;
+                case RIGHT: robot_y--; break;
+                case DOWN:  robot_x--; break;
+                case LEFT:  robot_y++; break;
+            }
+            cliff_flag = bump_flag = virt_wall_flag = update_pos_flag = 0;
+        }
     }
 
 }
- 
 
 void returnHome(void) {
 
@@ -246,7 +255,7 @@ int driveStraight(int distance) {
     looking_straight = 0;
     looking_right = 0;
     looking_left = 1;
-    moveCCW(100);
+    moveCCW(50);
     ir_move_timer = 0;
 
     while (distance_traveled < distance) {
@@ -254,45 +263,33 @@ int driveStraight(int distance) {
         distance_traveled += distanceAngleSensor(DISTANCE);
         distance_adc = adcDisplayDistance();
         
-        if (bumpPacket(BUMP_SENSOR) > 0){
-            bump_flag = 1;
-        }
+        if (bumpPacket(BUMP_SENSOR) > 0)            bump_flag = 1;
+        if (cliffPacket() > 0)                      cliff_flag = 1; 
+        if (virtualWallPacket(VIRTWALL_SENSOR) > 0) virt_wall_flag = 1;
         
-        if (cliffPacket() > 0){
-           cliff_flag = 1; 
-        }
-        
-        if (virtualWallPacket(VIRTWALL_SENSOR) > 0){
-           virt_wall_flag = 1;
-        }
-        
-        if(cliff_flag || bump_flag || virt_wall_flag){
+        if (cliff_flag || bump_flag || virt_wall_flag) {
             update_pos_flag = 1;
+            temp_global_info_flag = 1;
+            
             DRIVE_STOP();
             distance_traveled = 0;
+            
             DRIVE_BACKWARD();
             while (distance_traveled > -500) {
                 distance_traveled += distanceAngleSensor(DISTANCE);
                 adcDisplayQuick(distance_traveled);
             }
+            
             distance_traveled = distance;
-            cliff_flag = 0;
-            bump_flag = 0;
-            virt_wall_flag = 0;
         }
         
         if (ir_move_timer > 200) {
             if (distance_adc >= 80)                         maneuver = 0;
-            if (distance_adc < 48)                          maneuver = 1;
-            if (distance_adc > 52 && distance_adc < 80)     maneuver = 2;
-            if (distance_adc >= 48 && distance_adc <= 52)   maneuver = 3;
+            if (distance_adc < 58)                          maneuver = 1;
+            if (distance_adc > 62 && distance_adc < 80)     maneuver = 2;
+            if (distance_adc >= 58 && distance_adc <= 62)   maneuver = 3;
 
             if (looking_left) {
-//                if (move_stepper) {
-//                    moveCCW(200);
-//                    move_stepper = 0;
-//                    ir_move_timer = 0;
-//                }
                 switch (maneuver) {
                     case 0: looking_right = 1; looking_left = 0; move_stepper = 1; maneuver = 3; break;
                     case 1: SLOW_RIGHT(); break;
@@ -302,7 +299,7 @@ int driveStraight(int distance) {
             }
             if (looking_right) {
                 if (move_stepper) {
-                    moveCW(200);
+                    moveCW(100);
                     move_stepper = 0;
                     ir_move_timer = 0;
                 }
@@ -315,7 +312,7 @@ int driveStraight(int distance) {
             }
             if (looking_straight) {
                 if (move_stepper) {
-                    moveCCW(100);
+                    moveCCW(50);
                     move_stepper = 0;
                     ir_move_timer = 0;
                 }
@@ -330,8 +327,8 @@ int driveStraight(int distance) {
     }
     DRIVE_STOP();
 
-    if (looking_left) moveCW(100);
-    if (looking_right) moveCCW(100);
+    if (looking_left) moveCW(50);
+    if (looking_right) moveCCW(50);
 
     return distance_traveled;
 }
