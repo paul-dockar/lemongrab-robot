@@ -1,13 +1,14 @@
 #include "iRobot.h"
 
-int total_distance_travel = 0;
+int total_distance_travel;
 
-volatile bit wall_is_right_flag = 0;
-volatile bit bump_cliff_flag = 0;
+volatile bit wall_is_right_flag;
+volatile bit bump_cliff_flag;
 
-volatile bit cliff_flag = 0;
-volatile bit bump_flag = 0;
-volatile bit virtWall_flag = 0;
+volatile bit cliff_flag;
+volatile bit bump_flag;
+volatile bit virtWall_flag;
+volatile bit update_flag;
 
 //Starts robot and sets to Full mode. Initialises ser
 void setupIRobot(void) {
@@ -193,13 +194,17 @@ void explore(void) {
         *current_facing_direction = direction_to_travel;
 
         driveStraight(1000);                //drive straight 1m
-        //update robot position
-        switch (direction_to_travel) {
-            case UP: robot_x--; break;
-            case RIGHT: robot_y++; break;
-            case DOWN: robot_x++; break;
-            case LEFT: robot_y--; break;
+        
+        if(!update_flag){
+            //update robot position
+            switch (direction_to_travel) {
+                case UP: robot_x--; break;
+                case RIGHT: robot_y++; break;
+                case DOWN: robot_x++; break;
+                case LEFT: robot_y--; break;
+            }
         }
+        update_flag = 0;
     }
 
 }
@@ -261,6 +266,7 @@ int driveStraight(int distance) {
         }
         
         if(cliff_flag || bump_flag || virtWall_flag){
+            update_flag = 1;
             DRIVE_STOP();
             distance_traveled = 0;
             DRIVE_BACKWARD();
@@ -268,7 +274,7 @@ int driveStraight(int distance) {
                 distance_traveled += distanceAngleSensor(DISTANCE);
                 adcDisplayQuick(distance_traveled);
             }
-            distance_traveled = 1000;
+            distance_traveled = distance;
             cliff_flag = 0;
             bump_flag = 0;
             virtWall_flag = 0;
