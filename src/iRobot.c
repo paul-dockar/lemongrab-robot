@@ -141,7 +141,7 @@ void explore(void) {
 
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
-        direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
+        //direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
 
                             lcdWriteControl(0b00000001);
                             for (char x = 0; x < GLOBAL_X; x++) {
@@ -200,6 +200,7 @@ void explore(void) {
     }
 
 }
+ 
 
 void returnHome(void) {
 
@@ -428,9 +429,29 @@ void writeSongsToRobot (void) {
         ser_putch(song_data);
         eeprom_address++;
     }
+    eeprom_address = EEPROM_ADDRESS_SONG_TWO;
+    //write song two
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_TWO_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    eeprom_address = EEPROM_ADDRESS_SONG_THREE;
+    //write song three
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_THREE_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
 }
 
 void playSong(unsigned char song_number) {
+    while (bumpPacket(SONG_PLAYING) > 0){
+        continue;
+    }
     ser_putch(PLAY_SONG);
     ser_putch(song_number);
 }

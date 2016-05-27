@@ -89,12 +89,12 @@ void scanLocal(char scan_steps) {
     int stepper_pos = 0;
     resetADC();
     moveCCW(100);
-    setupLocalMap();
+    //setupLocalMap();
 
     for (scan_steps; scan_steps > 0; scan_steps--) {
         __delay_ms(100);
         adc_distance = adcDisplayDistance();
-        writeLocalMap(adc_distance, x, y);
+        //writeLocalMap(adc_distance, x, y);
 
         if (scan_steps > 1) moveCW(50);
 

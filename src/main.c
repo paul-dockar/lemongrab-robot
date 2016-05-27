@@ -9,12 +9,12 @@ void setup(void) {
     __delay_ms(5000);               //5 second startup delay to filter out irobot create serial crap
 
     setupInterrupt();               //calls pic interrupt setup function
-    //writeSongToEeprom();            //if songs need to be updated, uncomment this and rebuild, upload using kirra with eeprom protection disabled
+    writeSongToEeprom();            //if songs need to be updated, uncomment this and rebuild, upload using kirra with eeprom protection disabled
     setupIRobot();                  //calls irobot create setup function
     setupSPI();                     //calls spi setup function for stepper motor control
     setupADC();                     //calls adc setup function for ir reading control
     setupLCD();                     //calls lcd setup function to allow writing to lcd
-    setupExplore();
+    //setupExplore();
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
@@ -32,6 +32,8 @@ void main(void) {
 
     
     playSong(0);
+    playSong(1);
+    playSong(2);
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
