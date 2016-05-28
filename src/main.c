@@ -15,8 +15,6 @@ void setup(void) {
     setupADC();                     //calls adc setup function for ir reading control
     setupLCD();                     //calls lcd setup function to allow writing to lcd
     setupExplore();
-    
-    //playSong(0);
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
