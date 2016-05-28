@@ -27,8 +27,8 @@
 //IROBOT WHEEL SPEED DEFINES
 #define     RIGHT_WHEEL_FAST     200         //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
 #define     LEFT_WHEEL_FAST      200         //left wheel speed in mm/s
-#define     RIGHT_WHEEL_SLOW     50          //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
-#define     LEFT_WHEEL_SLOW      50          //left wheel speed in mm/s
+#define     RIGHT_WHEEL_SLOW     10          //right wheel speed in mm/s. right wheel slightly faster than left wheel, so compensate
+#define     LEFT_WHEEL_SLOW      10          //left wheel speed in mm/s
 
 //IROBOT MANEUVERS
 #define     SHARP_RIGHT()       drive(-80,LEFT_WHEEL_FAST);
@@ -54,6 +54,7 @@ bit exploring;
 bit victim_one;
 bit victim_two;
 bit move_stepper;
+bit slow_flag;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -62,7 +63,7 @@ void explore(void);
 void returnHome(void);
 
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
-int driveStraight(int distance);
+int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction);
 int driveAngle(int angle);
 int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor data per packet id in datasheet
 unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
