@@ -103,7 +103,7 @@ void explore(void) {
         if (direction_to_travel != 0) {
              *current_facing_direction = direction_to_travel;                   //update facing direction
             driveAngle(angle_to_turn);                                          //spin to new direction
-            driveStraight(950, robot_x, robot_y, *current_facing_direction);   //drive straight 1m
+            driveStraight(990, robot_x, robot_y, *current_facing_direction);   //drive straight 1m
             switch (*current_facing_direction) {                                //update robot position
                 case UP:    robot_x--; break;
                 case RIGHT: robot_y++; break;
@@ -141,7 +141,7 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
     looking_straight = 0;
     looking_right = 0;
     looking_left = 1;
-    moveCCW(100);
+    moveCCW(50);
     ir_move_timer = 0;
 
     if (robot_x == 1 && robot_y == 2 && current_facing_direction == 2) slow_flag = 1;
@@ -173,10 +173,10 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
             }
 
             if (ir_move_timer > 200) {
-                if (distance_adc >= 70)                         maneuver = 0;
-                if (distance_adc < 48)                          maneuver = 1;
-                if (distance_adc > 52 && distance_adc < 70)     maneuver = 2;
-                if (distance_adc >= 48 && distance_adc <= 52)   maneuver = 3;
+                if (distance_adc >= 80)                         maneuver = 0;
+                if (distance_adc < 58)                          maneuver = 1;
+                if (distance_adc > 64 && distance_adc < 80)     maneuver = 2;
+                if (distance_adc >= 58 && distance_adc <= 64)   maneuver = 3;
 
                 if (looking_left) {
                     switch (maneuver) {
@@ -188,7 +188,7 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
                 }
                 if (looking_right) {
                     if (move_stepper) {
-                        moveCW(200);
+                        moveCW(100);
                         move_stepper = 0;
                         ir_move_timer = 0;
                     }
@@ -201,7 +201,7 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
                 }
                 if (looking_straight) {
                     if (move_stepper) {
-                        moveCCW(100);
+                        moveCCW(50);
                         move_stepper = 0;
                         ir_move_timer = 0;
                     }
@@ -240,8 +240,8 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
     }
     DRIVE_STOP();
 
-    if (looking_left) moveCW(100);
-    if (looking_right) moveCCW(100);
+    if (looking_left) moveCW(50);
+    if (looking_right) moveCCW(50);
     slow_flag = 0;
     
     while (adcDisplayDistance() < 40) {
