@@ -51,10 +51,11 @@
 int total_distance_travel;                      //Global variable which holds the total distance travelled, allowing to write to the LCD from any function.
 bit reset_flag;
 bit exploring;
-bit victim_one;
-bit victim_two;
 bit move_stepper;
 bit slow_flag;
+bit victim_found_flag;
+unsigned char *victim_one_location;
+unsigned char *victim_two_location;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -62,14 +63,16 @@ void wallFollow(void);                          //Drives the iRobot around the m
 void explore(void);
 void returnHome(void);
 
-void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction);
+void victimCheck(unsigned char robot_x, unsigned char robot_y, unsigned char *goal_x, unsigned char *goal_y, unsigned char victim_count);
+void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveAngle(int angle);
 int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor data per packet id in datasheet
 unsigned int sensorPacket(char packet_id);      //returns 2 byte unsigned sensor data per packet id in datasheet
 unsigned char bumpPacket(char packet_id);       //returns 1 byte unsigned sensor data from the bump/wheel drop packet sensor
 unsigned char cliffPacket(void);                //returns 1 byte unsigned sensor data for the cliff sensor. Cycles through all 4 cliff sensors
 unsigned char virtualWallPacket(char packet_id);
+unsigned char victimSensor(unsigned char packet_id);
 void writeBatteryStatusToLcd(void);             //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
 void writeSongsToRobot(void);
 void playSong(unsigned char song_number);

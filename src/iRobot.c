@@ -136,6 +136,8 @@ void explore(void) {
     unsigned char robot_y = 2;
     unsigned char goal_x = 0;
     unsigned char goal_y = 3;
+    unsigned char goal_number = 0;
+    unsigned char victim_count = 0;
     *current_facing_direction = 2;
     reset_flag = 1;
     exploring = 1;
@@ -167,13 +169,14 @@ void explore(void) {
                             __delay_ms(2000);
 
         if (direction_to_travel == 0) {
-            if (victim_one && victim_two) {
-                exploring = 0;
-                return;
-            } else {
-                // keep exploring and set a new goal
-                exploring = 1;
-                return;         //temp return for now
+            if (goal_number == 0) {
+                goal_x = 1;
+                goal_y = 3;
+                goal_number++;                  // keep exploring and set a new goal
+            } else if (goal_number == 1) {
+                goal_x = 3;
+                goal_y = 0;
+                goal_number++;                  // keep exploring and set a new goal
             }
         } else if (direction_to_travel == -1) {
             angle_to_turn = 180;
@@ -186,16 +189,26 @@ void explore(void) {
             global_map[robot_x][robot_y] = DEADEND;
         } else {
             //determine new direction
-            angle_to_turn = 90 * abs((*current_facing_direction - direction_to_travel));
+            angle_to_turn = 90 * (*current_facing_direction - direction_to_travel);
             if (angle_to_turn > 180) {
                 angle_to_turn = angle_to_turn - 360;
+            } else if (angle_to_turn < -180) {
+                angle_to_turn = angle_to_turn + 360;
             }
             reset_flag = 0;
         }
+                            
+                            
+                            lcdWriteControl(0b00000001);
+                            lcdSetCursor(0x00);
+                            lcdWriteToDigitBCD(angle_to_turn);
+                            lcdWriteString(" dir");
+                            __delay_ms(2000);
 
-        driveAngle(angle_to_turn);                          //spin desired direction
-        *current_facing_direction = direction_to_travel;    //update facing direction
-        driveStraight(1000, robot_x, robot_y, *current_facing_direction);                                //drive straight 1m
+        driveAngle(angle_to_turn);                                          //spin desired direction
+        *current_facing_direction = direction_to_travel;                    //update facing direction
+        driveStraight(1000, robot_x, robot_y, *current_facing_direction);   //drive straight 1m
+
         
         //update robot position
         switch (direction_to_travel) {
@@ -204,6 +217,8 @@ void explore(void) {
             case DOWN:  robot_x++; break;
             case LEFT:  robot_y--; break;
         }
+        
+        if (victim_found_flag) victimCheck(robot_x, robot_y, &goal_x, &goal_y, victim_count);
         
         if (update_pos_flag) {
             if (cliff_flag)     global_map[robot_x][robot_y] = CLIFF;
@@ -221,33 +236,6 @@ void explore(void) {
         }
     }
 
-}
-
-void returnHome(void) {
-
-
-    //go to sleep when finished
-    lcdWriteControl(0b00000000);
-    asm("CLRWDT \n SLEEP");
-}
-
-//driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
-void drive(int right_wheel, int left_wheel) {
-    char right_high = 0;
-    char right_low = 0;
-    char left_high = 0;
-    char left_low = 0;
-
-    right_high = (right_wheel >> 8);
-    right_low = right_wheel;
-    left_high = (left_wheel >> 8);
-    left_low = left_wheel;
-
-    ser_putch(DRIVE);
-    ser_putch(right_high);
-    ser_putch(right_low);
-    ser_putch(left_high);
-    ser_putch(left_low);
 }
 
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction) {
@@ -273,6 +261,7 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
             if (bumpPacket(BUMP_SENSOR) > 0)            bump_flag = 1;
             if (cliffPacket() > 0)                      cliff_flag = 1;
             if (virtualWallPacket(VIRTWALL_SENSOR) > 0) virt_wall_flag = 1;
+            if (victimSensor(IRBYTE) > 0)               victim_found_flag = 1;
 
             if (cliff_flag || bump_flag || virt_wall_flag) {
                 update_pos_flag = 1;
@@ -367,6 +356,41 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
     return distance_traveled;
 }
 
+void victimCheck(unsigned char robot_x, unsigned char robot_y, unsigned char *goal_x, unsigned char *goal_y, unsigned char victim_count) {
+    if (victim_count == 0) {
+        victim_one_location = &global_map[robot_x][robot_y];
+        //playSong(1);
+        victim_count++;
+    } else if (victim_count == 1) {
+        if (&global_map[robot_x][robot_y] != victim_one_location) {
+            victim_two_location = &global_map[robot_x][robot_y];
+            //playSong(2);
+            victim_count++;
+            goal_x = 0;
+            goal_y = 1;
+        }
+    }
+}
+
+//driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
+void drive(int right_wheel, int left_wheel) {
+    char right_high = 0;
+    char right_low = 0;
+    char left_high = 0;
+    char left_low = 0;
+
+    right_high = (right_wheel >> 8);
+    right_low = right_wheel;
+    left_high = (left_wheel >> 8);
+    left_low = left_wheel;
+
+    ser_putch(DRIVE);
+    ser_putch(right_high);
+    ser_putch(right_low);
+    ser_putch(left_high);
+    ser_putch(left_low);
+}
+
 int driveAngle(int angle) {
     int angle_turned = 0;
 
@@ -456,6 +480,19 @@ unsigned char virtualWallPacket(char packet_id) {
      __delay_ms(15);
 
     return virtual_wall_byte;
+}
+
+unsigned char victimSensor(unsigned char packet_id) {
+    unsigned char return_byte = 0;
+    
+    ser_putch(SENSORS);
+	ser_putch(packet_id);
+
+	return_byte = ser_getch();
+    __delay_ms(15);
+    
+    if (return_byte > 240) return 1;
+    else return 0;
 }
 
 //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage

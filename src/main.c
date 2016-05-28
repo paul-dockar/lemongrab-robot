@@ -17,8 +17,6 @@ void setup(void) {
     setupExplore();
     
     //playSong(0);
-    //playSong(1);
-    //playSong(2);
 }
 
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
