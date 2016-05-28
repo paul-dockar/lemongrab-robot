@@ -25,11 +25,9 @@
 
 #define _XTAL_FREQ      20000000        //oscillator (Hz)
 #define HB_LED          RB0             //set PortB Pin 0 for heartbeat LED
-#define PB_EXPLORE      !RB1            //set PortB Pin 1 for pushbutton scan closest wall
-#define PB_WALL_FOLLOW  !RB5            //set PortB Pin 4 for pushbutton drive along closest wall
+#define PB_EXPLORE      !RB1            //set PortB Pin 1 for pushbutton advanced maze explore
 
-volatile bit pb_explore_pressed;        //push button flag for PB_SCAN
-volatile bit pb_find_wall_pressed;      //push button flag for PB_FIND_WALL
+volatile bit pb_explore_pressed;        //push button flag for PB_EXPORE
 
 void setup(void);                       //calls all other module setup functions
 void main(void);                        //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously

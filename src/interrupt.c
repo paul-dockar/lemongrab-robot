@@ -21,7 +21,6 @@ void interrupt isr(void) {
         T0IF = 0;
         TMR0 = TMR0_VAL;
         hb_led_counter++;
-        lost_wall_timer++;
         ir_move_timer++;
 
         //toggles heartbeat LED every 0.5 seconds
@@ -31,15 +30,11 @@ void interrupt isr(void) {
         }
 
         //checks for all 4 push buttons. If one is detected as pressed, start debounce counter. If debounce counter returns 1, then toggle push button flag.
-        if (PB_EXPLORE || PB_WALL_FOLLOW){
+        if (PB_EXPLORE){
             pb_debounce_count++;
             if (debounce(pb_debounce_count) && PB_EXPLORE) {
                 pb_release = 0;
                 pb_explore_pressed = 1;
-            }
-            if (debounce(pb_debounce_count) && PB_WALL_FOLLOW) {
-                pb_release = 0;
-                pb_find_wall_pressed = 1;
             }
         }
         else {

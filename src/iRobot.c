@@ -15,7 +15,7 @@ void setupIRobot(void) {
     ser_init();
     ser_putch(START);
     ser_putch(FULL);
-    //writeSongsToRobot();
+    writeSongsToRobot();
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
@@ -25,120 +25,19 @@ void distanceDisplay(int distance) {
     lcdWriteString("mm driven    ");
 }
 
-/*
- *  Wall follow function. Starts with a 360 scan to find closest wall. Orientates robot to be facing the wall, then drives till it is 50cm from the wall.
- *  After 50cm from the wall, orientate robot to be perpendicular to the wall, depending on which direction it was initially.
- *  If wall was initally to the right, once next to the wall, put wall the right again and vice versa.
- *  Once next to wall and perpendicular to it, initiate a forever while loop, using the IR sensor to change wheel speed to follow the wall around the whole maze.
- *  Bump sensors or cliff sensors can be triggered, causing the robot to pause for 10 seconds whilst it is manually maneuvered.
- */
-void wallFollow (void){
-    int angle = 0;
-    int current_angle = 0;
-    unsigned int distance = 0;
-
-    total_distance_travel = 0;
-    scanCcw(400);                           //CCWscan to find closest wall
-    moveCW(scan_360_step_count);            //Point IR sensor towards the wall.
-
-    __delay_ms(500);
-
-    /*
-     *  Depending on robot and IR sensor positions, orientate robot to face the wall in the quickest turn, either CW or CCW.
-     *  Also set a flag which determines which direction to follow the wall for the rest of the procedure.
-     */
-    if (scan_360_step_count > 200){
-        angle = (400 - scan_360_step_count) * 90 / 100;
-        SPIN_LEFT_F();
-        wall_is_right_flag = 0;                                                //from initial position, the wall is on the left
-    } else {
-        angle = scan_360_step_count * 90 / 100;
-        SPIN_RIGHT_F();
-        wall_is_right_flag = 1;                                                //from initial position, the wall is on the right
-    }
-
-    //Turn 90 degrees
-    while(angle > current_angle) {
-        current_angle += abs(distanceAngleSensor(ANGLE));
-    }
-
-    //After turning 90 degrees, stop
-    DRIVE_STOP();
-    moveCW(400 - scan_360_step_count);
-
-    //drive forward till 60cm from wall
-    DRIVE_STRAIGHT_F();
-    while (distance > 50) {
-        distance = getAdcDist(getAdc());
-        adcDisplayQuick(distance);
-    }
-    DRIVE_STOP();
-
-    //turn right or left 90 degrees
-    if (wall_is_right_flag)  SPIN_LEFT_F();
-    if (!wall_is_right_flag) SPIN_RIGHT_F();
-
-    angle = 0;
-    while(angle < 90) {
-        angle += abs(distanceAngleSensor(ANGLE));
-    }
-    DRIVE_STOP();
-
-    //After turning 90 degrees, move stepper motor 50 degrees right or lefts
-    if (wall_is_right_flag)  moveCW(50);
-    if (!wall_is_right_flag) moveCCW(50);
-
-    bump_cliff_flag = 0;
-    lost_wall_timer = 0;
-    while (1) {
-        unsigned char maneuver = 0;
-        distance = getAdcDist(getAdc());    //continuously read the adc distance
-        adcDisplayQuick(distance);          //write the distance using the quick lcd update function
-
-        //Normal routine for robot wallFollow. Changes wheel speeds depending on distance to wall, or if wall has not been found for 5.5 seconds
-        if (!bump_cliff_flag) {
-            if (distance > 70 && lost_wall_timer >= 5500)   maneuver = 0;
-            if (distance > 70 && lost_wall_timer < 5500)    maneuver = 1;
-            if (distance < 48)                              maneuver = 2;
-            if (distance >= 48 && distance <= 70)           maneuver = 3;
-
-            if (wall_is_right_flag) {
-                switch (maneuver) {
-                    case 0: SHARP_RIGHT(); break;                         //when wall is not found for certain time, turn sharp to the right
-                    case 1: SLOW_RIGHT(); break;                           //when wall is at a nice distance, and it is not lost, slowly turn towards it
-                    case 2: SHARP_LEFT2(); lost_wall_timer = 0; break;      //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT_F(); break;                       //when wall is at good distance, drive straight
-                }
-            }
-            if (!wall_is_right_flag) {
-                switch (maneuver) {
-                    case 0: SHARP_LEFT(); break;                          //when wall is not found for certain time, turn sharp to the left
-                    case 1: SLOW_LEFT(); break;                            //when wall is at a nice distance, and it is not lost, slowly turn towards it.
-                    case 2: SHARP_RIGHT2(); lost_wall_timer = 0; break;     //when wall is too close, turn sharp to the left. reset lost wall timer
-                    case 3: DRIVE_STRAIGHT_F(); break;                       //when wall is at good distance, drive straight
-                }
-            }
-            if (bumpPacket(BUMP_SENSOR) > 0 || cliffPacket() > 0 || virtualWallPacket(VIRTWALL_SENSOR) > 0) bump_cliff_flag = 1;    //when bump or cliff sensor is triggered, set bump flag
-        }
-        if (!wall_is_right_flag && bump_cliff_flag) SHARP_RIGHT();
-        if (wall_is_right_flag && bump_cliff_flag) SHARP_LEFT();
-
-    }
-}
-
 void explore(void) {
     signed char direction_to_travel = 0;
     int angle_to_turn = 0;
 
     //set robot starting variables
     unsigned char *current_facing_direction = &local_map[1][1];
-    unsigned char robot_x = 1;
-    unsigned char robot_y = 2;
+    unsigned char robot_x = 0;
+    unsigned char robot_y = 1;
     unsigned char goal_x = 0;
     unsigned char goal_y = 3;
     unsigned char goal_number = 0;
     unsigned char victim_count = 0;
-    *current_facing_direction = 2;
+    *current_facing_direction = 4;
     reset_flag = 1;
     exploring = 1;
 
@@ -150,25 +49,26 @@ void explore(void) {
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
 
-                            lcdWriteControl(0b00000001);
-                            for (char x = 0; x < GLOBAL_X; x++) {
-                                    if (x == 0 || x == 2) lcdSetCursor(0x00);
-                                    if (x == 1 || x == 3) lcdSetCursor(0x40);
-                                for (char y = 0; y < GLOBAL_Y; y++) {
-                                    lcdWriteToDigitBCD(global_map[x][y]);
-                                    lcdWriteString(" ");
-                                }
-                                if (x == 1) __delay_ms(3000);
-                                if (x == 1) lcdWriteControl(0b00000001);
-                            }
-                            __delay_ms(3000);
-                            lcdWriteControl(0b00000001);
-                            lcdSetCursor(0x00);
-                            lcdWriteToDigitBCD(direction_to_travel);
-                            lcdWriteString(" direction");
-                            __delay_ms(2000);
+//                            lcdWriteControl(0b00000001);
+//                            for (char x = 0; x < GLOBAL_X; x++) {
+//                                    if (x == 0 || x == 2) lcdSetCursor(0x00);
+//                                    if (x == 1 || x == 3) lcdSetCursor(0x40);
+//                                for (char y = 0; y < GLOBAL_Y; y++) {
+//                                    lcdWriteToDigitBCD(global_map[x][y]);
+//                                    lcdWriteString(" ");
+//                                }
+//                                if (x == 1) __delay_ms(3000);
+//                                if (x == 1) lcdWriteControl(0b00000001);
+//                            }
+//                            __delay_ms(3000);
+//                            lcdWriteControl(0b00000001);
+//                            lcdSetCursor(0x00);
+//                            lcdWriteToDigitBCD(direction_to_travel);
+//                            lcdWriteString(" direction");
+//                            __delay_ms(2000);
 
         if (direction_to_travel == 0) {
+            angle_to_turn = 0;
             if (goal_number == 0) {
                 goal_x = 1;
                 goal_y = 3;
@@ -197,21 +97,13 @@ void explore(void) {
             }
             reset_flag = 0;
         }
-                            
-                            
-                            lcdWriteControl(0b00000001);
-                            lcdSetCursor(0x00);
-                            lcdWriteToDigitBCD(angle_to_turn);
-                            lcdWriteString(" dir");
-                            __delay_ms(2000);
 
-        driveAngle(angle_to_turn);                                          //spin desired direction
-        *current_facing_direction = direction_to_travel;                    //update facing direction
-        driveStraight(1000, robot_x, robot_y, *current_facing_direction);   //drive straight 1m
+        driveAngle(angle_to_turn);                                                      //spin desired direction
+        if (direction_to_travel > 0) *current_facing_direction = direction_to_travel;   //update facing direction
+        driveStraight(1000, robot_x, robot_y, *current_facing_direction);               //drive straight 1m
 
-        
         //update robot position
-        switch (direction_to_travel) {
+        switch (*current_facing_direction) {
             case UP:    robot_x--; break;
             case RIGHT: robot_y++; break;
             case DOWN:  robot_x++; break;
@@ -226,7 +118,7 @@ void explore(void) {
             if (virt_wall_flag) global_map[robot_x][robot_y] = VIRTWALL;
             
             //revert robot position
-            switch (direction_to_travel) {
+            switch (*current_facing_direction) {
                 case UP:    robot_x++; break;
                 case RIGHT: robot_y--; break;
                 case DOWN:  robot_x--; break;
@@ -235,7 +127,6 @@ void explore(void) {
             cliff_flag = bump_flag = virt_wall_flag = update_pos_flag = 0;
         }
     }
-
 }
 
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction) {
@@ -359,17 +250,18 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
 void victimCheck(unsigned char robot_x, unsigned char robot_y, unsigned char *goal_x, unsigned char *goal_y, unsigned char victim_count) {
     if (victim_count == 0) {
         victim_one_location = &global_map[robot_x][robot_y];
-        //playSong(1);
+        playSong(1);
         victim_count++;
     } else if (victim_count == 1) {
         if (&global_map[robot_x][robot_y] != victim_one_location) {
             victim_two_location = &global_map[robot_x][robot_y];
-            //playSong(2);
+            playSong(2);
             victim_count++;
-            goal_x = 0;
-            goal_y = 1;
+            *goal_x = 0;
+            *goal_y = 1;
         }
     }
+    victim_found_flag = 0;
 }
 
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
@@ -491,7 +383,7 @@ unsigned char victimSensor(unsigned char packet_id) {
 	return_byte = ser_getch();
     __delay_ms(15);
     
-    if (return_byte > 240) return 1;
+    if (return_byte > 240 && return_byte < 255) return 1;
     else return 0;
 }
 

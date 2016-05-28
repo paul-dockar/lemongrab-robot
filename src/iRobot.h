@@ -59,12 +59,10 @@ unsigned char *victim_two_location;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
-void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
 void explore(void);
-void returnHome(void);
-
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction);
 void victimCheck(unsigned char robot_x, unsigned char robot_y, unsigned char *goal_x, unsigned char *goal_y, unsigned char victim_count);
+
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveAngle(int angle);
 int distanceAngleSensor(char packet_id);        //returns 2 byte signed sensor data per packet id in datasheet

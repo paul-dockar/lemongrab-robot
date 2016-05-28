@@ -26,16 +26,12 @@ void main(void) {
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
-
+        
         //checks for pb flags. If flag is set then perform a function
         if (pb_explore_pressed) {
             explore();
             //returnHome();
             pb_explore_pressed = 0;
-        }
-        if (pb_find_wall_pressed) {
-            wallFollow();
-            pb_find_wall_pressed = 0;
         }
     }
 }
