@@ -52,12 +52,19 @@ bit slow_flag;
 bit victim_found_flag;
 unsigned char *victim_one_location;
 unsigned char *victim_two_location;
+unsigned char victim_count;
+int total_distance_travel;
+
+volatile bit cliff_flag;
+volatile bit bump_flag;
+volatile bit virt_wall_flag;
+volatile bit update_pos_flag;
 
 void setupIRobot(void);                         //Starts robot and sets to Full mode. Initialises ser
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
 void explore(void);
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction);
-void victimCheck(unsigned char robot_x, unsigned char robot_y, unsigned char *goal_x, unsigned char *goal_y);
+void victimCheck(unsigned char robot_x, unsigned char robot_y);
 
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveAngle(int angle);
