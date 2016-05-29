@@ -1,10 +1,3 @@
-/*
- * File:   eeprom.h
- * Author: Michael.Smith201
- *
- * Created on 18 May 2016, 12:24 PM
- */
-
 #ifndef EEPROM_H
 #define	EEPROM_H
 
