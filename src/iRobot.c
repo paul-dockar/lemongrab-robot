@@ -27,7 +27,7 @@ void distanceDisplay(int distance) {
  *  Once next to wall and perpendicular to it, initiate a forever while loop, using the IR sensor to change wheel speed to follow the wall around the whole maze.
  *  Bump sensors or cliff sensors can be triggered, causing the robot to pause for 10 seconds whilst it is manually maneuvered.
  */
-void wallFollow (void){
+/*void wallFollow (void){
     int angle = 0;
     int current_angle = 0;
     unsigned int distance = 0;
@@ -42,6 +42,7 @@ void wallFollow (void){
      *  Depending on robot and IR sensor positions, orientate robot to face the wall in the quickest turn, either CW or CCW.
      *  Also set a flag which determines which direction to follow the wall for the rest of the procedure.
      */
+/*
     if (scan_360_step_count > 200){
         angle = (400 - scan_360_step_count) * 90 / 100;
         SPIN_LEFT_F();
@@ -120,7 +121,7 @@ void wallFollow (void){
 
     }
 }
-
+*/
 void explore(void) {
     signed char direction_to_travel = 0;
     int angle_to_turn = 0;
@@ -446,7 +447,45 @@ void writeSongsToRobot (void) {
         ser_putch(song_data);
         eeprom_address++;
     }
+    
+    eeprom_address = EEPROM_ADDRESS_SONG_FOUR;
+    //write song four
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_FOUR_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+   
+    eeprom_address = EEPROM_ADDRESS_SONG_FIVE;
+    //write song five
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_FIVE_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    eeprom_address = EEPROM_ADDRESS_SONG_SIX;
+    //write song six
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_SIX_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    eeprom_address = EEPROM_ADDRESS_SONG_SEVEN;
+    //write song seven
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_SEVEN_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
 }
+
+
 
 void playSong(unsigned char song_number) {
     while (bumpPacket(SONG_PLAYING) > 0){

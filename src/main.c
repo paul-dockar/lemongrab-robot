@@ -31,9 +31,26 @@ void main(void) {
 
 
     
-    playSong(0);
-    playSong(1);
-    playSong(2);
+    //Beat it
+    for (char n = 0; n < 2; n++){
+        playSong(0);
+    }
+    //Final Countdown
+    for (char n = 0; n < 2; n++){
+        playSong(1);
+        playSong(2);
+    }
+    //Sandstorm
+    for (char n = 0; n < 2; n++){
+        playSong(3);
+        playSong(4);
+        playSong(5);
+        playSong(3);
+        playSong(6);
+        playSong(3);
+        playSong(6);
+    }
+    
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
