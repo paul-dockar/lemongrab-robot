@@ -32,5 +32,8 @@ volatile bit pb_explore_pressed;        //push button flag for PB_EXPORE
 void setup(void);                       //calls all other module setup functions
 void main(void);                        //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void refreshLcd(int distance);          //Refresh the LCD with ADC value and distance value
+void beatIt(void);
+void finalCountdown(void);
+void sandstorm(void);
 
 #endif	/* MAIN_H */

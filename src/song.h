@@ -10,12 +10,12 @@
 #include "main.h"
 
 #define     EEPROM_ADDRESS_SONG_ONE     0x00
-#define     EEPROM_ADDRESS_SONG_TWO     0x20
-#define     EEPROM_ADDRESS_SONG_THREE   0x42
-#define     EEPROM_ADDRESS_SONG_FOUR    0x60
-#define     EEPROM_ADDRESS_SONG_FIVE    0x80
-#define     EEPROM_ADDRESS_SONG_SIX     0xA0
-#define     EEPROM_ADDRESS_SONG_SEVEN   0xB0
+#define     EEPROM_ADDRESS_SONG_TWO     0x19
+#define     EEPROM_ADDRESS_SONG_THREE   0x3C
+#define     EEPROM_ADDRESS_SONG_FOUR    0x4D
+#define     EEPROM_ADDRESS_SONG_FIVE    0x6C
+#define     EEPROM_ADDRESS_SONG_SIX     0x8F
+#define     EEPROM_ADDRESS_SONG_SEVEN   0x96
 #define     SONG_ONE_SIZE               24
 #define     SONG_TWO_SIZE               34
 #define     SONG_THREE_SIZE             16

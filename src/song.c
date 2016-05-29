@@ -5,7 +5,9 @@ void writeSongToEeprom(void) {
     songTwo(EEPROM_ADDRESS_SONG_TWO);
     songThree(EEPROM_ADDRESS_SONG_THREE);
     songFour(EEPROM_ADDRESS_SONG_FOUR);
-    
+    songFive(EEPROM_ADDRESS_SONG_FIVE);
+    songSix(EEPROM_ADDRESS_SONG_SIX);
+    songSeven(EEPROM_ADDRESS_SONG_SEVEN);
 }
 
 void songOne(unsigned char eeprom_address) {

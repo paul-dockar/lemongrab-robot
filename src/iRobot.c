@@ -31,8 +31,6 @@ void explore(void) {
     reset_flag = 1;
     exploring = 1;
     
-    playSong(0);
-
     while (exploring) {
         if (reset_flag)  scanLocal(FULL_SCAN);
         if (!reset_flag) scanLocal(HALF_SCAN);
@@ -56,11 +54,11 @@ void explore(void) {
             if (goal_number == 0) {
                 goal_x = 1;
                 goal_y = 3;
-                goal_number++;                  // keep exploring and set a new goal
+                goal_number++;
             } else if (goal_number == 1) {
                 goal_x = 3;
                 goal_y = 0;
-                goal_number++;                  // keep exploring and set a new goal
+                goal_number++;
             } else if (goal_number == 2) {
                 goal_x = 3;
                 goal_y = 2;
@@ -307,12 +305,12 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
 void victimCheck(unsigned char robot_x, unsigned char robot_y) {
     if (victim_count == 0) {
         victim_one_location = &global_map[robot_x][robot_y];
-        playSong(1);
+        beatIt();
         victim_count++;
     } else if (victim_count == 1) {
         if (&global_map[robot_x][robot_y] != victim_one_location) {
             victim_two_location = &global_map[robot_x][robot_y];
-            playSong(2);
+            finalCountdown();
             victim_count++;
         }
     }
@@ -468,8 +466,9 @@ void writeSongsToRobot (void) {
         ser_putch(song_data);
         eeprom_address++;
     }
-    eeprom_address = EEPROM_ADDRESS_SONG_TWO;
+    
     //write song two
+    eeprom_address = EEPROM_ADDRESS_SONG_TWO;
     ser_putch(SONG);
     for (char i = 0; i < SONG_TWO_SIZE; i++) {
         song_data = eepromRead(eeprom_address);
@@ -477,10 +476,46 @@ void writeSongsToRobot (void) {
         eeprom_address++;
     }
     
-    eeprom_address = EEPROM_ADDRESS_SONG_THREE;
     //write song three
+    eeprom_address = EEPROM_ADDRESS_SONG_THREE;
     ser_putch(SONG);
     for (char i = 0; i < SONG_THREE_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    //write song four
+    eeprom_address = EEPROM_ADDRESS_SONG_FOUR;
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_FOUR_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+   
+    //write song five
+    eeprom_address = EEPROM_ADDRESS_SONG_FIVE;
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_FIVE_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    //write song six
+    eeprom_address = EEPROM_ADDRESS_SONG_SIX;
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_SIX_SIZE; i++) {
+        song_data = eepromRead(eeprom_address);
+        ser_putch(song_data);
+        eeprom_address++;
+    }
+    
+    //write song seven
+    eeprom_address = EEPROM_ADDRESS_SONG_SEVEN;
+    ser_putch(SONG);
+    for (char i = 0; i < SONG_SEVEN_SIZE; i++) {
         song_data = eepromRead(eeprom_address);
         ser_putch(song_data);
         eeprom_address++;

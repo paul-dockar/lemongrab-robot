@@ -20,15 +20,15 @@ void setup(void) {
 //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
 void main(void) {
     setup();
-
     while (1) {
         //Refresh the LCD with ADC value and distance value
         refreshLcd(total_distance_travel);
         
         //checks for pb flags. If flag is set then perform a function
         if (pb_explore_pressed) {
+            sandstorm();
             explore();
-            //returnHome();
+            sandstorm();
             pb_explore_pressed = 0;
         }
     }
@@ -38,4 +38,26 @@ void main(void) {
 void refreshLcd(int distance) {
     adcDisplayDistance();
     distanceDisplay(distance);
+}
+
+//Beat it
+void beatIt(void) {
+    playSong(0);
+}
+
+//Final Countdown
+void finalCountdown(void) {
+    playSong(1);
+    playSong(2);
+}
+
+//Sandstorm
+void sandstorm(void) {
+    playSong(3);
+    playSong(4);
+    playSong(5);
+    playSong(3);
+    playSong(6);
+    playSong(3);
+    playSong(6);
 }
