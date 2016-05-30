@@ -14,11 +14,11 @@ void setupIRobot(void) {
 }
 
 //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
-void distanceDisplay(int distance) {
-    lcdSetCursor(0x40);
-    lcdWriteToDigitBCD(distance);
-    lcdWriteString("mm driven    ");
-}
+//void distanceDisplay(int distance) {
+//    lcdSetCursor(0x40);
+//    lcdWriteToDigitBCD(distance);
+//    lcdWriteString("mm driven    ");
+//}
 
 /*
  *  Wall follow function. Starts with a 360 scan to find closest wall. Orientates robot to be facing the wall, then drives till it is 50cm from the wall.
@@ -122,6 +122,7 @@ void distanceDisplay(int distance) {
     }
 }
 */
+/*
 void explore(void) {
     signed char direction_to_travel = 0;
     int angle_to_turn = 0;
@@ -324,7 +325,7 @@ int driveAngle(int angle) {
     DRIVE_STOP();
     return angle_turned;
 }
-
+*/
 
 //returns 2 byte signed sensor data per packet id in datasheet
 int distanceAngleSensor(char packet_id) {
@@ -396,6 +397,7 @@ unsigned char virtualWallPacket(char packet_id) {
 }
 
 //Additional functionality to display battery status for 4 seconds on startup. Displays battery charge, capacity and voltage
+/*
 void writeBatteryStatusToLcd(void) {
     lcdSetCursor(0x00);
     lcdWriteToDigitBCD(sensorPacket(BATTERY_CHARGE));
@@ -409,7 +411,7 @@ void writeBatteryStatusToLcd(void) {
 
     __delay_ms(4000);
 }
-
+*/
 void writeSongsToRobot (void) {
     unsigned char song_data = 0;
     unsigned char eeprom_address = EEPROM_ADDRESS_SONG_ONE;

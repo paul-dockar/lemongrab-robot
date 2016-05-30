@@ -36,7 +36,7 @@ void main(void) {
     playSong(6);
     playSong(3);
     playSong(6);
-    
+    /*
     while (1) {
         //checks for pb flags. If flag is set then perform a function
         if (pb_explore_pressed) {
@@ -44,5 +44,5 @@ void main(void) {
             //returnHome();
             pb_explore_pressed = 0;
         }
-    }
+    }*/
 }
