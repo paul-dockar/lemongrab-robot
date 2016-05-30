@@ -59,7 +59,6 @@ void setupIRobot(void);                         //Starts robot and sets to Full 
 void distanceDisplay(int distance);             //This function takes a distance value and writes it to the LCD, also writes mm driven after it. Distance is written whilst driving forward or square.
 void wallFollow(void);                          //Drives the iRobot around the maze. See large comment block in source file for more details.
 void explore(void);
-void returnHome(void);
 
 void drive(int right_wheel, int left_wheel);    //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 int driveStraight(int distance);

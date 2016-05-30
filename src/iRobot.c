@@ -201,15 +201,6 @@ void explore(void) {
     }
 
 }
- 
-
-void returnHome(void) {
-
-
-    //go to sleep when finished
-    lcdWriteControl(0b00000000);
-    asm("CLRWDT \n SLEEP");
-}
 
 //driveDirect iRobot left and right wheels. function splits ints into 2 chars to send to iRobot
 void drive(int right_wheel, int left_wheel) {
@@ -430,6 +421,7 @@ void writeSongsToRobot (void) {
         ser_putch(song_data);
         eeprom_address++;
     }
+    
     eeprom_address = EEPROM_ADDRESS_SONG_TWO;
     //write song two
     ser_putch(SONG);
@@ -484,8 +476,6 @@ void writeSongsToRobot (void) {
     }
     
 }
-
-
 
 void playSong(unsigned char song_number) {
     while (bumpPacket(SONG_PLAYING) > 0){

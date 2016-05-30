@@ -33,6 +33,5 @@ volatile bit pb_find_wall_pressed;      //push button flag for PB_FIND_WALL
 
 void setup(void);                       //calls all other module setup functions
 void main(void);                        //main program. starts by calling setup, then loops with pushbutton flag checks and displaying adc distance continuously
-void refreshLcd(int distance);          //Refresh the LCD with ADC value and distance value
 
 #endif	/* MAIN_H */
