@@ -29,6 +29,7 @@ void main(void) {
             sandstorm();
             explore();
             sandstorm();
+            turnOff();
             pb_explore_pressed = 0;
         }
     }
@@ -40,17 +41,6 @@ void refreshLcd(int distance) {
     distanceDisplay(distance);
 }
 
-//Beat it
-void beatIt(void) {
-    playSong(0);
-}
-
-//Final Countdown
-void finalCountdown(void) {
-    playSong(1);
-    playSong(2);
-}
-
 //Sandstorm
 void sandstorm(void) {
     playSong(3);
@@ -60,4 +50,9 @@ void sandstorm(void) {
     playSong(6);
     playSong(3);
     playSong(6);
+}
+
+void turnOff (void) {
+    lcdWriteControl(0b00000000);
+    asm("CLRWDT \n SLEEP");
 }

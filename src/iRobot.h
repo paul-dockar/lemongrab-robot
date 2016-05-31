@@ -33,11 +33,13 @@
 //IROBOT MANEUVERS
 #define     SLOW_RIGHT()        drive(250,LEFT_WHEEL_FAST);
 #define     SLOW_LEFT()         drive(RIGHT_WHEEL_FAST,250);
+#define     SLOW_RIGHT2()       drive(200,LEFT_WHEEL_FAST);
+#define     SLOW_LEFT2()        drive(RIGHT_WHEEL_FAST,200);
 
 #define     SPIN_RIGHT_F()      drive(-RIGHT_WHEEL_FAST,LEFT_WHEEL_FAST);
 #define     SPIN_LEFT_F()       drive(RIGHT_WHEEL_FAST,-LEFT_WHEEL_FAST);
-#define     SPIN_RIGHT_S()      drive(-RIGHT_WHEEL_SLOW,LEFT_WHEEL_SLOW);
-#define     SPIN_LEFT_S()       drive(RIGHT_WHEEL_SLOW,-LEFT_WHEEL_SLOW);
+#define     SPIN_RIGHT_S()      drive(-200,LEFT_WHEEL_SLOW);
+#define     SPIN_LEFT_S()       drive(RIGHT_WHEEL_SLOW,-200);
 
 #define     DRIVE_STRAIGHT_F()  drive(RIGHT_WHEEL_FAST,LEFT_WHEEL_FAST);
 #define     DRIVE_STRAIGHT_S()  drive(140,140);

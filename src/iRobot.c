@@ -27,6 +27,7 @@ void explore(void) {
     unsigned char goal_y = 3;
     unsigned char goal_number = 0;
     unsigned char *home_goal = &global_map[robot_x][robot_y];
+    unsigned char *temp_home_goal = &global_map[goal_x][goal_y];
     *current_facing_direction = 4;
     reset_flag = 1;
     exploring = 1;
@@ -36,45 +37,44 @@ void explore(void) {
         if (!reset_flag) scanLocal(HALF_SCAN);
         
         if (victim_count == 2) {
-            goal_x = 0;
-            goal_y = 1;
+			if (robot_x >= 2 || robot_y >= 3) {
+				goal_x = 3;
+				goal_y = 2;
+				temp_home_goal = &global_map[goal_x][goal_y];
+			} else {
+	            goal_x = 0;
+	            goal_y = 1;
+			}
+			if (temp_home_goal == &global_map[robot_x][robot_y]) {
+				goal_x = 0;
+				goal_y = 1;
+			}
         }
 
         //find direction to move next.
         //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
         direction_to_travel = findPathAStar(robot_x, robot_y, goal_x, goal_y);
-        
-        if (virt_wall_flag) {
-            direction_to_travel = 0;
-            virt_wall_flag = 0;
-        }
 
         if (direction_to_travel == 0) {
             angle_to_turn = 0;
-            if (goal_number == 0) {
+            if (goal_number == 0 && victim_count < 2) {
                 goal_x = 1;
                 goal_y = 3;
                 goal_number++;
-            } else if (goal_number == 1) {
+            } else if (goal_number == 1 && victim_count < 2) {
                 goal_x = 3;
                 goal_y = 0;
                 goal_number++;
-            } else if (goal_number == 2) {
-                goal_x = 3;
-                goal_y = 2;
-                goal_number++;
-            } else if (goal_number == 3) {
+            } else if (goal_number == 2 && victim_count < 2) {
                 goal_x = 0;
-                goal_y = 3;
+                goal_y = 1;
                 goal_number++;
-            } else {
-                exploring = 0;
             }
             if (home_goal == &global_map[robot_x][robot_y]) {
                 exploring = 0;
             }
         } else if (direction_to_travel == -1) {
-            angle_to_turn = 180;
+            angle_to_turn = -180;
             switch (*current_facing_direction) {
                 case 1: direction_to_travel = 3; break;
                 case 2: direction_to_travel = 4; break;
@@ -305,13 +305,15 @@ int driveStraight(int distance, char robot_x, char robot_y, char current_facing_
 void victimCheck(unsigned char robot_x, unsigned char robot_y) {
     if (victim_count == 0) {
         victim_one_location = &global_map[robot_x][robot_y];
-        beatIt();
+        playSong(0);    //play beat it
         victim_count++;
     } else if (victim_count == 1) {
         if (&global_map[robot_x][robot_y] != victim_one_location) {
             victim_two_location = &global_map[robot_x][robot_y];
-            finalCountdown();
+            playSong(1);
+            playSong(2);
             victim_count++;
+			reset_flag = 1;
         }
     }
     victim_found_flag = 0;
