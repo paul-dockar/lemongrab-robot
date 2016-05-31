@@ -122,7 +122,6 @@ void explore(void) {
             cliff_flag = bump_flag = update_pos_flag = 0;
         }
     }
-    playSong(0);
 }
 
 int driveStraight(int distance, char robot_x, char robot_y, char current_facing_direction) {
