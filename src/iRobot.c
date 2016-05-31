@@ -36,7 +36,7 @@ void explore(void) {
         if (reset_flag)  scanLocal(FULL_SCAN);
         if (!reset_flag) scanLocal(HALF_SCAN);
         
-        if (victim_count == 2) {
+        if (victim_count == 2 && victim_home_flag) {
 			if (robot_x >= 2 || robot_y >= 3) {
 				goal_x = 3;
 				goal_y = 2;
@@ -48,6 +48,7 @@ void explore(void) {
 			if (temp_home_goal == &global_map[robot_x][robot_y]) {
 				goal_x = 0;
 				goal_y = 1;
+                victim_home_flag = 0;
 			}
         }
 
@@ -94,9 +95,9 @@ void explore(void) {
         }
 
         if (direction_to_travel != 0) {
-             *current_facing_direction = direction_to_travel;                   //update facing direction
+            *current_facing_direction = direction_to_travel;                    //update facing direction
             driveAngle(angle_to_turn);                                          //spin to new direction
-            driveStraight(990, robot_x, robot_y, *current_facing_direction);   //drive straight 1m
+            driveStraight(990, robot_x, robot_y, *current_facing_direction);    //drive straight 1m
             switch (*current_facing_direction) {                                //update robot position
                 case UP:    robot_x--; break;
                 case RIGHT: robot_y++; break;
@@ -313,6 +314,7 @@ void victimCheck(unsigned char robot_x, unsigned char robot_y) {
             playSong(2);
             victim_count++;
 			reset_flag = 1;
+            victim_home_flag = 1;
         }
     }
     victim_found_flag = 0;

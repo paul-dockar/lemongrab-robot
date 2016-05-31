@@ -34,7 +34,7 @@ void scanLocal(char scan_steps) {
     setupLocalMap();
 
     for (scan_steps; scan_steps > 0; scan_steps--) {
-        __delay_ms(25);
+        __delay_ms(50);
         adc_distance = adcDisplayDistance();
         writeLocalMap(adc_distance, x, y);
 

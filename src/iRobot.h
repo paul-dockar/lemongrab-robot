@@ -52,6 +52,7 @@ bit exploring;
 bit move_stepper;
 bit slow_flag;
 bit victim_found_flag;
+bit victim_home_flag;
 unsigned char *victim_one_location;
 unsigned char *victim_two_location;
 unsigned char victim_count;
