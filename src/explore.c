@@ -34,6 +34,7 @@ void writeGlobalMap(unsigned char, char, char);
 void setupGlobalMap(void);
 void setupLocalMap(void);
 
+//function clears global & local map arrays
 void setupExplore(void) {
     setupGlobalMap();
     setupLocalMap();
@@ -55,10 +56,10 @@ signed char findPathAStar(char robot_x, char robot_y, char goal_x, char goal_y) 
 	}
 
     setupGlobalMap();											//setup robot/goal position, clear open and closed sets, clear global map
-    writeGlobalMap(ROBOT, robot_x, robot_y);
-    writeGlobalMap(GOAL, goal_x, goal_y);
-    initialisePointersNULL(closed_set, CLOSED_SET_SIZE);
-    initialisePointersNULL(open_set, OPEN_SET_SIZE);
+    writeGlobalMap(ROBOT, robot_x, robot_y);                    //writes robot position to global map
+    writeGlobalMap(GOAL, goal_x, goal_y);                       //writes goal position to global map
+    initialisePointersNULL(closed_set, CLOSED_SET_SIZE);        //clear closedset
+    initialisePointersNULL(open_set, OPEN_SET_SIZE);            //clear openset
     
     marryUpLocalMapData(local, robot_x, robot_y);				//write relevent data from the IR scan (local_map) to the global map
 
@@ -203,11 +204,11 @@ char findDirectionToTravel(struct NEIGHBOUR neighbour) {
 
     if (lowest_travel > 250) direction = TURN_AROUND;	//if stuff is everywhere then its a deadend!
 
-    return direction; 								//direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
+    return direction;                                   //direction is either 1 (up), 2 (right), 3 (down), 4 (left), or -1 (dead-end)
 }
 
 //This function will write relevant data from the IR scan (local_map) to the global map before the A* algorithm is run
-//It is a bit of spaghetti but unfortunately necessary because the global_map is only 20 bytes instead of the ideal 99+ bytes
+//It is a bit of spaghetti but unfortunately necessary because the global_map is only 20 bytes instead of the ideal 99+ bytes 
 void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     local.forward         = &local_map[0][1];
     local.right           = &local_map[1][2];
@@ -263,12 +264,14 @@ void marryUpLocalMapData(struct LOCAL local, char robot_x, char robot_y) {
     }
 }
 
+//takes an array name and size and clears it
 void initialisePointersNULL(unsigned char *array[], char size) {
     for (char i = 0; i < size; i++) {
         array[i] = 0;
     }
 }
 
+//removes an item from the open_set list
 void removeFromOpenSet(unsigned char *item_to_remove) {
     for (char i = 0; i < OPEN_SET_SIZE; i++) {
         if (open_set[i] == item_to_remove) {
@@ -277,6 +280,7 @@ void removeFromOpenSet(unsigned char *item_to_remove) {
     }
 }
 
+//adds an item to the closed set. does not add if already on the closed set
 void pushToClosedSet(unsigned char *item_to_push) {
     for (char i = 0; i < CLOSED_SET_SIZE; i++) {
         if (closed_set[i] == item_to_push) {
@@ -291,6 +295,7 @@ void pushToClosedSet(unsigned char *item_to_push) {
     }
 }
 
+//adds an item to the open set. does not add if already on the open set
 void pushToOpenSet(unsigned char *item_to_push) {
     for (char i = 0; i < OPEN_SET_SIZE; i++) {
         if (open_set[i] == item_to_push) {
@@ -305,6 +310,7 @@ void pushToOpenSet(unsigned char *item_to_push) {
     }
 }
 
+//if an item on the open set is 'clear' then takes the item from the next list, shifting it up a space
 void rearrangeOpenSet(void) {
     for (char i = 0; i < OPEN_SET_SIZE; i++) {
         if (open_set[i] == 0 && i < (OPEN_SET_SIZE - 1)) {
@@ -314,10 +320,12 @@ void rearrangeOpenSet(void) {
     }
 }
 
+//function takes a value and the xy array position and writes it
 void writeGlobalMap(unsigned char value, char x, char y) {
     global_map[x][y] = value;
 }
 
+//function takes a value and the xy array position and writes it
 void writeLocalMap(unsigned char value, char x, char y) {
     local_map[x][y] = value;
 }
